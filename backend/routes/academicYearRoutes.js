@@ -3,7 +3,7 @@ const router = express.Router();
 const ctrl = require('../controllers/academicYearController');
 const { verifyToken, verifyRole } = require('../middleware/authMiddleware');
 
-const ADMINS = ['admin', 'director'];
+const ADMINS = ['admin', 'director', 'dod', 'director_of_discipline', 'accountant', 'registrar'];
 const READ   = ['admin', 'director', 'dod', 'director_of_discipline', 'accountant', 'registrar', 'teacher'];
 
 // Read
@@ -19,6 +19,13 @@ router.get('/:id/preview-close', verifyToken, verifyRole(ADMINS), ctrl.previewCl
 router.post('/',               verifyToken, verifyRole(ADMINS), ctrl.createYear);
 router.post('/:id/set-current',verifyToken, verifyRole(ADMINS), ctrl.setCurrent);
 router.post('/:id/close',      verifyToken, verifyRole(ADMINS), ctrl.closeYear);
+
+// Year admin management
+router.delete('/:id',               verifyToken, verifyRole(ADMINS), ctrl.deleteYear);
+router.put('/:id',                  verifyToken, verifyRole(ADMINS), ctrl.editYear);
+router.post('/:id/reopen',          verifyToken, verifyRole(ADMINS), ctrl.reopenYear);
+router.get('/:id/admin-details',    verifyToken, verifyRole(ADMINS), ctrl.getAdminDetails);
+router.get('/:id/terms/:termId/details', verifyToken, verifyRole(ADMINS), ctrl.getTermDetails);
 
 // Terms
 router.put('/:yearId/terms/:termId',     verifyToken, verifyRole(ADMINS), ctrl.updateTerm);

@@ -101,16 +101,23 @@ const AdminLinkManager = () => {
                 axios.get(`${API_URL}/api/parents/linked-students`, { headers })
             ]);
             // Endpoints may return either an array or an object with a known key.
-            const asArr = (v, key) => Array.isArray(v) ? v : (v?.[key] || v?.data || []);
+            const asArr = (v, key) => {
+                if (Array.isArray(v)) return v;
+                if (v && typeof v === 'object') {
+                    return v[key] || v.data || [];
+                }
+                return [];
+            };
             setLinkRequests(asArr(requestsRes.data, 'requests'));
             setPendingLinks(asArr(pendingRes.data, 'links'));
             setStudents(asArr(studentsRes.data, 'students'));
             setParents(asArr(parentsRes.data, 'parents'));
             setLinkedStudents(asArr(linkedRes.data, 'linkedStudents'));
-        } catch (err) {
-            console.error('AdminLinkManager fetch error:', err);
-            toast.error(err.response?.data?.message || 'Habaye ikibazo mu gufungura amakuru');
-        }
+         } catch (err) {
+             console.error('AdminLinkManager fetch error:', err);
+             const msg = err.response?.data?.message || (err.code ? `Error ${err.code}` : 'Network error') || 'Failed to load data';
+             toast.error(msg);
+         }
         finally { setLoading(false); }
     };
 
@@ -222,9 +229,16 @@ const AdminLinkManager = () => {
     // Manual link
     const handleManualLink = async (e) => {
         e.preventDefault();
+        if (!linkForm.parent_id || !linkForm.student_id) {
+            toast.error('Hitamo umubyeyi n\'umunyeshuri');
+            return;
+        }
         try {
             await axios.post(`${API_URL}/api/parents/admin-link`, {
-                ...linkForm,
+                parent_id: linkForm.parent_id,
+                student_id: linkForm.student_id,
+                relationship: linkForm.relationship,
+                is_primary: linkForm.is_primary,
                 send_sms: true
             }, { headers });
             toast.success('✅ Ubucuti bwikoreye! SMS yoherejwe.');
@@ -234,7 +248,10 @@ const AdminLinkManager = () => {
             setModalLevel('');
             setModalLevels([]);
             fetchData();
-        } catch (err) { toast.error(err.response?.data?.message || 'Habaye ikibazo'); }
+        } catch (err) {
+            console.error('Manual link error:', err);
+            toast.error(err.response?.data?.message || 'Habaye ikibazo');
+        }
     };
 
     // View request details
@@ -501,34 +518,35 @@ const AdminLinkManager = () => {
             )}
 
             {/* Requests Table */}
-            <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead className="bg-gray-50 border-b">
-                            <tr>
-                                <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">Parent Info</th>
-                                <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">Student Info</th>
-                                <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">Trade & Level</th>
-                                <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">Requested</th>
-                                <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">Status</th>
-                                <th className="px-4 py-3 text-right text-xs font-bold text-gray-500 uppercase">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-100">
-                            {loading ? (
+            {(activeTab === 'requests' || activeTab === 'linked') && (
+                <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead className="bg-gray-50 border-b">
                                 <tr>
-                                    <td colSpan={6} className="px-4 py-12 text-center">
-                                        <RefreshCw className="animate-spin mx-auto" />
-                                    </td>
+                                    <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">Parent Info</th>
+                                    <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">Student Info</th>
+                                    <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">Trade & Level</th>
+                                    <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">Requested</th>
+                                    <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">Status</th>
+                                    <th className="px-4 py-3 text-right text-xs font-bold text-gray-500 uppercase">Actions</th>
                                 </tr>
-                            ) : filteredRequests.length === 0 ? (
-                                <tr>
-                                    <td colSpan={6} className="px-4 py-12 text-center text-gray-400">
-                                        <Link2 size={48} className="mx-auto mb-2 opacity-20" />
-                                        <p>No requests found</p>
-                                    </td>
-                                </tr>
-                            ) : filteredRequests.map(request => (
+                            </thead>
+                            <tbody className="divide-y divide-gray-100">
+                                {loading ? (
+                                    <tr>
+                                        <td colSpan={6} className="px-4 py-12 text-center">
+                                            <RefreshCw className="animate-spin mx-auto" />
+                                        </td>
+                                    </tr>
+                                ) : filteredRequests.filter(r => activeTab === 'requests' ? r.status === 'pending' : r.status !== 'pending').length === 0 ? (
+                                    <tr>
+                                        <td colSpan={6} className="px-4 py-12 text-center text-gray-400">
+                                            <Link2 size={48} className="mx-auto mb-2 opacity-20" />
+                                            <p>No requests found</p>
+                                        </td>
+                                    </tr>
+                                ) : filteredRequests.filter(r => activeTab === 'requests' ? r.status === 'pending' : r.status !== 'pending').map(request => (
                                 <tr key={request.id} className="hover:bg-gray-50">
                                     <td className="px-4 py-3">
                                         <div>
@@ -581,11 +599,12 @@ const AdminLinkManager = () => {
                                         </div>
                                     </td>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* All Linked Tab Content */}
             {activeTab === 'all-linked' && (

@@ -762,6 +762,304 @@ exports.listPromotions = async (req, res) => {
     }
 };
 
+/* ─── Year admin management ─────────────────────────────────── */
+
+exports.deleteYear = async (req, res) => {
+    const { id } = req.params;
+    const conn = await db.getConnection();
+    try {
+        await conn.beginTransaction();
+        const [yRows] = await conn.query('SELECT * FROM academic_years WHERE id = ? FOR UPDATE', [id]);
+        if (!yRows.length) {
+            await conn.rollback();
+            return res.status(404).json({ message: 'Umwaka ntiwabonetse.' });
+        }
+        if (yRows[0].is_current) {
+            await conn.rollback();
+            return res.status(400).json({ message: 'Ntushobora gusiba umwaka watoranyijwe nk\'umwaka w\'ubu.' });
+        }
+        // Remove term references in promotions first to avoid FK issues
+        await conn.query('UPDATE student_promotions SET from_academic_year_id = NULL WHERE from_academic_year_id = ?', [id]);
+        await conn.query('UPDATE student_promotions SET to_academic_year_id = NULL WHERE to_academic_year_id = ?', [id]);
+        // Delete terms
+        await conn.query('DELETE FROM academic_terms WHERE academic_year_id = ?', [id]);
+        // Delete year
+        await conn.query('DELETE FROM academic_years WHERE id = ?', [id]);
+        await conn.commit();
+        res.json({ message: 'Umwaka wasibwe.' });
+    } catch (err) {
+        await conn.rollback();
+        console.error('deleteYear', err);
+        res.status(500).json({ message: 'Habaye ikibazo gusiba umwaka.' });
+    } finally {
+        conn.release();
+    }
+};
+
+exports.editYear = async (req, res) => {
+    const { id } = req.params;
+    const { name, start_date, end_date, terms } = req.body || {};
+    if (!name || !start_date || !end_date) {
+        return res.status(400).json({ message: 'Andika izina, itariki itangira n\'irangira.' });
+    }
+    const conn = await db.getConnection();
+    try {
+        await conn.beginTransaction();
+        const [yRows] = await conn.query('SELECT id FROM academic_years WHERE name = ? AND id != ?', [name, id]);
+        if (yRows.length) {
+            await conn.rollback();
+            return res.status(409).json({ message: 'Umwaka ufite iri zina usanzweho.' });
+        }
+        await conn.query(
+            'UPDATE academic_years SET name = ?, start_date = ?, end_date = ? WHERE id = ?',
+            [name, start_date, end_date, id]
+        );
+        if (Array.isArray(terms)) {
+            for (const t of terms) {
+                if (t.id) {
+                    await conn.query(
+                        'UPDATE academic_terms SET name = ?, start_date = ?, end_date = ? WHERE id = ? AND academic_year_id = ?',
+                        [t.name, t.start_date, t.end_date, t.id, id]
+                    );
+                }
+            }
+        }
+        await conn.commit();
+        const updated = await loadYearById(id);
+        res.json({ message: 'Umwaka ivuguruwe.', year: updated });
+    } catch (err) {
+        await conn.rollback();
+        console.error('editYear', err);
+        res.status(500).json({ message: 'Habaye ikibazo.' });
+    } finally {
+        conn.release();
+    }
+};
+
+exports.reopenYear = async (req, res) => {
+    const { id } = req.params;
+    const conn = await db.getConnection();
+    try {
+        await conn.beginTransaction();
+        const [yRows] = await conn.query('SELECT * FROM academic_years WHERE id = ? FOR UPDATE', [id]);
+        if (!yRows.length) {
+            await conn.rollback();
+            return res.status(404).json({ message: 'Umwaka ntiwabonetse.' });
+        }
+        if (yRows[0].status !== 'closed') {
+            await conn.rollback();
+            return res.status(400).json({ message: 'Umwaka ntiwararangiye.' });
+        }
+        // Reset closed flags and set status active
+        await conn.query(
+            'UPDATE academic_years SET status = "active", closed_at = NULL, closed_by = NULL WHERE id = ?',
+            [id]
+        );
+        // Reset graduated students back to active if they were in this year
+        // (Admins may manually adjust levels after reopening)
+        await conn.query(
+            `UPDATE students SET current_status = 'active', graduation_status = 'in_progress'
+              WHERE current_status = 'graduated' AND academic_year_id = ?`,
+            [id]
+        );
+        await conn.commit();
+        res.json({ message: 'Umwaka wasubijweho.' });
+    } catch (err) {
+        await conn.rollback();
+        console.error('reopenYear', err);
+        res.status(500).json({ message: 'Habaye ikibazo gusubiza umwaka.' });
+    } finally {
+        conn.release();
+    }
+};
+
+exports.getAdminDetails = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const year = await loadYearById(id);
+        if (!year) return res.status(404).json({ message: 'Umwaka ntiwabonetse.' });
+
+        const [[studentCount]] = await db.query(
+            'SELECT COUNT(*) AS n FROM students WHERE academic_year_id = ?', [id]
+        );
+        const [[graduatedCount]] = await db.query(
+            `SELECT COUNT(*) AS n FROM student_promotions WHERE action = 'graduated' AND from_academic_year_id = ?`,
+            [id]
+        );
+        const [[promotedCount]] = await db.query(
+            `SELECT COUNT(*) AS n FROM student_promotions WHERE action = 'promoted' AND from_academic_year_id = ?`,
+            [id]
+        );
+        const [[retainedCount]] = await db.query(
+            `SELECT COUNT(*) AS n FROM student_promotions WHERE action = 'retained' AND from_academic_year_id = ?`,
+            [id]
+        );
+        const [tradeBreakdown] = await db.query(
+            `SELECT trade, COUNT(*) AS n FROM students WHERE academic_year_id = ? GROUP BY trade ORDER BY n DESC`,
+            [id]
+        );
+        const [levelBreakdown] = await db.query(
+            `SELECT level, COUNT(*) AS n FROM students WHERE academic_year_id = ? GROUP BY level ORDER BY n DESC`,
+            [id]
+        );
+
+        res.json({
+            ...year,
+            stats: {
+                students: studentCount.n,
+                graduated: graduatedCount.n,
+                promoted: promotedCount.n,
+                retained: retainedCount.n,
+                trade_breakdown: tradeBreakdown,
+                level_breakdown: levelBreakdown,
+            },
+        });
+    } catch (err) {
+        console.error('getAdminDetails', err);
+        res.status(500).json({ message: 'Habaye ikibazo.' });
+    }
+};
+
+exports.getTermDetails = async (req, res) => {
+    const { id, termId } = req.params;
+    try {
+        // 1. Term info
+        const [[term]] = await db.query(
+            'SELECT * FROM academic_terms WHERE id = ? AND academic_year_id = ?',
+            [termId, id]
+        );
+        if (!term) return res.status(404).json({ message: 'Term ntiboneka.' });
+
+        // 2. Students enrolled in this year
+        const [students] = await db.query(
+            'SELECT id, reg_number, first_name, last_name, trade, level, gender, current_status FROM students WHERE academic_year_id = ?',
+            [id]
+        );
+        const studentIds = students.map(s => s.id);
+
+        // 3. Attendance summary for this term period
+        let attendance = { present: 0, absent: 0, late: 0, excused: 0, total: 0, records: [] };
+        if (studentIds.length) {
+            const placeholders = studentIds.map(() => '?').join(',');
+            const [attRows] = await db.query(
+                `SELECT status, COUNT(*) AS n FROM attendance
+                  WHERE student_id IN (${placeholders}) AND date >= ? AND date <= ?
+                  GROUP BY status`,
+                [...studentIds, term.start_date, term.end_date]
+            );
+            for (const r of attRows) { attendance[r.status] = r.n; attendance.total += r.n; }
+            const [attRecs] = await db.query(
+                `SELECT a.*, s.first_name, s.last_name, s.reg_number
+                   FROM attendance a JOIN students s ON a.student_id = s.id
+                  WHERE a.student_id IN (${placeholders}) AND a.date >= ? AND a.date <= ?
+                  ORDER BY a.date DESC LIMIT 200`,
+                [...studentIds, term.start_date, term.end_date]
+            );
+            attendance.records = attRecs;
+        }
+
+        // 4. Grades summary for this term period
+        let grades = { count: 0, average_score: 0, by_subject: [], records: [] };
+        if (studentIds.length) {
+            const placeholders = studentIds.map(() => '?').join(',');
+            const [[gCount]] = await db.query(
+                `SELECT COUNT(*) AS n, AVG(score) AS avg_score FROM student_grades
+                  WHERE student_id IN (${placeholders}) AND term = ? AND academic_year = (
+                      SELECT name FROM academic_years WHERE id = ?
+                  )`,
+                [...studentIds, term.name, id]
+            );
+            grades.count = gCount.n || 0;
+            grades.average_score = Number(gCount.avg_score || 0).toFixed(2);
+            const [gSubjects] = await db.query(
+                `SELECT subject, AVG(score) AS avg_score, COUNT(*) AS n FROM student_grades
+                  WHERE student_id IN (${placeholders}) AND term = ? AND academic_year = (
+                      SELECT name FROM academic_years WHERE id = ?
+                  )
+                  GROUP BY subject ORDER BY avg_score DESC`,
+                [...studentIds, term.name, id]
+            );
+            grades.by_subject = gSubjects;
+            const [gRecs] = await db.query(
+                `SELECT g.*, s.first_name, s.last_name, s.reg_number
+                   FROM student_grades g JOIN students s ON g.student_id = s.id
+                  WHERE g.student_id IN (${placeholders}) AND g.term = ? AND g.academic_year = (
+                      SELECT name FROM academic_years WHERE id = ?
+                  )
+                  ORDER BY g.created_at DESC LIMIT 200`,
+                [...studentIds, term.name, id]
+            );
+            grades.records = gRecs;
+        }
+
+        // 5. Discipline summary for this term period
+        let discipline = { count: 0, records: [] };
+        if (studentIds.length) {
+            const placeholders = studentIds.map(() => '?').join(',');
+            const [[dCount]] = await db.query(
+                `SELECT COUNT(*) AS n FROM discipline_records
+                  WHERE student_id IN (${placeholders}) AND incident_date >= ? AND incident_date <= ?`,
+                [...studentIds, term.start_date, term.end_date]
+            );
+            discipline.count = dCount.n || 0;
+            const [dRecs] = await db.query(
+                `SELECT dr.*, s.first_name, s.last_name, s.reg_number,
+                        CONCAT(COALESCE(u.first_name,''), ' ', COALESCE(u.last_name,'')) as recorded_by_name
+                   FROM discipline_records dr
+                   JOIN students s ON dr.student_id = s.id
+                   LEFT JOIN users u ON dr.recorded_by = u.id
+                  WHERE dr.student_id IN (${placeholders}) AND dr.incident_date >= ? AND dr.incident_date <= ?
+                  ORDER BY dr.incident_date DESC LIMIT 200`,
+                [...studentIds, term.start_date, term.end_date]
+            );
+            discipline.records = dRecs;
+        }
+
+        // 6. Payments summary for this term period
+        let payments = { total_paid: 0, count: 0, records: [] };
+        if (studentIds.length) {
+            const placeholders = studentIds.map(() => '?').join(',');
+            const [[pSum]] = await db.query(
+                `SELECT COALESCE(SUM(amount_paid), 0) AS total, COUNT(*) AS n FROM payments
+                  WHERE student_id IN (${placeholders}) AND payment_date >= ? AND payment_date <= ?`,
+                [...studentIds, term.start_date, term.end_date]
+            );
+            payments.total_paid = Number(pSum.total || 0);
+            payments.count = pSum.n || 0;
+            const [pRecs] = await db.query(
+                `SELECT p.*, s.first_name, s.last_name, s.reg_number
+                   FROM payments p JOIN students s ON p.student_id = s.id
+                  WHERE p.student_id IN (${placeholders}) AND p.payment_date >= ? AND p.payment_date <= ?
+                  ORDER BY p.payment_date DESC LIMIT 200`,
+                [...studentIds, term.start_date, term.end_date]
+            );
+            payments.records = pRecs;
+        }
+
+        // 7. Events (news/announcements) that happened during this term
+        const [events] = await db.query(
+            `SELECT id, title_rw, title_en, content_rw, content_en, category, location, created_at, is_published
+               FROM news
+              WHERE created_at >= ? AND created_at <= ? AND is_published = 1
+              ORDER BY created_at DESC LIMIT 50`,
+            [term.start_date, term.end_date]
+        );
+
+        res.json({
+            term,
+            student_count: students.length,
+            attendance,
+            grades,
+            discipline,
+            payments,
+            events,
+        });
+    } catch (err) {
+        console.error('getTermDetails', err);
+        res.status(500).json({ message: 'Habaye ikibazo gusoma amakuru y\'iyi term.' });
+    }
+};
+
 /* ─── Graduates yearbook ──────────────────────────────────────────
    Lists every student archived by `student_promotions.action='graduated'`,
    grouped by academic year and trade. Used by the printable yearbook

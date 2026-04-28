@@ -75,11 +75,13 @@ const Layout = () => {
         return () => clearInterval(interval);
     }, []);
 
-    const isAdmin = user.role === 'admin';
+    const isAdmin = user.role === 'admin' || user.role === 'director';
     const isDod = user.role === 'dod' || user.role === 'director_of_discipline';
     const isAccountant = user.role === 'accountant';
     const isStockManager = user.role === 'stock_manager';
     const isParent = user.role === 'parent';
+    const isRegistrar = user.role === 'registrar';
+    const canManageLinks = isAdmin || isDod || isAccountant || isRegistrar;
 
     const roleConfig = {
         admin: { label: t('roles.admin'), color: 'bg-purple-500', icon: Briefcase },
@@ -100,15 +102,15 @@ const Layout = () => {
         { to: '/dashboard', icon: LayoutDashboard, label: t('nav.dashboard'), show: true },
         { to: '/notifications', icon: Bell, label: 'Notifications', show: true, badge: unreadCount },
         { to: '/applications', icon: FileText, label: t('nav.applications') || 'Applications', show: isAdmin || isDod || isAccountant },
-        { to: '/academic-year', icon: Calendar, label: t('nav.academicYear') || 'Academic Year', show: isAdmin || user.role === 'director' },
+        { to: '/academic-year', icon: Calendar, label: t('nav.academicYear') || 'Academic Year', show: isAdmin || isDod || isAccountant || isRegistrar },
         { to: '/graduates', icon: GraduationCap, label: t('nav.graduates') || 'Abasoje', show: isAdmin || user.role === 'director' || user.role === 'registrar' || isDod || isAccountant },
         { to: '/employers', icon: Briefcase, label: t('nav.employers') || 'Employers', show: isAdmin || user.role === 'director' || user.role === 'registrar' },
         { to: '/students', icon: Users, label: t('nav.students'), show: isAdmin || isDod || isAccountant },
-        { to: '/link-manager', icon: Link2, label: 'Link Manager', show: isAdmin || isDod || isAccountant },
+        { to: '/link-manager', icon: Link2, label: t('nav.linkManager') || 'Link Manager', show: canManageLinks },
         { to: '/discipline', icon: ShieldAlert, label: t('nav.discipline'), show: isAdmin || isDod },
         { to: '/finance', icon: DollarSign, label: t('nav.finance'), show: isAdmin || isAccountant },
         { to: '/stock', icon: Package, label: t('nav.stock'), show: isAdmin || isStockManager },
-        { to: '/parents', icon: User, label: isParent ? 'My Children' : (t('nav.parents') || 'Parents'), show: isAdmin || isDod || isAccountant || isParent },
+        { to: isParent ? '/parents' : '/parent-management', icon: User, label: isParent ? 'My Children' : (t('nav.parents') || 'Parents'), show: isAdmin || isDod || isAccountant || isParent },
         { to: '/staff', icon: Shield, label: 'Staff', show: isAdmin },
         { to: '/cms', icon: Globe, label: t('nav.cms') || 'CMS', show: isAdmin },
         { to: '/settings', icon: Settings, label: t('nav.settings') || 'Settings', show: true },
@@ -117,24 +119,28 @@ const Layout = () => {
 
     const filteredNavItems = navItems.filter(item => item.show);
 
-    // Get page title
-    const getPageTitle = () => {
-        const path = location.pathname.split('/')[1];
-        const titles = {
-            'dashboard': t('nav.dashboard'),
-            'students': t('nav.students'),
-            'discipline': t('nav.discipline'),
-            'finance': t('nav.finance'),
-            'stock': t('nav.stock'),
-            'parents': t('nav.parents') || 'Parents',
-            'applications': t('nav.applications') || 'Applications',
-            'link-manager': 'Link Manager',
-            'staff': 'Staff Management',
-            'cms': t('nav.cms') || 'CMS',
-            'settings': t('nav.settings') || 'Settings',
-        };
-        return titles[path] || 'Garden TVET';
-    };
+     // Get page title
+     const getPageTitle = () => {
+         const path = location.pathname.split('/')[1];
+         const titles = {
+             'dashboard': t('nav.dashboard'),
+             'students': t('nav.students'),
+             'discipline': t('nav.discipline'),
+             'finance': t('nav.finance'),
+             'stock': t('nav.stock'),
+             'parents': t('nav.parents') || 'Parents',
+             'applications': t('nav.applications') || 'Applications',
+             'academic-year': t('nav.academicYear') || 'Academic Year',
+             'graduates': t('nav.graduates') || 'Graduates',
+             'employers': t('nav.employers') || 'Employers',
+             'link-manager': t('nav.linkManager') || 'Link Manager',
+             'staff': 'Staff Management',
+             'cms': t('nav.cms') || 'CMS',
+             'settings': t('nav.settings') || 'Settings',
+             'notifications': 'Notifications',
+         };
+         return titles[path] || 'Garden TVET';
+     };
 
     return (
         <div className="flex h-screen bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">

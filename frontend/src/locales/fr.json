@@ -14,6 +14,10 @@
         "parents": "Parents",
         "cms": "Gérer le Site",
         "applications": "Candidatures",
+        "academicYear": "Année Académique",
+        "graduates": "Diplômés",
+        "employers": "Employeurs",
+        "linkManager": "Gestion des Liens",
         "staff": "Personnel",
         "settings": "Paramètres",
         "logout": "Déconnexion"

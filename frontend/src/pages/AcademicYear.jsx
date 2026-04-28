@@ -5,7 +5,8 @@ import { toast } from 'react-toastify';
 import {
     Calendar, Plus, Loader2, CheckCircle, Clock, Lock, ChevronRight,
     Award, GraduationCap, Users, RefreshCcw, AlertTriangle, X,
-    PlayCircle, FileText, History, Sparkles
+    PlayCircle, FileText, History, Sparkles, Trash2, Edit3, RotateCcw,
+    Eye, BarChart3, TrendingUp, DollarSign, ShieldAlert, ClipboardList
 } from 'lucide-react';
 
 const STATUS_BADGE = {
@@ -35,12 +36,13 @@ function emptyYearForm() {
 
 const AcademicYear = () => {
     const { user } = useAuthStore();
-    const isAdmin = user?.role === 'admin' || user?.role === 'director';
+    const isAdminOrDirector = ['admin', 'director', 'dod', 'director_of_discipline', 'accountant', 'registrar'].includes(user?.role);
+    const canView = ['admin', 'director', 'dod', 'director_of_discipline', 'accountant', 'registrar'].includes(user?.role);
 
     const [loading, setLoading]       = useState(true);
     const [years, setYears]           = useState([]);
     const [currentYear, setCurrent]   = useState(null);
-    const [activeYearId, setActiveId] = useState(null); // tab
+    const [activeYearId, setActiveId] = useState(null);
     const [yearDetail, setYearDetail] = useState(null);
     const [busy, setBusy]             = useState(false);
 
@@ -49,7 +51,7 @@ const AcademicYear = () => {
 
     const [closeOpen, setCloseOpen]      = useState(false);
     const [closePreview, setClosePreview]= useState(null);
-    const [overrides, setOverrides]      = useState({}); // { student_id: {action, to_level} }
+    const [overrides, setOverrides]      = useState({});
     const [createNextYear, setCreateNextYear] = useState(true);
     const [nextYearForm, setNextYearForm]= useState(emptyYearForm());
     const [confirmClose, setConfirmClose]= useState(false);
@@ -64,6 +66,13 @@ const AcademicYear = () => {
             'Automobile Technology':     ['Level 3', 'Level 4a', 'Level 4b', 'Level 5a', 'Level 5b'],
         },
     });
+
+    /* ─── Edit / Delete / Reopen / Term Detail state ──────────── */
+    const [showEdit, setShowEdit]       = useState(false);
+    const [editForm, setEditForm]       = useState(null);
+    const [termDetailId, setTermDetailId] = useState(null);
+    const [termDetail, setTermDetail]   = useState(null);
+    const [termTab, setTermTab]         = useState('overview');
 
     /* ─── data loaders ────────────────────────────────────────── */
     const loadAll = async () => {
@@ -210,7 +219,6 @@ const AcademicYear = () => {
             setPromCount(r.data.summary);
             setOverrides({});
             setConfirmClose(false);
-            // Pre-fill nextYearForm based on current year +1
             const m = (yearDetail.name || '').match(/(\d{4})/);
             const start = m ? parseInt(m[1], 10) + 1 : new Date().getFullYear() + 1;
             setNextYearForm({
@@ -270,17 +278,87 @@ const AcademicYear = () => {
         }
     };
 
+    /* ─── NEW: Delete, Edit, Reopen ───────────────────────────── */
+    const deleteYear = async (id) => {
+        if (!window.confirm('Wemeza gusiba uyu mwaka? Ibi bizasiba n\'terms zawo ndetse na promotions zose zabayeho muri uyu mwaka. Iki gikorwa ntigishobora kugarurwa.')) return;
+        setBusy(true);
+        try {
+            await api.delete(`/academic-years/${id}`);
+            toast.success('Umwaka wasibwe.');
+            if (activeYearId === id) { setActiveId(null); setYearDetail(null); }
+            await loadAll();
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Habaye ikibazo gusiba umwaka.');
+        } finally { setBusy(false); }
+    };
+
+    const startEdit = () => {
+        if (!yearDetail) return;
+        setEditForm({
+            name: yearDetail.name,
+            start_date: yearDetail.start_date?.slice(0,10),
+            end_date: yearDetail.end_date?.slice(0,10),
+            terms: yearDetail.terms.map(t => ({
+                id: t.id,
+                name: t.name,
+                start_date: t.start_date?.slice(0,10),
+                end_date: t.end_date?.slice(0,10),
+            })),
+        });
+        setShowEdit(true);
+    };
+
+    const submitEdit = async () => {
+        if (!editForm.name) return toast.error('Andika izina ry\'umwaka.');
+        setBusy(true);
+        try {
+            await api.put(`/academic-years/${yearDetail.id}`, editForm);
+            toast.success('Umwaka wavuguruwe.');
+            setShowEdit(false);
+            await loadAll();
+            await switchYear(yearDetail.id);
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Habaye ikibazo.');
+        } finally { setBusy(false); }
+    };
+
+    const reopenYear = async (id) => {
+        if (!window.confirm('Wemeza kongera gufungura uyu mwaka?')) return;
+        setBusy(true);
+        try {
+            await api.post(`/academic-years/${id}/reopen`);
+            toast.success('Umwaka yongeye gufunguka.');
+            await loadAll();
+            await switchYear(id);
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Habaye ikibazo.');
+        } finally { setBusy(false); }
+    };
+
+    /* ─── NEW: Term Details ───────────────────────────────────── */
+    const openTermDetail = async (termId) => {
+        setTermDetailId(termId);
+        setTermTab('overview');
+        setTermDetail(null);
+        try {
+            const r = await api.get(`/academic-years/${yearDetail.id}/terms/${termId}/details`);
+            setTermDetail(r.data);
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Habaye ikibazo gufungura term details.');
+        }
+    };
+
     /* ─── derived ─────────────────────────────────────────────── */
     const allTermsEnded = useMemo(
         () => yearDetail?.terms?.length === 3 && yearDetail.terms.every(t => t.status === 'ended'),
         [yearDetail]
     );
 
-    if (!isAdmin) {
+    if (!canView) {
         return (
             <div className="text-center py-20 text-gray-400">
                 <Lock size={48} className="mx-auto mb-3 opacity-30" />
-                <p>Iri page ni ry'admin gusa.</p>
+                <p>Iri page ni ry'abayobozi gusa.</p>
             </div>
         );
     }
@@ -305,12 +383,14 @@ const AcademicYear = () => {
                         >
                             <RefreshCcw size={16} /> Refresh
                         </button>
-                        <button
-                            onClick={() => setShowCreate(true)}
-                            className="px-4 py-2 bg-white text-primary-700 rounded-xl font-bold flex items-center gap-2 hover:bg-primary-50"
-                        >
-                            <Plus size={18} /> Umwaka mushya
-                        </button>
+                        {isAdminOrDirector && (
+                            <button
+                                onClick={() => setShowCreate(true)}
+                                className="px-4 py-2 bg-white text-primary-700 rounded-xl font-bold flex items-center gap-2 hover:bg-primary-50"
+                            >
+                                <Plus size={18} /> Umwaka mushya
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>
@@ -377,22 +457,43 @@ const AcademicYear = () => {
                                             {yearDetail.start_date?.slice(0,10)} → {yearDetail.end_date?.slice(0,10)}
                                         </p>
                                     </div>
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-2 flex-wrap">
                                         <span className={`px-3 py-1 rounded-full text-xs font-bold border ${STATUS_BADGE[yearDetail.status]}`}>
                                             {yearDetail.status}
                                         </span>
-                                        {yearDetail.is_current ? (
-                                            <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-600 text-white">
-                                                Umwaka w'ubu
-                                            </span>
-                                        ) : yearDetail.status !== 'closed' && (
-                                            <button
-                                                onClick={() => setCurrentApi(yearDetail.id)}
-                                                disabled={busy}
-                                                className="px-3 py-1 rounded-full text-xs font-bold bg-primary-600 text-white hover:bg-primary-700"
-                                            >
-                                                Toranya
-                                            </button>
+                                         {yearDetail.is_current ? (
+                                             <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-600 text-white">
+                                                 Umwaka w'ubu
+                                             </span>
+                                         ) : yearDetail.status !== 'closed' && isAdminOrDirector && (
+                                             <button
+                                                 onClick={() => setCurrentApi(yearDetail.id)}
+                                                 disabled={busy}
+                                                 className="px-3 py-1 rounded-full text-xs font-bold bg-primary-600 text-white hover:bg-primary-700"
+                                             >
+                                                 Toranya
+                                             </button>
+                                         )}
+            {/* Edit / Delete / Reopen actions - only for authorized roles */}
+                                        {isAdminOrDirector && (
+                                            <>
+                                                <button onClick={startEdit} disabled={busy}
+                                                    className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700 hover:bg-blue-200 flex items-center gap-1">
+                                                    <Edit3 size={12} /> Edit
+                                                </button>
+                                                {yearDetail.status === 'closed' && (
+                                                    <button onClick={() => reopenYear(yearDetail.id)} disabled={busy}
+                                                        className="px-3 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-700 hover:bg-purple-200 flex items-center gap-1">
+                                                        <RotateCcw size={12} /> Reopen
+                                                    </button>
+                                                )}
+                                                {!yearDetail.is_current && (
+                                                    <button onClick={() => deleteYear(yearDetail.id)} disabled={busy}
+                                                        className="px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700 hover:bg-red-200 flex items-center gap-1">
+                                                        <Trash2 size={12} /> Delete
+                                                    </button>
+                                                )}
+                                            </>
                                         )}
                                     </div>
                                 </div>
@@ -402,7 +503,8 @@ const AcademicYear = () => {
                                     {yearDetail.terms?.map(t => (
                                         <div
                                             key={t.id}
-                                            className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl border border-gray-200 hover:border-primary-200 transition"
+                                            className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl border border-gray-200 hover:border-primary-200 transition cursor-pointer"
+                                            onClick={() => openTermDetail(t.id)}
                                         >
                                             <div className="flex items-center gap-3">
                                                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold ${
@@ -423,9 +525,15 @@ const AcademicYear = () => {
                                                 <span className={`px-3 py-1 rounded-full text-xs font-bold border ${STATUS_BADGE[t.status]}`}>
                                                     {t.status}
                                                 </span>
-                                                {t.status !== 'ended' && yearDetail.status !== 'closed' && (
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); openTermDetail(t.id); }}
+                                                    className="px-3 py-1 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center gap-1"
+                                                >
+                                                    <Eye size={12} /> Details
+                                                </button>
+                                                {t.status !== 'ended' && yearDetail.status !== 'closed' && isAdminOrDirector && (
                                                     <button
-                                                        onClick={() => endTerm(yearDetail.id, t.id)}
+                                                        onClick={(e) => { e.stopPropagation(); endTerm(yearDetail.id, t.id); }}
                                                         disabled={busy}
                                                         className="px-3 py-1 rounded-xl bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold flex items-center gap-1"
                                                     >
@@ -436,31 +544,31 @@ const AcademicYear = () => {
                                         </div>
                                     ))}
                                 </div>
-
-                                {/* Year close action */}
-                                {yearDetail.status !== 'closed' && (
-                                    <div className="mt-6 p-4 rounded-2xl border-2 border-dashed border-amber-200 bg-amber-50/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                                        <div className="flex items-start gap-3">
-                                            <AlertTriangle className="text-amber-600 mt-1" size={22} />
-                                            <div>
-                                                <p className="font-bold text-amber-900">Funga umwaka & promote abana</p>
-                                                <p className="text-xs text-amber-800/80">
-                                                    {allTermsEnded
-                                                        ? 'Terms zose zarangiye — wahindura igihe gifunga.'
-                                                        : 'Genzura ko terms zose zarangiye mbere yo gufunga.'}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <button
-                                            onClick={openCloseDialog}
-                                            disabled={busy}
-                                            className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold flex items-center gap-2"
-                                        >
-                                            <Lock size={16} /> Funga umwaka
-                                        </button>
-                                    </div>
-                                )}
                             </div>
+
+                            {/* Year close action */}
+                            {yearDetail.status !== 'closed' && isAdminOrDirector && (
+                                <div className="mt-6 p-4 rounded-2xl border-2 border-dashed border-amber-200 bg-amber-50/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                                    <div className="flex items-start gap-3">
+                                        <AlertTriangle className="text-amber-600 mt-1" size={22} />
+                                        <div>
+                                            <p className="font-bold text-amber-900">Funga umwaka & promote abana</p>
+                                            <p className="text-xs text-amber-800/80">
+                                                {allTermsEnded
+                                                    ? 'Terms zose zarangiye — wahindura igihe gifunga.'
+                                                    : 'Genzura ko terms zose zarangiye mbere yo gufunga.'}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={openCloseDialog}
+                                        disabled={busy}
+                                        className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold flex items-center gap-2"
+                                    >
+                                        <Lock size={16} /> Funga umwaka
+                                    </button>
+                                </div>
+                            )}
 
                             {/* Promotions for this year */}
                             <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
@@ -505,134 +613,366 @@ const AcademicYear = () => {
                 </div>
             </div>
 
-            {/* ─── Create Year Modal ─────────────────────────────── */}
-            {showCreate && (
-                <Modal title="Andika umwaka mushya" onClose={() => setShowCreate(false)}>
-                    <YearForm form={createForm} setForm={setCreateForm} showSetCurrent />
+            {/* Term Detail Modal */}
+            {termDetailId && termDetail && (
+                <Modal title={`Term Details: ${termDetail.term?.name || 'Term'}`} onClose={() => { setTermDetailId(null); setTermDetail(null); }} size="xl">
+                    <div className="space-y-6">
+                        {/* Overview */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <div className="p-3 bg-primary-50 rounded-xl">
+                                <p className="text-xs text-gray-600 mb-1">Abanyeshuri</p>
+                                <p className="text-xl font-bold text-primary-700">{termDetail.student_count || 0}</p>
+                            </div>
+                            <div className="p-3 bg-green-50 rounded-xl">
+                                <p className="text-xs text-gray-600 mb-1">Attendance Present</p>
+                                <p className="text-xl font-bold text-green-700">{termDetail.attendance?.present || 0}</p>
+                            </div>
+                            <div className="p-3 bg-blue-50 rounded-xl">
+                                <p className="text-xs text-gray-600 mb-1">Amakuru y'Ibiro</p>
+                                <p className="text-xl font-bold text-blue-700">{termDetail.grades?.count || 0}</p>
+                            </div>
+                            <div className="p-3 bg-amber-50 rounded-xl">
+                                <p className="text-xs text-gray-600 mb-1">Discipline</p>
+                                <p className="text-xl font-bold text-amber-700">{termDetail.discipline?.count || 0}</p>
+                            </div>
+                        </div>
+
+                        {/* Tabs */}
+                        <div className="flex gap-2 border-b">
+                            {['overview','attendance','grades','discipline','payments','events'].map(tab => (
+                                <button key={tab}
+                                    onClick={() => setTermTab(tab)}
+                                    className={`px-4 py-2 rounded-t-lg font-bold text-sm capitalize ${
+                                        termTab === tab
+                                            ? 'bg-primary-50 text-primary-700 border-b-2 border-primary-500'
+                                            : 'text-gray-500 hover:text-gray-700'
+                                    }`}>
+                                    {tab === 'overview' ? 'Aho bigeze' : tab === 'attendance' ? 'Ubutegera' : tab === 'grades' ? 'Amakuru y\'Ibiro' : tab === 'discipline' ? 'Ibyaha' : tab === 'payments' ? 'Idefe' : 'Ibitabo'}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Tab Content */}
+                        {termTab === 'overview' && (
+                            <div className="grid md:grid-cols-2 gap-4">
+                                <div className="p-4 border rounded-xl">
+                                    <h4 className="font-bold text-gray-800 mb-2 flex items-center gap-2"><Calendar size={16}/> Itariki</h4>
+                                    <p className="text-sm">Kuva: {termDetail.term?.start_date?.slice(0,10)}</p>
+                                    <p className="text-sm">Kugeza: {termDetail.term?.end_date?.slice(0,10)}</p>
+                                    <p className="text-sm mt-2">Sitati: <span className={`px-2 py-1 rounded-full text-xs font-bold ${termDetail.term?.status === 'ended' ? 'bg-blue-100 text-blue-700' : termDetail.term?.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>{termDetail.term?.status}</span></p>
+                                </div>
+                                <div className="p-4 border rounded-xl">
+                                    <h4 className="font-bold text-gray-800 mb-2 flex items-center gap-2"><Users size={16}/> Abanyeshuri</h4>
+                                    <p className="text-sm">Total: {termDetail.student_count || 0}</p>
+                                </div>
+                                <div className="p-4 border rounded-xl">
+                                    <h4 className="font-bold text-gray-800 mb-2 flex items-center gap-2"><CheckCircle size={16}/> Attendance</h4>
+                                    <div className="grid grid-cols-2 gap-2 text-sm">
+                                        <div>Present: {termDetail.attendance?.present || 0}</div>
+                                        <div>Absent: {termDetail.attendance?.absent || 0}</div>
+                                        <div>Late: {termDetail.attendance?.late || 0}</div>
+                                        <div>Excused: {termDetail.attendance?.excused || 0}</div>
+                                    </div>
+                                </div>
+                                <div className="p-4 border rounded-xl">
+                                    <h4 className="font-bold text-gray-800 mb-2 flex items-center gap-2"><DollarSign size={16}/> Idefe</h4>
+                                    <p className="text-sm">Total Paid: {termDetail.payments?.total_paid ? `RWF ${termDetail.payments.total_paid.toLocaleString()}` : 'RWF 0'}</p>
+                                    <p className="text-sm">Transactions: {termDetail.payments?.count || 0}</p>
+                                </div>
+                            </div>
+                        )}
+
+                        {termTab === 'attendance' && (
+                            <div>
+                                <div className="mb-3 p-3 bg-gray-50 rounded-xl text-sm flex gap-4">
+                                    <span>Present: <b>{termDetail.attendance?.present || 0}</b></span>
+                                    <span>Absent: <b>{termDetail.attendance?.absent || 0}</b></span>
+                                    <span>Late: <b>{termDetail.attendance?.late || 0}</b></span>
+                                    <span>Excused: <b>{termDetail.attendance?.excused || 0}</b></span>
+                                </div>
+                                <table className="w-full text-sm">
+                                    <thead className="bg-gray-50">
+                                        <tr>
+                                            <th className="px-3 py-2 text-left">Izina</th>
+                                            <th className="px-3 py-2 text-left">Itariki</th>
+                                            <th className="px-3 py-2 text-left">Sitati</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {(termDetail.attendance?.records || []).slice(0,50).map((rec, i) => (
+                                            <tr key={i} className="border-t">
+                                                <td className="px-3 py-2">{rec.first_name} {rec.last_name}</td>
+                                                <td className="px-3 py-2 text-xs">{rec.date}</td>
+                                                <td className="px-3 py-2">
+                                                    <span className={`px-2 py-0.5 rounded-full text-xs ${
+                                                        rec.status === 'present' ? 'bg-green-100 text-green-700' :
+                                                        rec.status === 'absent' ? 'bg-red-100 text-red-700' :
+                                                        rec.status === 'late' ? 'bg-yellow-100 text-yellow-700' :
+                                                        'bg-gray-100 text-gray-700'
+                                                    }`}>{rec.status}</span>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+
+                        {termTab === 'grades' && (
+                            <div>
+                                <div className="mb-3 p-3 bg-gray-50 rounded-xl text-sm flex gap-4">
+                                    <span>Amakuru y'ibiro: <b>{termDetail.grades?.count || 0}</b></span>
+                                    <span>Ubusanure: <b>{termDetail.grades?.average_score || 0}</b></span>
+                                </div>
+                                {termDetail.grades?.by_subject?.length > 0 && (
+                                    <div className="mb-4">
+                                        <h4 className="font-bold text-sm mb-2">Ku byerekeye:</h4>
+                                        <div className="space-y-1">
+                                            {termDetail.grades.by_subject.map((sub, i) => (
+                                                <div key={i} className="flex justify-between p-2 bg-gray-50 rounded">
+                                                    <span>{sub.subject}</span>
+                                                    <span className="font-bold">{Number(sub.avg_score).toFixed(1)}% ({sub.n} abanyeshuri)</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                                <table className="w-full text-sm">
+                                    <thead className="bg-gray-50">
+                                        <tr>
+                                            <th className="px-3 py-2 text-left">Izina</th>
+                                            <th className="px-3 py-2 text-left">Icyerekezo</th>
+                                            <th className="px-3 py-2 text-left">Iriho</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {(termDetail.grades?.records || []).slice(0,50).map((g, i) => (
+                                            <tr key={i} className="border-t">
+                                                <td className="px-3 py-2">{g.first_name} {g.last_name}</td>
+                                                <td className="px-3 py-2">{g.subject}</td>
+                                                <td className="px-3 py-2 font-bold">{Number(g.score).toFixed(1)}%</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+
+                        {termTab === 'discipline' && (
+                            <div>
+                                <div className="mb-3 p-3 bg-gray-50 rounded-xl text-sm">
+                                    <span>Ibyaha: <b>{termDetail.discipline?.count || 0}</b></span>
+                                </div>
+                                <table className="w-full text-sm">
+                                    <thead className="bg-gray-50">
+                                        <tr>
+                                            <th className="px-3 py-2 text-left">Izina</th>
+                                            <th className="px-3 py-2 text-left">Ikibazo</th>
+                                            <th className="px-3 py-2 text-left">Itariki</th>
+                                            <th className="px-3 py-2 text-left">Icyo wakoranye</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {(termDetail.discipline?.records || []).slice(0,50).map((d, i) => (
+                                            <tr key={i} className="border-t">
+                                                <td className="px-3 py-2">{d.first_name} {d.last_name}</td>
+                                                <td className="px-3 py-2 text-xs">{d.incident_description || d.incident_type || '—'}</td>
+                                                <td className="px-3 py-2 text-xs">{d.incident_date?.slice(0,10)}</td>
+                                                <td className="px-3 py-2 text-xs">{d.recorded_by_name || '—'}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+
+                        {termTab === 'payments' && (
+                            <div>
+                                <div className="mb-3 p-3 bg-gray-50 rounded-xl text-sm flex gap-4">
+                                    <span>Total: <b>RWF {(termDetail.payments?.total_paid || 0).toLocaleString()}</b></span>
+                                    <span>Transactions: <b>{termDetail.payments?.count || 0}</b></span>
+                                </div>
+                                <table className="w-full text-sm">
+                                    <thead className="bg-gray-50">
+                                        <tr>
+                                            <th className="px-3 py-2 text-left">Izina</th>
+                                            <th className="px-3 py-2 text-left">Amount</th>
+                                            <th className="px-3 py-2 text-left">Itariki</th>
+                                            <th className="px-3 py-2 text-left">Mode</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {(termDetail.payments?.records || []).slice(0,50).map((p, i) => (
+                                            <tr key={i} className="border-t">
+                                                <td className="px-3 py-2">{p.first_name} {p.last_name}</td>
+                                                <td className="px-3 py-2 font-bold">RWF {Number(p.amount_paid).toLocaleString()}</td>
+                                                <td className="px-3 py-2 text-xs">{p.payment_date?.slice(0,10)}</td>
+                                                <td className="px-3 py-2 text-xs">{p.payment_method || '—'}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+
+                        {termTab === 'events' && (
+                            <div className="space-y-2">
+                                {(termDetail.events || []).length === 0 ? (
+                                    <p className="text-center py-8 text-gray-400">Nta bitabo byabonetse muri iyi term.</p>
+                                ) : (
+                                    (termDetail.events || []).map((ev, i) => (
+                                        <div key={i} className="p-3 border rounded-xl">
+                                            <h5 className="font-bold text-gray-800">{ev.title_rw || ev.title_en}</h5>
+                                            <p className="text-xs text-gray-500 mb-1">{ev.category} · {new Date(ev.created_at).toLocaleDateString()}</p>
+                                            <p className="text-sm">{ev.content_rw?.slice(0,120)}...</p>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </Modal>
+            )}
+
+            {/* Edit Year Modal */}
+            {showEdit && editForm && (
+                <Modal title="Edit Academic Year" onClose={() => setShowEdit(false)}>
+                    <YearForm form={editForm} setForm={setEditForm} />
                     <div className="flex gap-3 mt-4">
-                        <button onClick={() => setShowCreate(false)} className="flex-1 py-3 rounded-xl bg-gray-100 font-bold">Funga</button>
-                        <button onClick={submitCreate} disabled={busy} className="flex-1 py-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold flex items-center justify-center gap-2">
-                            {busy && <Loader2 className="animate-spin" size={16} />} Andika
+                        <button onClick={() => setShowEdit(false)} className="flex-1 py-3 rounded-xl bg-gray-100 font-bold">Cancel</button>
+                        <button onClick={submitEdit} disabled={busy} className="flex-1 py-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold flex items-center justify-center gap-2">
+                            {busy && <Loader2 className="animate-spin" size={16} />} <Edit3 size={16} /> Update Year
                         </button>
                     </div>
                 </Modal>
             )}
 
-            {/* ─── Close Year Modal — Bulk Promote ─────────────── */}
-            {closeOpen && closePreview && (
-                <Modal title={`Funga ${yearDetail.name} — Bulk Promote`} onClose={() => setCloseOpen(false)} size="xl">
-                    <div className="grid grid-cols-3 gap-3 mb-4">
-                        <SummaryPill label="Promoted"  value={liveSummary.promoted}  color="bg-green-100 text-green-700" />
-                        <SummaryPill label="Graduated" value={liveSummary.graduated} color="bg-amber-100 text-amber-700" />
-                        <SummaryPill label="Retained"  value={liveSummary.retained}  color="bg-gray-100 text-gray-700" />
-                    </div>
-
-                    {closePreview.cohort_breakdown && (
-                        <div className="mb-4 p-3 bg-gradient-to-r from-amber-50 via-white to-emerald-50 border border-amber-100 rounded-2xl">
-                            <p className="text-xs font-bold uppercase text-gray-700 mb-2">Cohort Engine — Auto MIXED split + linear ladders</p>
-                            <div className="flex flex-wrap gap-2">
-                                {Object.entries(closePreview.cohort_breakdown).map(([k, v]) => (
-                                    <span key={k} className="px-2 py-1 rounded-lg bg-white border border-gray-200 text-xs">
-                                        <span className="font-bold text-gray-700">{v}</span>
-                                        <span className="text-gray-500 ml-1">{k}</span>
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {!closePreview.ready_to_close && (
-                        <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-sm flex items-start gap-2 mb-4">
-                            <AlertTriangle size={18} className="mt-0.5" />
-                            Hari terms zitarangiye. Niba ukomeza, terms zose zizafungwa.
-                        </div>
-                    )}
-
-                    {/* Bulk promote actions */}
-                    {(closePreview.plan?.length || 0) > 0 && (
-                        <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-                            <div className="text-sm text-gray-600">
-                                <strong>{closePreview.plan.length}</strong> abanyeshuri — hindura buri umunyeshuri uko ushaka:
-                            </div>
-                            <div className="flex gap-2">
-                                <button type="button" onClick={resetOverrides}
-                                    className="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-xs font-bold hover:bg-gray-200">
-                                    Reset overrides
-                                </button>
-                                <button type="button"
-                                    onClick={() => {
-                                        const all = {};
-                                        closePreview.plan.forEach(p => {
-                                            all[p.student_id] = { action: 'promoted', to_level: nextLevelFor(p.trade, p.from_level) || p.from_level };
-                                        });
-                                        setOverrides(all);
-                                    }}
-                                    className="px-3 py-1.5 rounded-lg bg-green-100 text-green-700 text-xs font-bold hover:bg-green-200">
-                                    Promote all
-                                </button>
-                                <button type="button"
-                                    onClick={() => {
-                                        const all = {};
-                                        closePreview.plan.forEach(p => {
-                                            all[p.student_id] = { action: 'retained' };
-                                        });
-                                        setOverrides(all);
-                                    }}
-                                    className="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-xs font-bold hover:bg-gray-200">
-                                    Retain all
-                                </button>
-                            </div>
-                        </div>
-                    )}
-
-                    <div className="border rounded-xl max-h-72 overflow-y-auto mb-4">
-                        <BulkPromoteTable
-                            rows={closePreview.plan || []}
-                            overrides={overrides}
-                            updateOverride={updateOverride}
-                            ladderFor={ladderFor}
-                            nextLevelFor={nextLevelFor}
-                        />
-                    </div>
-
-                    <label className="flex items-center gap-2 mb-3 text-sm font-medium text-gray-700">
-                        <input type="checkbox"
-                            checked={createNextYear}
-                            onChange={e => setCreateNextYear(e.target.checked)}
-                        />
-                        Tangira umwaka mushya nyuma yo gufunga (
-                        <strong>{closePreview.pending_intake}</strong> applicants emejwe bategereje gufatwa)
-                    </label>
-
-                    {createNextYear && (
-                        <div className="p-4 bg-primary-50 rounded-2xl mb-3">
-                            <YearForm form={nextYearForm} setForm={setNextYearForm} />
-                        </div>
-                    )}
-
-                    {/* Required confirmation */}
-                    <label className={`flex items-start gap-3 p-3 rounded-xl border-2 cursor-pointer ${
-                        confirmClose ? 'border-amber-400 bg-amber-50' : 'border-gray-200 hover:border-amber-200'
-                    }`}>
-                        <input type="checkbox" checked={confirmClose}
-                            onChange={e => setConfirmClose(e.target.checked)}
-                            className="mt-1" />
-                        <div>
-                            <div className="font-bold text-gray-800 text-sm">Wemeza ko umwaka {yearDetail.name} ushaka kuwufunga?</div>
-                            <div className="text-xs text-gray-600">
-                                Iyi gikorwa irakomeye: abanyeshuri bose bazasimburwa, abari kuri Level 5 (cyangwa 5b) bazatumbuka,
-                                naho umwaka uzashyirwa muri history.
-                            </div>
-                        </div>
-                    </label>
-
+            {/* Create Year Modal */}
+            {showCreate && (
+                <Modal title="Create New Academic Year" onClose={() => setShowCreate(false)}>
+                    <YearForm form={createForm} setForm={setCreateForm} showSetCurrent />
                     <div className="flex gap-3 mt-4">
-                        <button onClick={() => setCloseOpen(false)}
-                            className="flex-1 py-3 rounded-xl bg-gray-100 font-bold">Reka</button>
-                        <button onClick={submitClose} disabled={busy || !confirmClose}
-                            className="flex-1 py-3 rounded-xl bg-amber-600 hover:bg-amber-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold flex items-center justify-center gap-2">
-                            {busy && <Loader2 className="animate-spin" size={16} />} <Lock size={16} /> Funga umwaka
+                        <button onClick={() => setShowCreate(false)} className="flex-1 py-3 rounded-xl bg-gray-100 font-bold">Cancel</button>
+                        <button onClick={submitCreate} disabled={busy} className="flex-1 py-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold flex items-center justify-center gap-2">
+                            {busy && <Loader2 className="animate-spin" size={16} />} <Plus size={16} /> Create Year
                         </button>
+                    </div>
+                </Modal>
+            )}
+
+            {/* Close Year Modal */}
+            {closeOpen && closePreview && yearDetail && (
+                <Modal title={`Close Academic Year: ${yearDetail.name}`} onClose={() => setCloseOpen(false)} size="xl">
+                    <div className="space-y-4">
+                        {/* Summary */}
+                        <div className="grid grid-cols-3 gap-3">
+                            <SummaryPill label="Promoted" value={liveSummary.promoted} color="bg-green-100 text-green-700" />
+                            <SummaryPill label="Graduated" value={liveSummary.graduated} color="bg-amber-100 text-amber-700" />
+                            <SummaryPill label="Retained" value={liveSummary.retained} color="bg-gray-100 text-gray-700" />
+                        </div>
+
+                        {/* Warnings */}
+                        {!closePreview.ready_to_close && (
+                            <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-2">
+                                <AlertTriangle size={18} className="text-amber-600 mt-0.5" />
+                                <div className="text-sm text-amber-800">
+                                    <p className="font-bold">Not all terms are ended</p>
+                                    <p>Some terms are still active. You can still close the year, but it's recommended to end all terms first.</p>
+                                </div>
+                            </div>
+                        )}
+
+                        {closePreview.pending_intake > 0 && (
+                            <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl flex items-start gap-2">
+                                <AlertTriangle size={18} className="text-blue-600 mt-0.5" />
+                                <div className="text-sm text-blue-800">
+                                    <p className="font-bold">{closePreview.pending_intake} approved applications pending enrollment</p>
+                                    <p>Consider enrolling them before closing the year.</p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Cohort breakdown */}
+                        {closePreview.cohort_breakdown && Object.keys(closePreview.cohort_breakdown).length > 0 && (
+                            <div className="p-4 bg-gray-50 rounded-xl">
+                                <h4 className="font-bold text-gray-800 mb-2">Cohort Breakdown</h4>
+                                <div className="grid grid-cols-2 gap-2 text-xs">
+                                    {Object.entries(closePreview.cohort_breakdown).map(([key, count]) => (
+                                        <div key={key} className="flex justify-between p-2 bg-white rounded border">
+                                            <span className="text-gray-600">{key}</span>
+                                            <span className="font-bold">{count}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Promotion plan table with overrides */}
+                        <div className="border rounded-xl overflow-hidden max-h-96">
+                            <div className="bg-gray-50 px-4 py-2 border-b flex items-center justify-between sticky top-0">
+                                <h4 className="font-bold text-gray-800">Promotion Plan ({closePreview.plan?.length || 0} students)</h4>
+                                <button
+                                    onClick={resetOverrides}
+                                    className="text-xs px-3 py-1 bg-white border rounded-lg hover:bg-gray-50 flex items-center gap-1"
+                                >
+                                    <RefreshCcw size={12} /> Reset Overrides
+                                </button>
+                            </div>
+                            <div className="overflow-y-auto max-h-80">
+                                <BulkPromoteTable
+                                    rows={closePreview.plan || []}
+                                    overrides={overrides}
+                                    updateOverride={updateOverride}
+                                    ladderFor={ladderFor}
+                                    nextLevelFor={nextLevelFor}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Create next year option */}
+                        <label className="flex items-start gap-3 p-3 rounded-xl border-2 cursor-pointer hover:border-primary-200">
+                            <input
+                                type="checkbox"
+                                checked={createNextYear}
+                                onChange={e => setCreateNextYear(e.target.checked)}
+                                className="mt-1"
+                            />
+                            <div>
+                                <div className="font-bold text-gray-800 text-sm">Create next academic year automatically</div>
+                                <div className="text-xs text-gray-600">A new year will be created and set as current when this year closes.</div>
+                            </div>
+                        </label>
+
+                        {createNextYear && (
+                            <div className="p-4 bg-primary-50 rounded-2xl mb-3">
+                                <YearForm form={nextYearForm} setForm={setNextYearForm} />
+                            </div>
+                        )}
+
+                        {/* Required confirmation */}
+                        <label className={`flex items-start gap-3 p-3 rounded-xl border-2 cursor-pointer ${
+                            confirmClose ? 'border-amber-400 bg-amber-50' : 'border-gray-200 hover:border-amber-200'
+                        }`}>
+                            <input type="checkbox" checked={confirmClose}
+                                onChange={e => setConfirmClose(e.target.checked)}
+                                className="mt-1" />
+                            <div>
+                                <div className="font-bold text-gray-800 text-sm">I confirm closing academic year {yearDetail.name}</div>
+                                <div className="text-xs text-gray-600">
+                                    This is a critical operation: all students will be promoted/graduated/retained according to the plan above,
+                                    and the year will be marked as closed in history.
+                                </div>
+                            </div>
+                        </label>
+
+                        <div className="flex gap-3 mt-4">
+                            <button onClick={() => setCloseOpen(false)}
+                                className="flex-1 py-3 rounded-xl bg-gray-100 font-bold">Cancel</button>
+                            <button onClick={submitClose} disabled={busy || !confirmClose}
+                                className="flex-1 py-3 rounded-xl bg-amber-600 hover:bg-amber-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold flex items-center justify-center gap-2">
+                                {busy && <Loader2 className="animate-spin" size={16} />} <Lock size={16} /> Close Year
+                            </button>
+                        </div>
                     </div>
                 </Modal>
             )}

@@ -4,8 +4,8 @@ const parentController = require('../controllers/parentController');
 const gradeController = require('../controllers/gradeController');
 const { verifyToken, verifyRole } = require('../middleware/authMiddleware');
 
-// Only admin, dod, accountant can access parent linking
-const staffRoles = ['admin', 'dod', 'accountant'];
+// Only admin, dod, accountant, director_of_discipline, registrar can access parent linking
+const staffRoles = ['admin', 'dod', 'director_of_discipline', 'accountant', 'director', 'registrar'];
 
 // Helper: list of student IDs linked to the calling parent (handles both status / link_status columns)
 async function getLinkedStudentIds(parentId) {
@@ -285,7 +285,7 @@ router.put('/link-requests/:id/reject', verifyToken, verifyRole(staffRoles), par
 router.put('/link/:id', verifyToken, verifyRole(['admin', 'director', 'registrar']), parentController.approveLink);
 
 // Direct link parent to student (POST version for frontend compatibility)
-router.post('/link', verifyToken, verifyRole(['admin', 'dod', 'accountant']), async (req, res) => {
+router.post('/link', verifyToken, verifyRole(staffRoles), async (req, res) => {
     try {
         const { student_id, parent_id, relationship, send_sms } = req.body;
         if (!student_id || !parent_id) {
@@ -373,27 +373,30 @@ router.delete('/:id', verifyToken, verifyRole(['admin']), parentController.delet
 router.get('/', verifyToken, verifyRole(staffRoles), async (req, res) => {
     try {
         const { search, phone } = req.query;
-        let query = 'SELECT id, first_name, last_name, email, phone, created_at FROM users WHERE role = "parent"';
+        let query = `SELECT u.id, u.first_name, u.last_name, u.email, u.phone, u.created_at,
+                     (SELECT COUNT(*) FROM parent_student_links WHERE parent_id = u.id AND (status = 'approved' OR status = 'linked')) as linked_children
+                     FROM users u WHERE u.role = 'parent'`;
         const params = [];
 
         if (search) {
-            query += ' AND (first_name LIKE ? OR last_name LIKE ? OR phone LIKE ? OR email LIKE ?)';
+            query += ' AND (u.first_name LIKE ? OR u.last_name LIKE ? OR u.phone LIKE ? OR u.email LIKE ?)';
             const searchPattern = `%${search}%`;
             params.push(searchPattern, searchPattern, searchPattern, searchPattern);
         }
 
         if (phone) {
-            query += ' AND phone LIKE ?';
+            query += ' AND u.phone LIKE ?';
             params.push(`%${phone}%`);
         }
 
-        query += ' ORDER BY created_at DESC';
+        query += ' ORDER BY u.created_at DESC';
 
         const db = require('../db');
         const [parents] = await db.execute(query, params);
-        res.json(parents);
+        res.json(parents || []);
     } catch (err) {
-        res.status(500).json({ message: 'Server error' });
+        console.error('Error fetching parents:', err);
+        res.status(500).json({ message: 'Server error', error: err.message });
     }
 });
 

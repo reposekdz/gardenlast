@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import useAuthStore from '../store/authStore';
 import { toast } from 'react-toastify';
-import { PlusCircle, Trash2, Eye, EyeOff, Newspaper, FileText, CheckCircle, XCircle, Clock, Image, Globe, Edit2, Save, Phone, Mail, MapPin, Facebook, Youtube, Building, MessageSquare, Award, BarChart3, ThumbsUp, Users, TrendingUp } from 'lucide-react';
+import { PlusCircle, Trash2, Eye, EyeOff, Newspaper, FileText, CheckCircle, XCircle, Clock, Image, Globe, Edit2, Save, Phone, Mail, MapPin, Facebook, Youtube, Building, MessageSquare, Award, BarChart3, ThumbsUp, Users, TrendingUp, Calendar, GraduationCap } from 'lucide-react';
 import HeroSlidesManager from '../components/HeroSlidesManager';
 import SMSTemplatesManager from '../components/SMSTemplatesManager';
 import GradesManager from '../components/GradesManager';
+import AcademicYear from './AcademicYear';
 
 const AdminCMS = () => {
     const { token } = useAuthStore();
@@ -224,6 +225,10 @@ const AdminCMS = () => {
                 <button onClick={() => setActiveTab('grades')}
                     className={`flex items-center gap-2 px-6 py-2 text-sm font-bold rounded-lg transition-all ${activeTab === 'grades' ? 'bg-white shadow text-primary-700' : 'text-gray-500 hover:text-gray-700'}`}>
                     <Award size={16} /> Grades
+                </button>
+                <button onClick={() => setActiveTab('academic-years')}
+                    className={`flex items-center gap-2 px-6 py-2 text-sm font-bold rounded-lg transition-all ${activeTab === 'academic-years' ? 'bg-white shadow text-primary-700' : 'text-gray-500 hover:text-gray-700'}`}>
+                    <Calendar size={16} /> Academic Years
                 </button>
                 <button onClick={() => setActiveTab('analytics')}
                     className={`flex items-center gap-2 px-6 py-2 text-sm font-bold rounded-lg transition-all ${activeTab === 'analytics' ? 'bg-white shadow text-primary-700' : 'text-gray-500 hover:text-gray-700'}`}>
@@ -712,6 +717,11 @@ const AdminCMS = () => {
                 <div className="card overflow-x-auto">
                     <GradesManager />
                 </div>
+            )}
+
+            {/* Academic Years */}
+            {activeTab === 'academic-years' && (
+                <AcademicYear />
             )}
         </div>
     );

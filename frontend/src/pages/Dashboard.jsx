@@ -194,8 +194,8 @@ const Dashboard = () => {
         toast.success('Dashboard refreshed!');
     };
 
-    const isAdmin = user.role === 'admin';
-    const isDod = user.role === 'dod';
+    const isAdmin = user.role === 'admin' || user.role === 'director';
+    const isDod = user.role === 'dod' || user.role === 'director_of_discipline';
     const isAccountant = user.role === 'accountant';
     const isStock = user.role === 'stock_manager';
     const isParent = user.role === 'parent';
@@ -203,6 +203,7 @@ const Dashboard = () => {
     const roleConfig = {
         admin: { title: 'Umuyobozi Mukuru', color: 'from-purple-600 to-purple-800', roleColor: 'bg-purple-500' },
         dod: { title: 'Ushinzwe Imyitwarire', color: 'from-red-600 to-red-800', roleColor: 'bg-red-500' },
+        director_of_discipline: { title: 'Ushinzwe Imyitwarire', color: 'from-red-600 to-red-800', roleColor: 'bg-red-500' },
         accountant: { title: 'Ushinzwe Imari', color: 'from-green-600 to-green-800', roleColor: 'bg-green-500' },
         stock_manager: { title: 'Ushinzwe Ububiko', color: 'from-amber-600 to-amber-800', roleColor: 'bg-amber-500' },
         parent: { title: 'Umubyeyi', color: 'from-pink-600 to-pink-800', roleColor: 'bg-pink-500' },

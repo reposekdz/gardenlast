@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 25, 2026 at 04:05 PM
+-- Generation Time: Apr 28, 2026 at 04:12 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,59 @@ SET time_zone = "+00:00";
 --
 -- Database: `garden_tvet`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `academic_terms`
+--
+
+CREATE TABLE `academic_terms` (
+  `id` int(11) NOT NULL,
+  `academic_year_id` int(11) NOT NULL,
+  `term_number` tinyint(4) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `status` enum('upcoming','active','ended') DEFAULT 'upcoming',
+  `ended_at` timestamp NULL DEFAULT NULL,
+  `ended_by` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `academic_terms`
+--
+
+INSERT INTO `academic_terms` (`id`, `academic_year_id`, `term_number`, `name`, `start_date`, `end_date`, `status`, `ended_at`, `ended_by`, `created_at`) VALUES
+(1, 1, 1, 'Term 1', '2026-09-01', '2026-12-15', 'active', NULL, NULL, '2026-04-28 10:07:10'),
+(2, 1, 2, 'Term 2', '2027-01-10', '2027-03-30', 'upcoming', NULL, NULL, '2026-04-28 10:07:10'),
+(3, 1, 3, 'Term 3', '2027-04-15', '2027-07-15', 'upcoming', NULL, NULL, '2026-04-28 10:07:10');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `academic_years`
+--
+
+CREATE TABLE `academic_years` (
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `status` enum('planning','active','closed') DEFAULT 'active',
+  `is_current` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `closed_at` timestamp NULL DEFAULT NULL,
+  `closed_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `academic_years`
+--
+
+INSERT INTO `academic_years` (`id`, `name`, `start_date`, `end_date`, `status`, `is_current`, `created_at`, `closed_at`, `closed_by`) VALUES
+(1, '2026-2027', '2026-09-01', '2027-07-15', 'active', 1, '2026-04-28 10:07:10', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -57,10 +110,16 @@ CREATE TABLE `applications` (
   `trade` varchar(100) NOT NULL,
   `level` varchar(50) NOT NULL,
   `previous_school` varchar(255) DEFAULT NULL,
-  `status` enum('pending','approved','rejected') DEFAULT 'pending',
+  `status` enum('pending','approved','rejected','waitlisted') DEFAULT 'pending',
   `applied_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `review_notes` text DEFAULT NULL,
-  `reviewed_at` timestamp NULL DEFAULT NULL
+  `reviewed_at` timestamp NULL DEFAULT NULL,
+  `enrolled_student_id` int(11) DEFAULT NULL,
+  `enrolled_at` timestamp NULL DEFAULT NULL,
+  `enrolled_trade` varchar(100) DEFAULT NULL,
+  `enrolled_level` varchar(50) DEFAULT NULL,
+  `enrolled_academic_year_id` int(11) DEFAULT NULL,
+  `waitlisted` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -172,6 +231,30 @@ CREATE TABLE `content_blocks` (
 INSERT INTO `content_blocks` (`id`, `section_name`, `content_rw`, `content_en`, `content_fr`, `image_url`, `updated_at`) VALUES
 (1, 'home_hero', 'Ikaze mu Ishuri rya Garden TVET. Twubaka ejo hazaza heza!', 'Welcome to Garden TVET School. Building a better future!', 'Bienvenue à l école Garden TVET. Construire un avenir meilleur!', NULL, '2026-03-15 06:20:04'),
 (2, 'about_us', 'Garden TVET ni ishuri ry ubumenyingiro ritanga uburezi bwiza...', 'Garden TVET is a vocational school providing quality education...', 'Garden TVET est une école professionnelle offrant une éducation de qualité...', NULL, '2026-03-15 06:20:04');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `course_notes`
+--
+
+CREATE TABLE `course_notes` (
+  `id` int(11) NOT NULL,
+  `trade_code` varchar(20) NOT NULL,
+  `trade_name` varchar(100) NOT NULL,
+  `level` varchar(50) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `file_path` varchar(500) NOT NULL,
+  `file_name` varchar(255) NOT NULL,
+  `file_size` int(11) DEFAULT NULL,
+  `cover_image` varchar(500) DEFAULT NULL,
+  `view_count` int(11) DEFAULT 0,
+  `download_count` int(11) DEFAULT 0,
+  `uploaded_by` int(11) DEFAULT NULL,
+  `uploaded_by_name` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -370,7 +453,11 @@ CREATE TABLE `driving_lessons` (
   `duration_minutes` int(11) DEFAULT NULL,
   `order_num` int(11) DEFAULT 0,
   `is_published` tinyint(1) DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `pdf_url` varchar(500) DEFAULT NULL,
+  `image_url` varchar(500) DEFAULT NULL,
+  `attachments` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`attachments`)),
+  `description` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -530,6 +617,71 @@ CREATE TABLE `driving_stock` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `email_log`
+--
+
+CREATE TABLE `email_log` (
+  `id` int(11) NOT NULL,
+  `recipient` varchar(500) NOT NULL,
+  `subject` varchar(500) NOT NULL,
+  `status` enum('sent','failed','queued') DEFAULT 'sent',
+  `error` varchar(1000) DEFAULT NULL,
+  `message_id` varchar(300) DEFAULT NULL,
+  `category` varchar(80) DEFAULT NULL,
+  `related_id` int(11) DEFAULT NULL,
+  `body_preview` text DEFAULT NULL,
+  `sent_at` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employers`
+--
+
+CREATE TABLE `employers` (
+  `id` int(11) NOT NULL,
+  `company_name` varchar(200) NOT NULL,
+  `contact_person` varchar(150) DEFAULT NULL,
+  `email` varchar(200) DEFAULT NULL,
+  `phone` varchar(50) DEFAULT NULL,
+  `sector` varchar(120) DEFAULT NULL,
+  `address` varchar(300) DEFAULT NULL,
+  `website` varchar(300) DEFAULT NULL,
+  `preferred_trades` varchar(300) DEFAULT NULL,
+  `notes` text DEFAULT NULL,
+  `status` enum('active','inactive','archived') DEFAULT 'active',
+  `created_by` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employer_outreach`
+--
+
+CREATE TABLE `employer_outreach` (
+  `id` int(11) NOT NULL,
+  `employer_id` int(11) NOT NULL,
+  `recipient_email` varchar(200) NOT NULL,
+  `subject` varchar(300) NOT NULL,
+  `message` text DEFAULT NULL,
+  `attached_pdf` tinyint(1) DEFAULT 1,
+  `filter_year_id` int(11) DEFAULT NULL,
+  `filter_trade` varchar(120) DEFAULT NULL,
+  `filter_search` varchar(200) DEFAULT NULL,
+  `graduate_count` int(11) DEFAULT 0,
+  `status` enum('sent','failed','queued') DEFAULT 'sent',
+  `error` varchar(500) DEFAULT NULL,
+  `sent_by` int(11) DEFAULT NULL,
+  `sent_at` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `exam_results`
 --
 
@@ -563,26 +715,28 @@ CREATE TABLE `fees` (
   `created_by` int(11) DEFAULT NULL,
   `student_category` enum('public','private','both') DEFAULT 'both',
   `description` text DEFAULT NULL,
-  `due_date` date DEFAULT NULL
+  `due_date` date DEFAULT NULL,
+  `term_start_date` date DEFAULT NULL,
+  `term_end_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `fees`
 --
 
-INSERT INTO `fees` (`id`, `term`, `trade`, `level`, `amount`, `created_at`, `is_active`, `created_by`, `student_category`, `description`, `due_date`) VALUES
-(1, 'Term 1 2026', 'Software Development', 'Level 3', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL),
-(2, 'Term 1 2026', 'Software Development', 'Level 4', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL),
-(3, 'Term 1 2026', 'Software Development', 'Level 5', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL),
-(4, 'Term 1 2026', 'Automobile Technology', 'Level 3', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL),
-(5, 'Term 1 2026', 'Automobile Technology', 'Level 4A', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL),
-(6, 'Term 1 2026', 'Automobile Technology', 'Level 4B', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL),
-(7, 'Term 1 2026', 'Automobile Technology', 'Level 5A', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL),
-(8, 'Term 1 2026', 'Automobile Technology', 'Level 5B', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL),
-(9, 'Term 1 2026', 'Building & Construction', 'Level 3', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL),
-(10, 'Term 1 2026', 'Building & Construction', 'Level 4', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL),
-(11, 'Term 1 2026', 'Building & Construction', 'Level 5', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL),
-(12, 'Term 1 2026', 'Software Development', 'Level 4', 97000.00, '2026-03-25 13:48:21', 1, 4, 'private', 'bbbb', '2000-12-06');
+INSERT INTO `fees` (`id`, `term`, `trade`, `level`, `amount`, `created_at`, `is_active`, `created_by`, `student_category`, `description`, `due_date`, `term_start_date`, `term_end_date`) VALUES
+(1, 'Term 1 2026', 'Software Development', 'Level 3', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL, NULL, NULL),
+(2, 'Term 1 2026', 'Software Development', 'Level 4', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL, NULL, NULL),
+(3, 'Term 1 2026', 'Software Development', 'Level 5', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL, NULL, NULL),
+(4, 'Term 1 2026', 'Automobile Technology', 'Level 3', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL, NULL, NULL),
+(5, 'Term 1 2026', 'Automobile Technology', 'Level 4A', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL, NULL, NULL),
+(6, 'Term 1 2026', 'Automobile Technology', 'Level 4B', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL, NULL, NULL),
+(7, 'Term 1 2026', 'Automobile Technology', 'Level 5A', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL, NULL, NULL),
+(8, 'Term 1 2026', 'Automobile Technology', 'Level 5B', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL, NULL, NULL),
+(9, 'Term 1 2026', 'Building & Construction', 'Level 3', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL, NULL, NULL),
+(10, 'Term 1 2026', 'Building & Construction', 'Level 4', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL, NULL, NULL),
+(11, 'Term 1 2026', 'Building & Construction', 'Level 5', 150000.00, '2026-03-17 06:20:50', 1, NULL, 'both', NULL, NULL, NULL, NULL),
+(12, 'Term 1 2026', 'Software Development', 'Level 4', 97000.00, '2026-03-25 13:48:21', 1, 4, 'private', 'bbbb', '2000-12-06', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -710,7 +864,13 @@ CREATE TABLE `leave_requests` (
   `reviewed_by` int(11) DEFAULT NULL,
   `reviewed_at` timestamp NULL DEFAULT NULL,
   `review_notes` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `start_time` time DEFAULT NULL,
+  `end_time` time DEFAULT NULL,
+  `lesson` varchar(200) DEFAULT NULL,
+  `actual_return_time` datetime DEFAULT NULL,
+  `returned_by` int(11) DEFAULT NULL,
+  `return_notes` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -798,6 +958,82 @@ CREATE TABLE `news_images` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `note_bookmarks`
+--
+
+CREATE TABLE `note_bookmarks` (
+  `id` int(11) NOT NULL,
+  `note_id` int(11) NOT NULL,
+  `owner_key` varchar(120) NOT NULL,
+  `owner_name` varchar(150) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `note_comments`
+--
+
+CREATE TABLE `note_comments` (
+  `id` int(11) NOT NULL,
+  `note_id` int(11) NOT NULL,
+  `parent_comment_id` int(11) DEFAULT NULL,
+  `commenter_role` enum('student','teacher','admin','staff') NOT NULL DEFAULT 'student',
+  `commenter_user_id` int(11) DEFAULT NULL,
+  `commenter_name` varchar(150) NOT NULL,
+  `body` text NOT NULL,
+  `likes` int(11) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `note_comment_likes`
+--
+
+CREATE TABLE `note_comment_likes` (
+  `id` int(11) NOT NULL,
+  `comment_id` int(11) NOT NULL,
+  `liker_key` varchar(120) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `note_reactions`
+--
+
+CREATE TABLE `note_reactions` (
+  `id` int(11) NOT NULL,
+  `note_id` int(11) NOT NULL,
+  `reactor_key` varchar(120) NOT NULL,
+  `reaction` enum('like','helpful','question','love') NOT NULL DEFAULT 'like',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `note_reading_progress`
+--
+
+CREATE TABLE `note_reading_progress` (
+  `id` int(11) NOT NULL,
+  `note_id` int(11) NOT NULL,
+  `reader_key` varchar(120) NOT NULL,
+  `reader_name` varchar(150) DEFAULT NULL,
+  `last_page` int(11) DEFAULT 1,
+  `total_pages` int(11) DEFAULT NULL,
+  `completed` tinyint(1) DEFAULT 0,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `notifications`
 --
 
@@ -829,17 +1065,56 @@ CREATE TABLE `parent_link_requests` (
   `status` enum('pending','linked','rejected') DEFAULT 'pending',
   `linked_student_id` int(11) DEFAULT NULL,
   `requested_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `reg_number` varchar(100) DEFAULT NULL,
+  `relationship` varchar(50) DEFAULT NULL,
+  `notes` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `parent_link_requests`
 --
 
-INSERT INTO `parent_link_requests` (`id`, `parent_id`, `student_name`, `student_trade`, `student_level`, `student_gender`, `status`, `linked_student_id`, `requested_at`, `created_at`) VALUES
-(1, 5, 'reponse kdz', 'Software Development', 'Level 3', 'Female', 'pending', NULL, '2026-03-16 11:13:51', '2026-03-23 13:00:50'),
-(2, 13, 'niyonkuru  reponse', 'Software Development', 'Level 4', 'Male', 'pending', NULL, '2026-03-18 16:11:32', '2026-03-23 13:00:50'),
-(3, 15, 'reponse nyonkuru', 'Software Development', 'Level 4', 'Male', 'pending', NULL, '2026-03-25 14:09:11', '2026-03-25 14:09:11');
+INSERT INTO `parent_link_requests` (`id`, `parent_id`, `student_name`, `student_trade`, `student_level`, `student_gender`, `status`, `linked_student_id`, `requested_at`, `created_at`, `reg_number`, `relationship`, `notes`) VALUES
+(1, 5, 'reponse kdz', 'Software Development', 'Level 3', 'Female', 'pending', NULL, '2026-03-16 11:13:51', '2026-03-23 13:00:50', NULL, NULL, NULL),
+(2, 13, 'niyonkuru  reponse', 'Software Development', 'Level 4', 'Male', 'pending', NULL, '2026-03-18 16:11:32', '2026-03-23 13:00:50', NULL, NULL, NULL),
+(3, 15, 'reponse nyonkuru', 'Software Development', 'Level 4', 'Male', 'pending', NULL, '2026-03-25 14:09:11', '2026-03-25 14:09:11', NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `parent_messages`
+--
+
+CREATE TABLE `parent_messages` (
+  `id` int(11) NOT NULL,
+  `thread_id` int(11) NOT NULL,
+  `sender_role` enum('parent','staff') NOT NULL,
+  `sender_id` int(11) NOT NULL,
+  `body` text NOT NULL,
+  `attachment_url` varchar(500) DEFAULT NULL,
+  `sms_sent` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `parent_message_threads`
+--
+
+CREATE TABLE `parent_message_threads` (
+  `id` int(11) NOT NULL,
+  `parent_id` int(11) NOT NULL,
+  `student_id` int(11) DEFAULT NULL,
+  `subject` varchar(255) NOT NULL,
+  `category` varchar(50) DEFAULT 'general',
+  `status` enum('open','closed') DEFAULT 'open',
+  `last_message_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `unread_by_parent` int(11) DEFAULT 0,
+  `unread_by_staff` int(11) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -903,7 +1178,6 @@ CREATE TABLE `payments` (
   `transaction_ref` varchar(100) DEFAULT NULL,
   `notes` text DEFAULT NULL,
   `payment_status` varchar(20) DEFAULT 'partial',
-  `transaction_reference` varchar(100) DEFAULT NULL,
   `receipt_number` varchar(50) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1162,7 +1436,9 @@ INSERT INTO `sms_logs` (`id`, `phone`, `message`, `status`, `sent_by`, `recipien
 (9, '0799447629', 'Murakaza neza reponse kuri Garden TVET School! Konti yawe nk\'umubyeyi yashyizweho neza. Shakisha abana bawe kuri app.', 'sent', NULL, NULL, '2026-03-25 13:37:14'),
 (10, '0799447629', 'Murakaza neza reponse kuri Garden TVET School! Konti yawe nk\'umubyeyi yashyizweho neza. Shakisha abana bawe kuri app.', 'sent', NULL, NULL, '2026-03-25 13:37:14'),
 (11, '0799447628', 'Murakaza neza kamana kuri Garden TVET School! Konti yawe nk\'umubyeyi yashyizweho neza. Shakisha abana bawe kuri app.', 'sent', NULL, NULL, '2026-03-25 14:07:55'),
-(12, '0799447628', 'Murakaza neza kamana kuri Garden TVET School! Konti yawe nk\'umubyeyi yashyizweho neza. Shakisha abana bawe kuri app.', 'sent', NULL, NULL, '2026-03-25 14:07:55');
+(12, '0799447628', 'Murakaza neza kamana kuri Garden TVET School! Konti yawe nk\'umubyeyi yashyizweho neza. Shakisha abana bawe kuri app.', 'sent', NULL, NULL, '2026-03-25 14:07:55'),
+(13, '+250722725730', 'Murakaza neza reponse! Konti yawe ya Garden TVET:\nUsername: dd\nPassword: 123456\nUnjire kuri: gardentvet.rw', 'sent', NULL, NULL, '2026-04-27 16:23:49'),
+(14, '0722725730', 'Murakaza neza reponse! Konti yawe ya Garden TVET:\nUsername: dd\nPassword: 123456\nUnjire kuri: gardentvet.rw', 'sent', NULL, NULL, '2026-04-27 16:23:49');
 
 -- --------------------------------------------------------
 
@@ -1265,16 +1541,17 @@ CREATE TABLE `stock_items` (
   `purchase_date` date DEFAULT NULL,
   `purchase_price` decimal(10,2) DEFAULT NULL,
   `description` text DEFAULT NULL,
-  `last_restocked` date DEFAULT NULL
+  `last_restocked` date DEFAULT NULL,
+  `image_url` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `stock_items`
 --
 
-INSERT INTO `stock_items` (`id`, `item_name`, `quantity`, `status`, `last_updated`, `item_code`, `category`, `unit`, `min_quantity`, `location`, `supplier`, `purchase_date`, `purchase_price`, `description`, `last_restocked`) VALUES
-(1, 'dtyui', 555555, 'available', '2026-03-23 13:02:45', NULL, 'tools', 'pairs', 5, 'fgyuik', 'dfghj', '2026-12-22', 2345678.00, 'sdfghjkl', NULL),
-(2, 'umuceryi', 20, 'available', '2026-03-25 13:53:11', NULL, 'equipment', 'kg', 3, 'stocj', 'nnnn', '0000-00-00', 20.00, 'hgtr4', NULL);
+INSERT INTO `stock_items` (`id`, `item_name`, `quantity`, `status`, `last_updated`, `item_code`, `category`, `unit`, `min_quantity`, `location`, `supplier`, `purchase_date`, `purchase_price`, `description`, `last_restocked`, `image_url`) VALUES
+(1, 'dtyui', 555555, 'available', '2026-03-23 13:02:45', NULL, 'tools', 'pairs', 5, 'fgyuik', 'dfghj', '2026-12-22', 2345678.00, 'sdfghjkl', NULL, NULL),
+(2, 'umuceryi', 20, 'available', '2026-03-25 13:53:11', NULL, 'equipment', 'kg', 3, 'stocj', 'nnnn', '0000-00-00', 20.00, 'hgtr4', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1319,7 +1596,7 @@ CREATE TABLE `students` (
   `trade` varchar(100) NOT NULL,
   `level` varchar(50) NOT NULL,
   `year_enrolled` year(4) DEFAULT NULL,
-  `current_status` enum('active','sick','left','suspended') DEFAULT 'active',
+  `current_status` enum('active','sick','left','suspended','on_leave','expelled','graduated') DEFAULT 'active',
   `enrollment_date` date DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `gender` enum('Male','Female') DEFAULT 'Male',
@@ -1334,20 +1611,28 @@ CREATE TABLE `students` (
   `address_cell` varchar(50) DEFAULT NULL,
   `address_village` varchar(50) DEFAULT NULL,
   `parent_phone` varchar(20) DEFAULT NULL,
-  `student_type` enum('public','private') DEFAULT 'private',
+  `student_type` enum('private','public','government','bursary','sponsored') DEFAULT 'private',
   `gpa` decimal(3,2) DEFAULT NULL,
   `attendance_rate` decimal(5,2) DEFAULT NULL,
   `date_of_birth` date DEFAULT NULL,
-  `conduct_points` int(11) DEFAULT 40
+  `conduct_points` int(11) DEFAULT 40,
+  `password_hash` varchar(255) DEFAULT NULL,
+  `must_change_password` tinyint(1) DEFAULT 1,
+  `last_login` timestamp NULL DEFAULT NULL,
+  `default_password_hint` varchar(20) DEFAULT NULL,
+  `photo_url` varchar(500) DEFAULT NULL,
+  `academic_year_id` int(11) DEFAULT NULL,
+  `graduation_status` enum('in_progress','graduated') DEFAULT 'in_progress',
+  `application_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `students`
 --
 
-INSERT INTO `students` (`id`, `reg_number`, `first_name`, `last_name`, `trade`, `level`, `year_enrolled`, `current_status`, `enrollment_date`, `created_at`, `gender`, `contact_phone`, `contact_email`, `guardian_name`, `guardian_phone`, `guardian_relation`, `address_province`, `address_district`, `address_sector`, `address_cell`, `address_village`, `parent_phone`, `student_type`, `gpa`, `attendance_rate`, `date_of_birth`, `conduct_points`) VALUES
-(1, '2026/SOF/001', 'reponse', 'kdz', 'Software Development', 'Level 4', '2026', 'active', NULL, '2026-03-16 17:30:12', 'Female', '+250722725735', 'reponsekdz06@gmail.com', 'bbb', '0784494628', NULL, 'kigali', 'gasabo', 'nnnn', 'nn', NULL, NULL, 'public', NULL, NULL, '2000-12-04', 40),
-(2, '2026/AUT/001', 'niyonasabye', 'innocent', 'Automobile Technology', 'Level 3', '2026', 'active', NULL, '2026-03-18 15:05:10', 'Male', '0798864433', NULL, NULL, NULL, NULL, 'Kigali City', 'kamonyi', 'runda', NULL, NULL, NULL, 'private', NULL, NULL, NULL, 40);
+INSERT INTO `students` (`id`, `reg_number`, `first_name`, `last_name`, `trade`, `level`, `year_enrolled`, `current_status`, `enrollment_date`, `created_at`, `gender`, `contact_phone`, `contact_email`, `guardian_name`, `guardian_phone`, `guardian_relation`, `address_province`, `address_district`, `address_sector`, `address_cell`, `address_village`, `parent_phone`, `student_type`, `gpa`, `attendance_rate`, `date_of_birth`, `conduct_points`, `password_hash`, `must_change_password`, `last_login`, `default_password_hint`, `photo_url`, `academic_year_id`, `graduation_status`, `application_id`) VALUES
+(1, '2026/SOF/001', 'reponse', 'kdz', 'Software Development', 'Level 4', '2026', 'active', NULL, '2026-03-16 17:30:12', 'Female', '+250722725735', 'reponsekdz06@gmail.com', 'bbb', '0784494628', NULL, 'kigali', 'gasabo', 'nnnn', 'nn', NULL, NULL, 'public', NULL, NULL, '2000-12-04', 40, '$2b$10$SJoSduVl/wG1g9.d5aDNFeU7G7ootHgKPue4mcBdgGdCiIQ1Ztyrq', 1, NULL, '5735', NULL, NULL, 'in_progress', NULL),
+(2, '2026/AUT/001', 'niyonasabye', 'innocent', 'Automobile Technology', 'Level 3', '2026', 'active', NULL, '2026-03-18 15:05:10', 'Male', '0798864433', NULL, NULL, NULL, NULL, 'Kigali City', 'kamonyi', 'runda', NULL, NULL, NULL, 'private', NULL, NULL, NULL, 40, '$2b$10$Bz8H9OfvCbau5rhL8WARiez2t/OnFqX0Ju1Z/3LFRGkr6FIFr0t/O', 1, NULL, '4433', NULL, NULL, 'in_progress', NULL);
 
 -- --------------------------------------------------------
 
@@ -1402,6 +1687,101 @@ CREATE TABLE `student_grades` (
   `recorded_by` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_promotions`
+--
+
+CREATE TABLE `student_promotions` (
+  `id` int(11) NOT NULL,
+  `student_id` int(11) NOT NULL,
+  `from_academic_year_id` int(11) DEFAULT NULL,
+  `to_academic_year_id` int(11) DEFAULT NULL,
+  `from_trade` varchar(100) DEFAULT NULL,
+  `to_trade` varchar(100) DEFAULT NULL,
+  `from_level` varchar(50) DEFAULT NULL,
+  `to_level` varchar(50) DEFAULT NULL,
+  `action` enum('enrolled','promoted','retained','graduated','transferred') NOT NULL,
+  `notes` text DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_questions`
+--
+
+CREATE TABLE `student_questions` (
+  `id` int(11) NOT NULL,
+  `student_name` varchar(150) NOT NULL,
+  `trade_code` varchar(20) NOT NULL,
+  `trade_name` varchar(120) DEFAULT NULL,
+  `level` varchar(80) NOT NULL,
+  `question` text NOT NULL,
+  `contact` varchar(120) DEFAULT NULL,
+  `status` enum('pending','answered','closed') DEFAULT 'pending',
+  `answer` text DEFAULT NULL,
+  `answered_by` int(11) DEFAULT NULL,
+  `answered_by_name` varchar(150) DEFAULT NULL,
+  `answered_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `student_questions`
+--
+
+INSERT INTO `student_questions` (`id`, `student_name`, `trade_code`, `trade_name`, `level`, `question`, `contact`, `status`, `answer`, `answered_by`, `answered_by_name`, `answered_at`, `created_at`) VALUES
+(1, 'fqfqf', 'sod', 'Ikoranabuhanga (Mudasobwa)', 'Level 4', 'fqffqfuefhnfwrwwvwvwkovviwejwenwvwlvvn0ovnvqwoeiivvhqevqvqvqovqvbqbqe0vqvqe0kqegbqeqelvqe[vqe\'vq9gqegqekpfpqe[eq\'fqefqgbifkqegqeg-qegqegfqeb9gbqefqe8q0qepfqejgqeufqeghqegoqeeqekgqeuqqhgguqenqevqevqegpq', 'reponsekdz06@gmail.com', 'answered', 'e5uywttwyewyueuirff', 16, 'dd', '2026-04-28 09:51:34', '2026-04-27 16:22:06');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_question_replies`
+--
+
+CREATE TABLE `student_question_replies` (
+  `id` int(11) NOT NULL,
+  `question_id` int(11) NOT NULL,
+  `replier_role` enum('student','teacher','admin','staff','dod','hod') NOT NULL DEFAULT 'student',
+  `replier_user_id` int(11) DEFAULT NULL,
+  `replier_name` varchar(150) NOT NULL,
+  `replier_contact` varchar(120) DEFAULT NULL,
+  `body` text NOT NULL,
+  `is_accepted` tinyint(1) DEFAULT 0,
+  `upvotes` int(11) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_question_reply_votes`
+--
+
+CREATE TABLE `student_question_reply_votes` (
+  `id` int(11) NOT NULL,
+  `reply_id` int(11) NOT NULL,
+  `voter_key` varchar(120) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_question_views`
+--
+
+CREATE TABLE `student_question_views` (
+  `id` int(11) NOT NULL,
+  `question_id` int(11) NOT NULL,
+  `viewer_key` varchar(120) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1528,7 +1908,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `last_name`, `phone`, `email`, `role`, `created_at`, `province`, `district`, `sector`) VALUES
-(1, 'admin', '$2b$10$0LPbLIFHHJMWGNwxxzyNx.PN4DEqCW1uX6f3n2r.nc6BUHKE28FPS', 'System', 'Admin', '+250780000000', NULL, 'admin', '2026-03-15 06:19:58', NULL, NULL, NULL),
+(1, 'admin', '$2b$10$6vZtVXBQ/bFk4TDYJ6/3oe9FB0cjGJtiAuf7zuAh6Izt/sAJoY2K.', 'System', 'Admin', '+250780000000', NULL, 'admin', '2026-03-15 06:19:58', NULL, NULL, NULL),
 (3, 'dod', '$2b$10$0D6VRxiJR4jAJtNguxIZeewkx7tbGvw1S59hQ0CG96PS/.HowN9Oq', 'Jean', 'Muhutu', '+250780000001', NULL, 'director_of_discipline', '2026-03-15 06:21:28', NULL, NULL, NULL),
 (4, 'accountant', '$2b$10$BX8ofBN7l4k0MMXfCHE2AeZieFjSMandXPg7Ql9vYjnq68RzjWaBe', 'Marie', 'Mukamana', '+250780000002', NULL, 'accountant', '2026-03-15 06:21:28', NULL, NULL, NULL),
 (5, 'parent_0799447620', '$2b$10$AmBeXWLVYW1CRkc4tNIADOCV/kAh4E12zB01i9Y0bqItYZV/wetF2', 'reponse', 'kdz', '0799447620', NULL, 'parent', '2026-03-15 12:15:31', 'Intara y\'Amajyepfo', 'Nyanza', 'Muyira'),
@@ -1537,7 +1917,8 @@ INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `last_name`, `p
 (12, 'stock_manager', '$2b$10$A2VLcgbXBoySAH3xaAQmn.SOKaE8FVixtDMmZD3xL7jWyDLRB9ndG', 'Stock', 'Manager', '0780000003', NULL, 'stock_manager', '2026-03-16 11:25:03', NULL, NULL, NULL),
 (13, 'parent_0799447624', '$2b$10$/oexA8VAbv8AAMt8CigvNeEvFoAP1JEvxMfnko0Fx4u56n1KI45xK', 'reponse', 'kdz', '0799447624', NULL, 'parent', '2026-03-18 15:54:37', 'Umujyi wa Kigali', 'Gasabo', 'Gatsata'),
 (14, 'parent_0799447629', '$2b$10$wnXiAa..DjnQ/WTox7ehGOc9RyeQ9N5XCQcHX48EvBTAYTuWMi17O', 'reponse', 'kdz', '0799447629', NULL, 'parent', '2026-03-25 13:37:09', 'Umujyi wa Kigali', 'Gasabo', 'Kacyiru'),
-(15, 'parent_0799447628', '$2b$10$JifzH1kzo1zlI7lTNnF.uuB4JbLffq/MhXJohSI7W2mlx6bXWSqJG', 'kamana', 'eleze', '0799447628', NULL, 'parent', '2026-03-25 14:07:48', 'Intara y\'Amajyaruguru', 'Musanze', 'Muhoza');
+(15, 'parent_0799447628', '$2b$10$JifzH1kzo1zlI7lTNnF.uuB4JbLffq/MhXJohSI7W2mlx6bXWSqJG', 'kamana', 'eleze', '0799447628', NULL, 'parent', '2026-03-25 14:07:48', 'Intara y\'Amajyaruguru', 'Musanze', 'Muhoza'),
+(16, 'dd', '$2b$10$bAiP8N6YNal/BeC/uURdxu86OKkO5al5sZzByZzVxLkoYv.7UrzYi', 'reponse', 'kdz', '0722725730', NULL, 'teacher', '2026-04-27 16:23:49', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1551,6 +1932,22 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `academic_terms`
+--
+ALTER TABLE `academic_terms`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_year_term` (`academic_year_id`,`term_number`);
+
+--
+-- Indexes for table `academic_years`
+--
+ALTER TABLE `academic_years`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`),
+  ADD KEY `idx_is_current` (`is_current`),
+  ADD KEY `idx_status` (`status`);
 
 --
 -- Indexes for table `activity_logs`
@@ -1605,6 +2002,13 @@ ALTER TABLE `contact_messages`
 ALTER TABLE `content_blocks`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `section_name` (`section_name`);
+
+--
+-- Indexes for table `course_notes`
+--
+ALTER TABLE `course_notes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_trade_level` (`trade_code`,`level`);
 
 --
 -- Indexes for table `cron_jobs`
@@ -1725,6 +2129,33 @@ ALTER TABLE `driving_stock`
   ADD KEY `instructor_id` (`instructor_id`);
 
 --
+-- Indexes for table `email_log`
+--
+ALTER TABLE `email_log`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_status` (`status`),
+  ADD KEY `idx_category` (`category`),
+  ADD KEY `idx_sent_at` (`sent_at`);
+
+--
+-- Indexes for table `employers`
+--
+ALTER TABLE `employers`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_company` (`company_name`),
+  ADD KEY `idx_sector` (`sector`),
+  ADD KEY `idx_status` (`status`);
+
+--
+-- Indexes for table `employer_outreach`
+--
+ALTER TABLE `employer_outreach`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_employer` (`employer_id`),
+  ADD KEY `idx_status` (`status`),
+  ADD KEY `idx_sent_at` (`sent_at`);
+
+--
 -- Indexes for table `exam_results`
 --
 ALTER TABLE `exam_results`
@@ -1808,6 +2239,45 @@ ALTER TABLE `news_images`
   ADD KEY `idx_news_id` (`news_id`);
 
 --
+-- Indexes for table `note_bookmarks`
+--
+ALTER TABLE `note_bookmarks`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_bm` (`note_id`,`owner_key`),
+  ADD KEY `idx_owner` (`owner_key`);
+
+--
+-- Indexes for table `note_comments`
+--
+ALTER TABLE `note_comments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_note` (`note_id`),
+  ADD KEY `idx_parent` (`parent_comment_id`);
+
+--
+-- Indexes for table `note_comment_likes`
+--
+ALTER TABLE `note_comment_likes`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_like` (`comment_id`,`liker_key`);
+
+--
+-- Indexes for table `note_reactions`
+--
+ALTER TABLE `note_reactions`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_reaction` (`note_id`,`reactor_key`,`reaction`),
+  ADD KEY `idx_note` (`note_id`);
+
+--
+-- Indexes for table `note_reading_progress`
+--
+ALTER TABLE `note_reading_progress`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_progress` (`note_id`,`reader_key`),
+  ADD KEY `idx_note` (`note_id`);
+
+--
 -- Indexes for table `notifications`
 --
 ALTER TABLE `notifications`
@@ -1820,6 +2290,21 @@ ALTER TABLE `parent_link_requests`
   ADD PRIMARY KEY (`id`),
   ADD KEY `parent_id` (`parent_id`),
   ADD KEY `linked_student_id` (`linked_student_id`);
+
+--
+-- Indexes for table `parent_messages`
+--
+ALTER TABLE `parent_messages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_thread` (`thread_id`);
+
+--
+-- Indexes for table `parent_message_threads`
+--
+ALTER TABLE `parent_message_threads`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_parent` (`parent_id`),
+  ADD KEY `idx_status` (`status`);
 
 --
 -- Indexes for table `parent_notifications`
@@ -1960,7 +2445,8 @@ ALTER TABLE `stock_transactions`
 --
 ALTER TABLE `students`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `reg_number` (`reg_number`);
+  ADD UNIQUE KEY `reg_number` (`reg_number`),
+  ADD KEY `idx_academic_year` (`academic_year_id`);
 
 --
 -- Indexes for table `student_dynamic_columns`
@@ -1977,6 +2463,48 @@ ALTER TABLE `student_grades`
   ADD KEY `recorded_by` (`recorded_by`),
   ADD KEY `idx_student` (`student_id`),
   ADD KEY `idx_term` (`term`,`academic_year`);
+
+--
+-- Indexes for table `student_promotions`
+--
+ALTER TABLE `student_promotions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_student` (`student_id`),
+  ADD KEY `idx_from_year` (`from_academic_year_id`),
+  ADD KEY `idx_to_year` (`to_academic_year_id`),
+  ADD KEY `idx_action` (`action`);
+
+--
+-- Indexes for table `student_questions`
+--
+ALTER TABLE `student_questions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_status` (`status`),
+  ADD KEY `idx_trade` (`trade_code`,`level`);
+
+--
+-- Indexes for table `student_question_replies`
+--
+ALTER TABLE `student_question_replies`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_q` (`question_id`),
+  ADD KEY `idx_accepted` (`is_accepted`);
+
+--
+-- Indexes for table `student_question_reply_votes`
+--
+ALTER TABLE `student_question_reply_votes`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_vote` (`reply_id`,`voter_key`),
+  ADD KEY `idx_reply` (`reply_id`);
+
+--
+-- Indexes for table `student_question_views`
+--
+ALTER TABLE `student_question_views`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_view` (`question_id`,`viewer_key`),
+  ADD KEY `idx_q` (`question_id`);
 
 --
 -- Indexes for table `system_stats_cache`
@@ -2014,6 +2542,18 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `academic_terms`
+--
+ALTER TABLE `academic_terms`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `academic_years`
+--
+ALTER TABLE `academic_years`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `activity_logs`
@@ -2056,6 +2596,12 @@ ALTER TABLE `contact_messages`
 --
 ALTER TABLE `content_blocks`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `course_notes`
+--
+ALTER TABLE `course_notes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `cron_jobs`
@@ -2154,6 +2700,24 @@ ALTER TABLE `driving_stock`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `email_log`
+--
+ALTER TABLE `email_log`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `employers`
+--
+ALTER TABLE `employers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `employer_outreach`
+--
+ALTER TABLE `employer_outreach`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `exam_results`
 --
 ALTER TABLE `exam_results`
@@ -2220,6 +2784,36 @@ ALTER TABLE `news_images`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `note_bookmarks`
+--
+ALTER TABLE `note_bookmarks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `note_comments`
+--
+ALTER TABLE `note_comments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `note_comment_likes`
+--
+ALTER TABLE `note_comment_likes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `note_reactions`
+--
+ALTER TABLE `note_reactions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `note_reading_progress`
+--
+ALTER TABLE `note_reading_progress`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
@@ -2230,6 +2824,18 @@ ALTER TABLE `notifications`
 --
 ALTER TABLE `parent_link_requests`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `parent_messages`
+--
+ALTER TABLE `parent_messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `parent_message_threads`
+--
+ALTER TABLE `parent_message_threads`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `parent_notifications`
@@ -2301,7 +2907,7 @@ ALTER TABLE `settings`
 -- AUTO_INCREMENT for table `sms_logs`
 --
 ALTER TABLE `sms_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `sms_reminders`
@@ -2346,6 +2952,36 @@ ALTER TABLE `student_grades`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `student_promotions`
+--
+ALTER TABLE `student_promotions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `student_questions`
+--
+ALTER TABLE `student_questions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `student_question_replies`
+--
+ALTER TABLE `student_question_replies`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `student_question_reply_votes`
+--
+ALTER TABLE `student_question_reply_votes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `student_question_views`
+--
+ALTER TABLE `student_question_views`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `trades`
 --
 ALTER TABLE `trades`
@@ -2367,11 +3003,17 @@ ALTER TABLE `trade_images`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `academic_terms`
+--
+ALTER TABLE `academic_terms`
+  ADD CONSTRAINT `fk_term_year` FOREIGN KEY (`academic_year_id`) REFERENCES `academic_years` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `activity_logs`
@@ -2477,6 +3119,12 @@ ALTER TABLE `driving_stock`
   ADD CONSTRAINT `driving_stock_ibfk_1` FOREIGN KEY (`instructor_id`) REFERENCES `driving_instructors` (`id`);
 
 --
+-- Constraints for table `employer_outreach`
+--
+ALTER TABLE `employer_outreach`
+  ADD CONSTRAINT `fk_outreach_employer` FOREIGN KEY (`employer_id`) REFERENCES `employers` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `exam_results`
 --
 ALTER TABLE `exam_results`
@@ -2522,6 +3170,12 @@ ALTER TABLE `news_images`
 ALTER TABLE `parent_link_requests`
   ADD CONSTRAINT `parent_link_requests_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `parent_link_requests_ibfk_2` FOREIGN KEY (`linked_student_id`) REFERENCES `students` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `parent_messages`
+--
+ALTER TABLE `parent_messages`
+  ADD CONSTRAINT `parent_messages_ibfk_1` FOREIGN KEY (`thread_id`) REFERENCES `parent_message_threads` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `parent_notifications`
