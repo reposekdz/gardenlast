@@ -350,22 +350,22 @@ exports.getAllParents = async (req, res) => {
 // Get parents linked to a specific student
 exports.getParentsByStudent = async (req, res) => {
     const { studentId } = req.params;
-    try {
-        const [links] = await db.execute(
-            `SELECT psl.*, 
-                    u.first_name as parent_first, u.last_name as parent_last, u.phone as parent_phone, u.email as parent_email,
-                    s.first_name as student_first, s.last_name as student_last, s.reg_number, s.trade as student_trade, s.level as student_level,
-                    CONCAT(u.first_name, ' ', u.last_name) as parent_name,
-                    CONCAT(s.first_name, ' ', s.last_name) as student_name,
-                    psl.relationship as relationship
-             FROM parent_student_links psl
-             JOIN users u ON psl.parent_id = u.id
-             JOIN students s ON psl.student_id = s.id
-             WHERE psl.student_id = ? AND (psl.status = 'approved' OR (psl.status = 'approved' OR psl.link_status = 'approved'))
-             ORDER BY psl.is_primary DESC, psl.created_at DESC`,
-            [studentId]
-        );
-        res.json(links);
+     try {
+         const [links] = await db.execute(
+             `SELECT psl.*,
+                     u.first_name as parent_first, u.last_name as parent_last, u.phone as parent_phone, u.email as parent_email,
+                     s.first_name as student_first, s.last_name as student_last, s.reg_number, s.trade as student_trade, s.level as student_level,
+                     CONCAT(u.first_name, ' ', u.last_name) as parent_name,
+                     CONCAT(s.first_name, ' ', s.last_name) as student_name,
+                     psl.relationship as relationship
+              FROM parent_student_links psl
+              JOIN users u ON psl.parent_id = u.id
+              JOIN students s ON psl.student_id = s.id
+              WHERE psl.student_id = ? AND (psl.status = 'approved' OR (psl.status = 'approved' OR psl.link_status = 'approved'))
+              ORDER BY psl.is_primary DESC, psl.requested_at DESC`,
+             [studentId]
+         );
+         res.json(links);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
