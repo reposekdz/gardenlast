@@ -244,7 +244,7 @@ const Discipline = () => {
             const studentsToProcess = selectAllStudents ? filteredStudents : [students.find(s => s.id === parseInt(recordForm.student_id))].filter(Boolean);
 
             if (studentsToProcess.length === 0) {
-                toast.error('Hitamo umunyeshuri');
+                toast.error(t('disc_full.errors.select_student'));
                 return;
             }
 
@@ -260,7 +260,7 @@ const Discipline = () => {
                 }, { headers });
             }
 
-            toast.success(`Icyifuzo cyatangiye kuri ${studentsToProcess.length} ${studentsToProcess.length === 1 ? 'umunyeshuri' : 'abahutu'}`);
+            toast.success(t('disc_full.toasts.record_added_multiple', { count: studentsToProcess.length }));
             setShowRecordModal(false);
             setRecordForm({ student_id: '', action_type: '', description: '', points_deducted: '', incident_date: '' });
             setEvidenceFiles([]);
@@ -270,7 +270,7 @@ const Discipline = () => {
             setSelectedStudents([]);
             fetchRecords();
             fetchStats();
-        } catch (err) { toast.error(err.response?.data?.message || 'Habaye ikibazo'); }
+        } catch (err) { toast.error(err.response?.data?.message || t('common_extra.generic_error')); }
     };
 
     // Submit leave request
@@ -278,11 +278,11 @@ const Discipline = () => {
         e.preventDefault();
         try {
             await axios.post(`${API_URL}/api/discipline/leaves`, leaveForm, { headers });
-            toast.success('Icyifuzo cyatumijwe');
+            toast.success(t('disc_full.toasts.leave_submitted'));
             setShowLeaveModal(false);
             setLeaveForm({ leave_type: '', start_date: '', end_date: '', reason: '', student_id: '', start_time: '', end_time: '', lesson: '' });
             fetchLeaveRequests();
-        } catch (err) { toast.error(err.response?.data?.message || 'Habaye ikibazo'); }
+        } catch (err) { toast.error(err.response?.data?.message || t('common_extra.generic_error')); }
     };
 
     // Approve/reject leave
@@ -290,22 +290,22 @@ const Discipline = () => {
         try {
             await axios.put(`${API_URL}/api/discipline/leaves/${id}`,
                 { status, review_notes: '' }, { headers });
-            toast.success(`Icyifuzo ${status === 'approved' ? 'byemejwe' : 'byangijwe'}`);
+            toast.success(t('disc_full.toasts.leave_reviewed', { status: status === 'approved' ? 'approved' : 'rejected' }));
             fetchLeaveRequests();
-        } catch (err) { toast.error('Habaye ikibazo'); }
+        } catch (err) { toast.error(t('common_extra.generic_error')); }
     };
 
     // Mark a leave as returned — auto-records timestamp + sends SMS to parents
     const handleMarkReturned = async (id) => {
-        const note = window.prompt('Optional note about the return (e.g. "back on time, no issues"):', '');
+        const note = window.prompt(t('disc_full.prompts.return_note'), '');
         if (note === null) return; // cancelled
         try {
             const res = await axios.put(`${API_URL}/api/discipline/leaves/${id}/return`,
                 { return_notes: note }, { headers });
-            toast.success(res.data?.message || 'Marked as returned & parents notified');
+            toast.success(res.data?.message || t('disc_full.toasts.returned_with_notification'));
             fetchLeaveRequests();
         } catch (err) {
-            toast.error(err.response?.data?.message || 'Failed to mark returned');
+            toast.error(err.response?.data?.message || t('disc_full.toasts.return_failed'));
         }
     };
 
@@ -1393,3 +1393,4 @@ const Discipline = () => {
 };
 
 export default Discipline;
+             

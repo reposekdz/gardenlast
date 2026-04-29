@@ -2739,6 +2739,16 @@
       "guardian": "Guardian",
       "cohort": "Cohort"
     },
+    "table": {
+      "#": "#",
+      "reg_number": "Reg Number",
+      "name": "Name",
+      "gender": "Gender",
+      "final_level": "Final Level",
+      "phone": "Phone",
+      "address": "Address",
+      "date": "Date"
+    },
     "outreach_log": "Outreach Log",
     "empty_outreach": "No outreach has been sent."
   },

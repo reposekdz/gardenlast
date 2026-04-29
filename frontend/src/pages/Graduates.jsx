@@ -91,7 +91,7 @@ const Graduates = () => {
             toast.info(t('grad_full.no_graduates_to_print'));
             return;
         }
-        const html = buildPrintHtml(data, { yearId, trade, search });
+        const html = buildPrintHtml(data, { yearId, trade, search }, t);
         const w = window.open('', '_blank', 'width=1024,height=768');
         if (!w) {
             toast.error(t('grad_full.enable_popups'));
@@ -368,7 +368,7 @@ const Detail = ({ icon: Icon, label, children }) => (
 );
 
 /* ─── Print roster HTML builder ─────────────────────────────────── */
-function buildPrintHtml(data, filters) {
+function buildPrintHtml(data, filters, t) {
     const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, c =>
         ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])
     );
@@ -379,26 +379,26 @@ function buildPrintHtml(data, filters) {
         filters.yearId ? 'Year filter applied' : null,
         filters.trade  ? `Trade: ${filters.trade}` : null,
         filters.search ? `Search: "${filters.search}"` : null,
-    ].filter(Boolean).join(' · ') || 'Imyaka yose · Trades zose';
+    ].filter(Boolean).join(' · ') || t('grad_full.all_years') + ' · ' + t('grad_full.all_trades');
 
     const yearsHtml = data.groups.map(g => `
         <section class="year">
             <h2>${escapeHtml(g.year_name)}
-                <small>${g.start_date ? new Date(g.start_date).toLocaleDateString() : ''} → ${g.end_date ? new Date(g.end_date).toLocaleDateString() : ''} · ${g.total} abasoje</small>
+                <small>${g.start_date ? new Date(g.start_date).toLocaleDateString() : ''} → ${g.end_date ? new Date(g.end_date).toLocaleDateString() : ''} · ${t('grad_full.n_graduates', { count: g.total })}</small>
             </h2>
             ${g.trades.map(t => `
-                <h3>${escapeHtml(t.trade)} <small>(${t.count})</small></h3>
+                <h3>${escapeHtml(t.trade)} <small>(${t('grad_full.n_graduates', { count: t.count })})</small></h3>
                 <table>
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>Reg Number</th>
-                            <th>Amazina</th>
-                            <th>Igitsina</th>
-                            <th>Final Level</th>
-                            <th>Telefone</th>
-                            <th>Aho atuye</th>
-                            <th>Itariki</th>
+                            <th>${t('grad_full.table.name')}</th>
+                            <th>${t('grad_full.table.gender')}</th>
+                            <th>${t('grad_full.table.final_level')}</th>
+                            <th>${t('grad_full.table.phone')}</th>
+                            <th>${t('grad_full.table.address')}</th>
+                            <th>${t('grad_full.table.date')}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -424,7 +424,7 @@ function buildPrintHtml(data, filters) {
 <html lang="rw">
 <head>
 <meta charset="utf-8" />
-<title>Garden TVET — Abasoje (Graduates Roster)</title>
+<title>Garden TVET — ${t('grad_full.title')}</title>
 <style>
     * { box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #1f2937; margin: 24px; }
@@ -450,12 +450,12 @@ function buildPrintHtml(data, filters) {
 <body>
     <header>
         <div>
-            <h1>Garden TVET School — Urutonde rw'Abasoje</h1>
+            <h1>Garden TVET School — ${t('grad_full.title')}</h1>
             <small>${escapeHtml(filterLine)}</small>
         </div>
         <div style="text-align:right">
             <small>Yacapwe ku ${escapeHtml(today)}</small><br/>
-            <small><strong>${data.total}</strong> abasoje · ${data.groups.length} imyaka</small>
+            <small><strong>${data.total}</strong> ${t('grad_full.n_graduates', { count: data.total })} · ${data.groups.length} imyaka</small>
         </div>
     </header>
     <div class="filters">${escapeHtml(filterLine)}</div>

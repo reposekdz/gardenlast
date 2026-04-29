@@ -2739,6 +2739,16 @@
       "guardian": "Tuteur",
       "cohort": "Promotion"
     },
+    "table": {
+      "#": "#",
+      "reg_number": "Matricule",
+      "name": "Nom",
+      "gender": "Genre",
+      "final_level": "Niveau Final",
+      "phone": "Téléphone",
+      "address": "Adresse",
+      "date": "Date"
+    },
     "outreach_log": "Journal d'Envoi",
     "empty_outreach": "Aucun envoi n'a été effectué."
   },

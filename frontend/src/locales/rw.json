@@ -2739,6 +2739,16 @@
       "guardian": "Umubyeyi/Umuremyi",
       "cohort": "Cohort"
     },
+    "table": {
+      "#": "#",
+      "reg_number": "No. y' Injiza",
+      "name": "Amazina",
+      "gender": "Igitsina",
+      "final_level": "Urwego Rwanyuma",
+      "phone": "Telefone",
+      "address": "Aderesi",
+      "date": "Itariki"
+    },
     "outreach_log": "Ibyahoze",
     "empty_outreach": "Nta outreach yarakorwa."
   },
