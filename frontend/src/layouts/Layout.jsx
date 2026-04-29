@@ -86,13 +86,14 @@ const Layout = () => {
     const roleConfig = {
         admin: { label: t('roles.admin'), color: 'bg-purple-500', icon: Briefcase },
         dod: { label: t('roles.dod'), color: 'bg-red-500', icon: ShieldAlert },
+        director_of_discipline: { label: t('roles.dod'), color: 'bg-red-500', icon: ShieldAlert },
         accountant: { label: t('roles.accountant'), color: 'bg-green-500', icon: DollarSign },
         stock_manager: { label: t('roles.stock_manager'), color: 'bg-amber-500', icon: Package },
-        parent: { label: 'Parent', color: 'bg-gray-500', icon: User },
-        teacher: { label: 'Teacher', color: 'bg-blue-500', icon: GraduationCap },
-        librarian: { label: 'Librarian', color: 'bg-indigo-500', icon: BookOpen },
-        director: { label: 'Director', color: 'bg-pink-500', icon: TrendingUp },
-        registrar: { label: 'Registrar', color: 'bg-teal-500', icon: FileText },
+        parent: { label: t('roles.parent'), color: 'bg-gray-500', icon: User },
+        teacher: { label: t('roles.teacher'), color: 'bg-blue-500', icon: GraduationCap },
+        librarian: { label: t('roles.librarian'), color: 'bg-indigo-500', icon: BookOpen },
+        director: { label: t('roles.director'), color: 'bg-pink-500', icon: TrendingUp },
+        registrar: { label: t('roles.registrar'), color: 'bg-teal-500', icon: FileText },
     };
 
     const RoleIcon = roleConfig[user.role]?.icon || User;
@@ -100,21 +101,21 @@ const Layout = () => {
 
     const navItems = [
         { to: '/dashboard', icon: LayoutDashboard, label: t('nav.dashboard'), show: true },
-        { to: '/notifications', icon: Bell, label: 'Notifications', show: true, badge: unreadCount },
-        { to: '/applications', icon: FileText, label: t('nav.applications') || 'Applications', show: isAdmin || isDod || isAccountant },
-        { to: '/academic-year', icon: Calendar, label: t('nav.academicYear') || 'Academic Year', show: isAdmin || isDod || isAccountant || isRegistrar },
-        { to: '/graduates', icon: GraduationCap, label: t('nav.graduates') || 'Abasoje', show: isAdmin || user.role === 'director' || user.role === 'registrar' || isDod || isAccountant },
-        { to: '/employers', icon: Briefcase, label: t('nav.employers') || 'Employers', show: isAdmin || user.role === 'director' || user.role === 'registrar' },
+        { to: '/notifications', icon: Bell, label: t('nav.notifications'), show: true, badge: unreadCount },
+        { to: '/applications', icon: FileText, label: t('nav.applications'), show: isAdmin || isDod || isAccountant },
+        { to: '/academic-year', icon: Calendar, label: t('nav.academicYear'), show: isAdmin || isDod || isAccountant || isRegistrar },
+        { to: '/graduates', icon: GraduationCap, label: t('nav.graduates'), show: isAdmin || user.role === 'director' || user.role === 'registrar' || isDod || isAccountant },
+        { to: '/employers', icon: Briefcase, label: t('nav.employers'), show: isAdmin || user.role === 'director' || user.role === 'registrar' },
         { to: '/students', icon: Users, label: t('nav.students'), show: isAdmin || isDod || isAccountant },
-        { to: '/link-manager', icon: Link2, label: t('nav.linkManager') || 'Link Manager', show: canManageLinks },
+        { to: '/link-manager', icon: Link2, label: t('nav.linkManager'), show: canManageLinks },
         { to: '/discipline', icon: ShieldAlert, label: t('nav.discipline'), show: isAdmin || isDod },
         { to: '/finance', icon: DollarSign, label: t('nav.finance'), show: isAdmin || isAccountant },
         { to: '/stock', icon: Package, label: t('nav.stock'), show: isAdmin || isStockManager },
-        { to: isParent ? '/parents' : '/parent-management', icon: User, label: isParent ? 'My Children' : (t('nav.parents') || 'Parents'), show: isAdmin || isDod || isAccountant || isParent },
-        { to: '/staff', icon: Shield, label: 'Staff', show: isAdmin },
-        { to: '/cms', icon: Globe, label: t('nav.cms') || 'CMS', show: isAdmin },
-        { to: '/settings', icon: Settings, label: t('nav.settings') || 'Settings', show: true },
-        { to: '/home', icon: Globe, label: t('pub.nav.home') || 'Public Site', show: true },
+        { to: isParent ? '/parents' : '/parent-management', icon: User, label: isParent ? t('nav.my_children') : t('nav.parents'), show: isAdmin || isDod || isAccountant || isParent },
+        { to: '/staff', icon: Shield, label: t('nav.staff'), show: isAdmin },
+        { to: '/cms', icon: Globe, label: t('nav.cms'), show: isAdmin },
+        { to: '/settings', icon: Settings, label: t('nav.settings'), show: true },
+        { to: '/home', icon: Globe, label: t('nav.public_site'), show: true },
     ];
 
     const filteredNavItems = navItems.filter(item => item.show);
@@ -128,19 +129,22 @@ const Layout = () => {
              'discipline': t('nav.discipline'),
              'finance': t('nav.finance'),
              'stock': t('nav.stock'),
-             'parents': t('nav.parents') || 'Parents',
-             'applications': t('nav.applications') || 'Applications',
-             'academic-year': t('nav.academicYear') || 'Academic Year',
-             'graduates': t('nav.graduates') || 'Graduates',
-             'employers': t('nav.employers') || 'Employers',
-             'link-manager': t('nav.linkManager') || 'Link Manager',
-             'staff': 'Staff Management',
-             'cms': t('nav.cms') || 'CMS',
-             'settings': t('nav.settings') || 'Settings',
-             'notifications': 'Notifications',
+             'parents': t('nav.parents'),
+             'parent-management': t('nav.parents'),
+             'applications': t('nav.applications'),
+             'academic-year': t('nav.academicYear'),
+             'graduates': t('nav.graduates'),
+             'employers': t('nav.employers'),
+             'link-manager': t('nav.linkManager'),
+             'staff': t('nav.staff'),
+             'cms': t('nav.cms'),
+             'settings': t('nav.settings'),
+             'notifications': t('nav.notifications'),
          };
          return titles[path] || 'Garden TVET';
      };
+
+     const localeTag = { rw: 'rw-RW', fr: 'fr-FR', en: 'en-GB' }[i18n.language] || 'en-GB';
 
     return (
         <div className="flex h-screen bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
@@ -242,7 +246,7 @@ const Layout = () => {
                             </h1>
                             <p className="text-xs text-gray-400 flex items-center gap-1">
                                 <Clock size={12} />
-                                {new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                                {new Date().toLocaleDateString(localeTag, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                             </p>
                         </div>
                     </div>
@@ -253,7 +257,7 @@ const Layout = () => {
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                             <input
                                 type="text"
-                                placeholder="Search students, payments..."
+                                placeholder={t('nav.search_placeholder')}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
@@ -304,10 +308,10 @@ const Layout = () => {
                             {showNotifications && (
                                 <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50">
                                     <div className="p-4 border-b border-gray-100 flex justify-between items-center">
-                                        <h3 className="font-bold text-gray-800">Notifications</h3>
+                                        <h3 className="font-bold text-gray-800">{t('nav.notifications')}</h3>
                                         {unreadCount > 0 && (
                                             <span className="px-2 py-1 bg-red-100 text-red-600 text-xs rounded-full font-medium">
-                                                {unreadCount} new
+                                                {unreadCount} {t('header.new')}
                                             </span>
                                         )}
                                     </div>
@@ -343,7 +347,7 @@ const Layout = () => {
                                         ) : (
                                             <div className="p-4 text-center text-gray-500 text-sm">
                                                 <Bell size={32} className="mx-auto mb-2 text-gray-300" />
-                                                No new notifications
+                                                {t('header.no_new_notifications')}
                                             </div>
                                         )}
                                     </div>
@@ -352,7 +356,7 @@ const Layout = () => {
                                             onClick={() => navigate('/notifications')}
                                             className="w-full text-center text-blue-600 hover:text-blue-700 text-sm font-medium"
                                         >
-                                            View All Notifications →
+                                            {t('header.view_all_notifications')}
                                         </button>
                                     </div>
                                 </div>
@@ -387,7 +391,7 @@ const Layout = () => {
                                             className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
                                         >
                                             <Settings size={16} className="mr-3 text-gray-400" />
-                                            Settings
+                                            {t('nav.settings')}
                                         </Link>
                                         <button
                                             onClick={handleLogout}

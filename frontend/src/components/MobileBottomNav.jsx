@@ -70,11 +70,11 @@ const MobileBottomNav = () => {
                 {/* Public Mobile Bottom Navigation - Fixed at bottom */}
                 <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] lg:hidden z-[9999] safe-area-pb pb-safe">
                     <div className="flex justify-around items-center h-16 px-1 bg-white">
-                        <NavButton to="/home" icon={Home} label="Home" />
-                        <NavButton to="/about" icon={Home} label="About" />
-                        <NavButton to="/driving-rules" icon={BookOpen} label="Imodoka" />
-                        <NavButton to="/news" icon={Bell} label="News" />
-                        <NavButton to="/contact" icon={Phone} label="Contact" />
+                        <NavButton to="/home" icon={Home} label={t('pub.nav.home')} />
+                        <NavButton to="/about" icon={Home} label={t('pub.nav.about')} />
+                        <NavButton to="/driving-rules" icon={BookOpen} label={t('pub.nav.driving_rules')} />
+                        <NavButton to="/news" icon={Bell} label={t('pub.nav.news')} />
+                        <NavButton to="/contact" icon={Phone} label={t('pub.nav.contact')} />
                     </div>
                 </div>
                 <div className="h-20 lg:hidden" />
@@ -168,7 +168,7 @@ const MobileBottomNav = () => {
                             <div className="p-1.5 rounded-xl">
                                 <Menu size={22} />
                             </div>
-                            <span className="text-[10px] mt-0.5 font-semibold text-gray-500">More</span>
+                            <span className="text-[10px] mt-0.5 font-semibold text-gray-500">{t('common.more')}</span>
                         </button>
                     )}
                 </div>
@@ -206,7 +206,7 @@ const MobileBottomNav = () => {
                         {/* User Info */}
                         <div className="px-4 py-2 text-xs text-gray-500">
                             <p className="font-medium">{user.first_name} {user.last_name}</p>
-                            <p className="capitalize">{user.role?.replace('_', ' ')}</p>
+                            <p className="capitalize">{t(`roles.${user.role}`, { defaultValue: user.role?.replace('_', ' ') })}</p>
                         </div>
 
                         {/* Logout Button */}

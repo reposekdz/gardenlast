@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { BookOpen, FileText, ChevronRight, Loader2, Car, HardHat, Code2, GraduationCap } from 'lucide-react';
 
 const ICONS = { auto: Car, bdc: HardHat, sod: Code2, driving: Car };
 
 const KwigaPage = () => {
+    const { t } = useTranslation();
     const API_URL = import.meta.env.VITE_API_URL || '';
     const [trades, setTrades] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -18,13 +20,13 @@ const KwigaPage = () => {
                 const res = await axios.get(`${API_URL}/api/course-notes/trades`);
                 if (!cancelled) setTrades(res.data);
             } catch (e) {
-                if (!cancelled) setError('Habayemo ikibazo. Ongera ugerageze.');
+                if (!cancelled) setError(t('pub.kwiga.load_failed'));
             } finally {
                 if (!cancelled) setLoading(false);
             }
         })();
         return () => { cancelled = true; };
-    }, [API_URL]);
+    }, [API_URL, t]);
 
     return (
         <div className="bg-gray-50 min-h-screen">
@@ -37,13 +39,13 @@ const KwigaPage = () => {
                         <div className="w-12 h-12 rounded-2xl bg-accent-500 flex items-center justify-center">
                             <GraduationCap className="text-primary-900" size={26} />
                         </div>
-                        <span className="text-accent-400 font-bold tracking-widest text-sm uppercase">Kwiga</span>
+                        <span className="text-accent-400 font-bold tracking-widest text-sm uppercase">{t('pub.kwiga.section')}</span>
                     </div>
                     <h1 className="text-4xl lg:text-6xl font-black mb-4">
-                        Igisomwa cyose ku <span className="text-accent-400">myuga yose</span>
+                        {t('pub.kwiga.title')} <span className="text-accent-400">{t('pub.kwiga.title_highlight')}</span>
                     </h1>
                     <p className="text-lg lg:text-xl text-primary-200 max-w-2xl">
-                        Hitamo umwuga ushaka kwigamo, urebe amasomo n&rsquo;inyandiko (PDF) abarimu ba Garden TVET bashyizeho ku rwego rwawe.
+                        {t('pub.kwiga.subtitle')}
                     </p>
                 </div>
             </section>
@@ -77,15 +79,15 @@ const KwigaPage = () => {
                                         <div className="flex items-center gap-4 text-sm text-gray-600 mb-6">
                                             <span className="flex items-center gap-1.5">
                                                 <BookOpen size={16} className="text-primary-600" />
-                                                {trade.levels.length} levels
+                                                {trade.levels.length} {t('pub.kwiga.levels')}
                                             </span>
                                             <span className="flex items-center gap-1.5">
                                                 <FileText size={16} className="text-accent-500" />
-                                                {trade.notes_count} {trade.notes_count === 1 ? 'note' : 'notes'}
+                                                {trade.notes_count} {trade.notes_count === 1 ? t('pub.kwiga.note') : t('pub.kwiga.notes')}
                                             </span>
                                         </div>
                                         <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
-                                            <span className="text-primary-700 font-bold group-hover:text-primary-900">Reba amasomo</span>
+                                            <span className="text-primary-700 font-bold group-hover:text-primary-900">{t('pub.kwiga.view_lessons')}</span>
                                             <ChevronRight className="text-primary-700 group-hover:translate-x-1 transition-transform" size={20} />
                                         </div>
                                     </div>

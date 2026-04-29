@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, Navigate, Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import useAuthStore from '../store/authStore';
+import { useTranslation } from 'react-i18next';
 import {
     LayoutDashboard, FileText, MessageCircleQuestion, Users, ShieldAlert,
     Heart, Settings, LogOut, Menu, X, GraduationCap, Bell, Globe, Clock,
@@ -10,6 +11,7 @@ import {
 
 const TeacherLayout = () => {
     const { user, token, logout } = useAuthStore();
+    const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
     const API_URL = import.meta.env.VITE_API_URL || '';
@@ -37,28 +39,30 @@ const TeacherLayout = () => {
     const isActive = (path) => location.pathname === path;
 
     const navItems = [
-        { to: '/teacher',             icon: LayoutDashboard,    label: 'Akanya k\'Ibanze' },
-        { to: '/teacher/notes',       icon: FileText,           label: 'Inyandiko' },
-        { to: '/teacher/questions',   icon: MessageCircleQuestion, label: 'Ibibazo by\'Abanyeshuri', badge: pendingQs },
-        { to: '/teacher/students',    icon: Users,              label: 'Abanyeshuri' },
-        { to: '/teacher/conduct',     icon: ShieldAlert,        label: 'Imyitwarire' },
-        { to: '/teacher/messages',    icon: MessageSquare,      label: 'Ubutumwa' },
-        { to: '/teacher/engagement',  icon: Heart,              label: 'Reactions & Comments' },
-        { to: '/settings',            icon: Settings,           label: 'Settings' },
-        { to: '/home',                icon: Globe,              label: 'Urubuga rusange' }
+        { to: '/teacher',             icon: LayoutDashboard,    label: t('teacher.nav.overview') },
+        { to: '/teacher/notes',       icon: FileText,           label: t('teacher.nav.notes') },
+        { to: '/teacher/questions',   icon: MessageCircleQuestion, label: t('teacher.nav.questions'), badge: pendingQs },
+        { to: '/teacher/students',    icon: Users,              label: t('teacher.nav.students') },
+        { to: '/teacher/conduct',     icon: ShieldAlert,        label: t('teacher.nav.conduct') },
+        { to: '/teacher/messages',    icon: MessageSquare,      label: t('teacher.nav.messages') },
+        { to: '/teacher/engagement',  icon: Heart,              label: t('teacher.nav.engagement') },
+        { to: '/settings',            icon: Settings,           label: t('teacher.nav.settings') },
+        { to: '/home',                icon: Globe,              label: t('teacher.nav.public_site') }
     ];
 
     const titles = {
-        '/teacher':            'Akanya k\'Ibanze',
-        '/teacher/notes':      'Inyandiko zanjye',
-        '/teacher/questions':  'Ibibazo by\'Abanyeshuri',
-        '/teacher/students':   'Abanyeshuri (read-only)',
-        '/teacher/conduct':    'Imyitwarire y\'abanyeshuri',
-        '/teacher/messages':   'Kohereza ubutumwa ku babyeyi',
-        '/teacher/engagement': 'Likes / Comments / Hands'
+        '/teacher':            t('teacher.titles.overview'),
+        '/teacher/notes':      t('teacher.titles.notes'),
+        '/teacher/questions':  t('teacher.titles.questions'),
+        '/teacher/students':   t('teacher.titles.students'),
+        '/teacher/conduct':    t('teacher.titles.conduct'),
+        '/teacher/messages':   t('teacher.titles.messages'),
+        '/teacher/engagement': t('teacher.titles.engagement')
     };
 
     const handleLogout = () => { logout(); navigate('/login'); };
+
+    const localeTag = { rw: 'rw-RW', fr: 'fr-FR', en: 'en-GB' }[i18n.language] || 'en-GB';
 
     return (
         <div className="flex h-screen bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
@@ -78,7 +82,7 @@ const TeacherLayout = () => {
                         <div>
                             <span className="text-xl font-black tracking-tight">Garden</span>
                             <span className="text-accent-400 font-bold">TVET</span>
-                            <p className="text-[10px] text-primary-200 font-bold uppercase tracking-wider">Teacher Portal</p>
+                            <p className="text-[10px] text-primary-200 font-bold uppercase tracking-wider">{t('teacher.portal')}</p>
                         </div>
                     </Link>
                     <button onClick={() => setSidebarOpen(false)} className="ml-auto lg:hidden p-2 rounded-lg hover:bg-primary-600">
@@ -123,14 +127,14 @@ const TeacherLayout = () => {
                         </div>
                         <div className="ml-3 flex-1 min-w-0">
                             <p className="text-sm font-bold truncate">{user.first_name} {user.last_name}</p>
-                            <p className="text-xs text-primary-200 truncate">Mwarimu</p>
+                            <p className="text-xs text-primary-200 truncate">{t('teacher.role_label')}</p>
                         </div>
                     </div>
                     <button
                         onClick={handleLogout}
                         className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-100 text-sm font-bold"
                     >
-                        <LogOut size={16} /> Sohoka
+                        <LogOut size={16} /> {t('teacher.logout')}
                     </button>
                 </div>
             </aside>
@@ -142,16 +146,16 @@ const TeacherLayout = () => {
                             <Menu size={24} className="text-gray-600" />
                         </button>
                         <div className="hidden sm:block">
-                            <h1 className="text-xl font-bold text-gray-800">{titles[location.pathname] || 'Teacher Portal'}</h1>
+                            <h1 className="text-xl font-bold text-gray-800">{titles[location.pathname] || t('teacher.portal')}</h1>
                             <p className="text-xs text-gray-400 flex items-center gap-1">
                                 <Clock size={12} />
-                                {new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                                {new Date().toLocaleDateString(localeTag, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                             </p>
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
                         <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-blue-50 rounded-xl text-blue-800 text-sm font-bold">
-                            <Bell size={14} /> {pendingQs} ibibazo bitarasubizwa
+                            <Bell size={14} /> {t('teacher.pending_questions', { count: pendingQs })}
                         </div>
                     </div>
                 </header>

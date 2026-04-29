@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import {
     Car, BookOpen, Inbox, Search, SortAsc, Loader2, FileText,
@@ -11,6 +12,7 @@ import PdfReaderModal from '../../components/PdfReaderModal';
 const TRADE_CODE = 'driving';
 
 const DrivingRulesPage = () => {
+    const { t } = useTranslation();
     const API_URL = import.meta.env.VITE_API_URL || '';
     const [trade, setTrade] = useState(null);
     const [notes, setNotes] = useState([]);
@@ -34,13 +36,13 @@ const DrivingRulesPage = () => {
                 setTrade(tRes.data);
                 setNotes(listRes.data);
             } catch (e) {
-                if (!cancelled) setError('Habayemo ikibazo. Ongera ugerageze.');
+                if (!cancelled) setError(t('pub.kwiga.load_failed'));
             } finally {
                 if (!cancelled) setLoading(false);
             }
         })();
         return () => { cancelled = true; };
-    }, [API_URL]);
+    }, [API_URL, t]);
 
     const counts = useMemo(() => {
         const c = { all: notes.length };
@@ -69,8 +71,8 @@ const DrivingRulesPage = () => {
     if (error || !trade) {
         return (
             <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-6">
-                <p className="text-red-600 font-semibold mb-4">{error || 'Page ntibonetse'}</p>
-                <Link to="/home" className="text-primary-700 font-bold underline">Subira ku rugo</Link>
+                <p className="text-red-600 font-semibold mb-4">{error || t('pub.driving_rules.page_not_found')}</p>
+                <Link to="/home" className="text-primary-700 font-bold underline">{t('pub.kwiga.back_home')}</Link>
             </div>
         );
     }
@@ -86,33 +88,33 @@ const DrivingRulesPage = () => {
                 <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
                 <div className="max-w-7xl mx-auto px-6 relative z-10">
                     <Link to="/home" className="inline-flex items-center gap-2 text-white/90 hover:text-white mb-4 font-semibold">
-                        <ArrowLeft size={18} /> Subira ku rugo
+                        <ArrowLeft size={18} /> {t('pub.kwiga.back_home')}
                     </Link>
                     <div className="flex items-center gap-3 mb-3">
                         <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center backdrop-blur">
                             <Car size={26} />
                         </div>
-                        <span className="text-white/90 font-bold tracking-widest text-sm uppercase">Driving Rules</span>
+                        <span className="text-white/90 font-bold tracking-widest text-sm uppercase">{t('pub.driving_rules.section')}</span>
                     </div>
-                    <h1 className="text-3xl lg:text-5xl font-black mb-2">{trade.name_rw}</h1>
+                    <h1 className="text-3xl lg:text-5xl font-black mb-2">{trade.name_rw || t('pub.driving_rules.title_db')}</h1>
                     <p className="text-lg text-white/90 max-w-2xl">
-                        Funda amategeko y&rsquo;umuhanda mu Rwanda. Soma cyangwa kuramo inyandiko (PDF) abarimu bashyizeho.
+                        {t('pub.driving_rules.subtitle')}
                     </p>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 max-w-3xl">
                         <div className="bg-white/10 backdrop-blur rounded-xl p-3">
-                            <p className="text-xs text-white/70 font-bold uppercase">Notes</p>
+                            <p className="text-xs text-white/70 font-bold uppercase">{t('pub.driving_rules.stat_notes')}</p>
                             <p className="text-2xl font-black mt-0.5">{notes.length}</p>
                         </div>
                         <div className="bg-white/10 backdrop-blur rounded-xl p-3">
-                            <p className="text-xs text-white/70 font-bold uppercase">Levels</p>
+                            <p className="text-xs text-white/70 font-bold uppercase">{t('pub.driving_rules.stat_levels')}</p>
                             <p className="text-2xl font-black mt-0.5">{trade.levels.length}</p>
                         </div>
                         <div className="bg-white/10 backdrop-blur rounded-xl p-3">
-                            <p className="text-xs text-white/70 font-bold uppercase">Views</p>
+                            <p className="text-xs text-white/70 font-bold uppercase">{t('pub.driving_rules.stat_views')}</p>
                             <p className="text-2xl font-black mt-0.5">{totalViews}</p>
                         </div>
                         <div className="bg-white/10 backdrop-blur rounded-xl p-3">
-                            <p className="text-xs text-white/70 font-bold uppercase">Downloads</p>
+                            <p className="text-xs text-white/70 font-bold uppercase">{t('pub.driving_rules.stat_downloads')}</p>
                             <p className="text-2xl font-black mt-0.5">{totalDownloads}</p>
                         </div>
                     </div>
@@ -127,8 +129,8 @@ const DrivingRulesPage = () => {
                             <ShieldCheck size={20} />
                         </div>
                         <div>
-                            <p className="font-black text-gray-900 text-sm">Amategeko y&rsquo;Umuhanda</p>
-                            <p className="text-xs text-gray-500">Code de la route - Rwanda</p>
+                            <p className="font-black text-gray-900 text-sm">{t('pub.driving_rules.info_road_title')}</p>
+                            <p className="text-xs text-gray-500">{t('pub.driving_rules.info_road_desc')}</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
@@ -136,8 +138,8 @@ const DrivingRulesPage = () => {
                             <BookOpen size={20} />
                         </div>
                         <div>
-                            <p className="font-black text-gray-900 text-sm">Inyigisho z&rsquo;Abarimu</p>
-                            <p className="text-xs text-gray-500">Notes zashyizweho na Garden TVET</p>
+                            <p className="font-black text-gray-900 text-sm">{t('pub.driving_rules.info_notes_title')}</p>
+                            <p className="text-xs text-gray-500">{t('pub.driving_rules.info_notes_desc')}</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
@@ -145,8 +147,8 @@ const DrivingRulesPage = () => {
                             <GraduationCap size={20} />
                         </div>
                         <div>
-                            <p className="font-black text-gray-900 text-sm">Itegure ry&rsquo;Ikizamini</p>
-                            <p className="text-xs text-gray-500">Itegurire ikizamini cy&rsquo;uruhushya</p>
+                            <p className="font-black text-gray-900 text-sm">{t('pub.driving_rules.info_exam_title')}</p>
+                            <p className="text-xs text-gray-500">{t('pub.driving_rules.info_exam_desc')}</p>
                         </div>
                     </div>
                 </div>
@@ -161,7 +163,7 @@ const DrivingRulesPage = () => {
                         className={`px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors ${
                             activeLevel === 'all' ? 'bg-primary-700 text-white' : 'bg-white border border-gray-200 text-gray-700 hover:border-primary-400'
                         }`}>
-                        Byose ({counts.all})
+                        {t('pub.driving_rules.all_levels')} ({counts.all})
                     </button>
                     {trade.levels.map(l => (
                         <button key={l} onClick={() => setActiveLevel(l)}
@@ -180,7 +182,7 @@ const DrivingRulesPage = () => {
                         <input
                             value={search}
                             onChange={e => setSearch(e.target.value)}
-                            placeholder="Shakisha izina, ubusobanuro, cyangwa umwarimu..."
+                            placeholder={t('pub.driving_rules.search_placeholder')}
                             className="w-full pl-9 pr-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none"
                         />
                     </div>
@@ -188,10 +190,10 @@ const DrivingRulesPage = () => {
                         <SortAsc size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                         <select value={sortBy} onChange={e => setSortBy(e.target.value)}
                             className="pl-9 pr-8 py-2.5 border border-gray-200 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none">
-                            <option value="newest">Bishya</option>
-                            <option value="oldest">Bya kera</option>
-                            <option value="title">Title (A-Z)</option>
-                            <option value="popular">Bikundwa</option>
+                            <option value="newest">{t('pub.driving_rules.sort_newest')}</option>
+                            <option value="oldest">{t('pub.driving_rules.sort_oldest')}</option>
+                            <option value="title">{t('pub.driving_rules.sort_title')}</option>
+                            <option value="popular">{t('pub.driving_rules.sort_popular')}</option>
                         </select>
                     </div>
                 </div>
@@ -200,10 +202,10 @@ const DrivingRulesPage = () => {
                     <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center">
                         <Inbox size={48} className="text-gray-300 mx-auto mb-3" />
                         <p className="text-gray-700 font-bold text-lg">
-                            {notes.length === 0 ? 'Nta nyandiko ziraboneka kuri uru rubuga' : 'Nta gisubizo gihari'}
+                            {notes.length === 0 ? t('pub.driving_rules.no_notes') : t('pub.driving_rules.no_results')}
                         </p>
                         <p className="text-gray-500 text-sm mt-1">
-                            {notes.length === 0 ? 'Abarimu bagiye kuzizana mu gihe gito.' : 'Gerageza ihindure cyangwa wishakashe ikindi.'}
+                            {notes.length === 0 ? t('pub.driving_rules.no_notes_desc') : t('pub.driving_rules.no_results_desc')}
                         </p>
                     </div>
                 ) : (

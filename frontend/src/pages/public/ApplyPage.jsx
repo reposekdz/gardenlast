@@ -112,21 +112,21 @@ const ApplyPage = () => {
         const newErrors = {};
 
         if (currentStep === 1) {
-            if (!form.first_name.trim()) newErrors.first_name = 'First name is required';
-            if (!form.last_name.trim()) newErrors.last_name = 'Last name is required';
-            if (!form.gender) newErrors.gender = 'Please select gender';
-            if (!form.date_of_birth) newErrors.date_of_birth = 'Date of birth is required';
+            if (!form.first_name.trim()) newErrors.first_name = t('pub.apply.err_first_name');
+            if (!form.last_name.trim()) newErrors.last_name = t('pub.apply.err_last_name');
+            if (!form.gender) newErrors.gender = t('pub.apply.err_gender');
+            if (!form.date_of_birth) newErrors.date_of_birth = t('pub.apply.err_dob');
         }
 
         if (currentStep === 2) {
-            if (!form.phone.trim()) newErrors.phone = 'Phone number is required';
-            else if (!/^\d{9,10}$/.test(form.phone.replace(/\D/g, ''))) newErrors.phone = 'Enter a valid phone number';
-            if (!form.province) newErrors.province = 'Please select province';
+            if (!form.phone.trim()) newErrors.phone = t('pub.apply.err_phone_required');
+            else if (!/^\d{9,10}$/.test(form.phone.replace(/\D/g, ''))) newErrors.phone = t('pub.apply.err_phone_invalid');
+            if (!form.province) newErrors.province = t('pub.apply.err_province');
         }
 
         if (currentStep === 3) {
-            if (!form.trade) newErrors.trade = 'Please select a trade';
-            if (!form.level) newErrors.level = 'Please select a level';
+            if (!form.trade) newErrors.trade = t('pub.apply.err_trade');
+            if (!form.level) newErrors.level = t('pub.apply.err_level');
         }
 
         setErrors(newErrors);
@@ -156,9 +156,9 @@ const ApplyPage = () => {
             const response = await axios.post(`${API_URL}/api/applications`, form);
             setApplicationId(response.data.id || response.data.application_id);
             setSubmitted(true);
-            toast.success('Application submitted successfully!');
+            toast.success(t('pub.apply.submit_success'));
         } catch (err) {
-            toast.error(err.response?.data?.message || 'Submission failed. Please try again.');
+            toast.error(err.response?.data?.message || t('pub.apply.submit_failed'));
         } finally {
             setLoading(false);
         }
@@ -166,10 +166,10 @@ const ApplyPage = () => {
 
     const getStepTitle = () => {
         switch (step) {
-            case 1: return lang === 'rw' ? 'Amakuru yibatswe' : 'Personal Information';
-            case 2: return lang === 'rw' ? 'Contact Information' : 'Contact Information';
-            case 3: return lang === 'rw' ? 'Ishami na Level' : 'Trade & Level';
-            case 4: return lang === 'rw' ? 'Ibindi bisobanuro' : 'Additional Info';
+            case 1: return t('pub.apply.step1_title');
+            case 2: return t('pub.apply.step2_title');
+            case 3: return t('pub.apply.step3_title');
+            case 4: return t('pub.apply.step4_title');
             default: return '';
         }
     };
@@ -182,15 +182,15 @@ const ApplyPage = () => {
                         <CheckCircle size={48} className="text-green-500" />
                     </div>
                     <h2 className="text-3xl font-black text-gray-900 mb-4">🎉 {t('pub.apply.success')}</h2>
-                    <p className="text-gray-500 mb-2">Uzabona ubutumwa (SMS) kuri telefone yawe mu gihe gito.</p>
+                    <p className="text-gray-500 mb-2">{t('pub.apply.redirect_msg')}</p>
                     {applicationId && (
                         <p className="text-sm text-primary-600 font-mono bg-primary-50 p-2 rounded-lg mb-6">
-                            Application ID: {applicationId}
+                            {t('pub.apply.application_id')} {applicationId}
                         </p>
                     )}
                     <button onClick={() => window.location.href = '/home'}
                         className="px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl transition-colors">
-                        Subira Ahabanza
+                        {t('pub.apply.back_home')}
                     </button>
                 </div>
             </div>
@@ -240,11 +240,11 @@ const ApplyPage = () => {
                                     {getStepTitle()}
                                 </h2>
                                 <p className="text-primary-200 text-sm mt-1">
-                                    Step {step} of {totalSteps}
+                                    {t('pub.apply.step_of', { step, total: totalSteps })}
                                 </p>
                             </div>
                             <div className="text-white/60 text-sm">
-                                {Math.round((step / totalSteps) * 100)}% Complete
+                                {t('pub.apply.percent_complete', { percent: Math.round((step / totalSteps) * 100) })}
                             </div>
                         </div>
                         <div className="mt-4 h-2 bg-white/20 rounded-full overflow-hidden">
@@ -269,7 +269,7 @@ const ApplyPage = () => {
                                         value={form.first_name}
                                         onChange={handleChange}
                                         className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm ${errors.first_name ? 'border-red-500 bg-red-50' : 'border-gray-200'}`}
-                                        placeholder="Ex: Jean Pierre"
+                                        placeholder={t('pub.apply.placeholder_first')}
                                     />
                                     {errors.first_name && <p className="text-red-500 text-xs mt-1">{errors.first_name}</p>}
                                 </div>
@@ -283,29 +283,29 @@ const ApplyPage = () => {
                                         value={form.last_name}
                                         onChange={handleChange}
                                         className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm ${errors.last_name ? 'border-red-500 bg-red-50' : 'border-gray-200'}`}
-                                        placeholder="Ex: Mugisha"
+                                        placeholder={t('pub.apply.placeholder_last')}
                                     />
                                     {errors.last_name && <p className="text-red-500 text-xs mt-1">{errors.last_name}</p>}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">Gender *</label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">{t('pub.apply.gender')} *</label>
                                     <div className="grid grid-cols-2 gap-4">
                                         <label className={`flex items-center gap-3 p-4 border rounded-xl cursor-pointer transition-all ${form.gender === 'Male' ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:border-primary-300'}`}>
                                             <input type="radio" name="gender" value="Male" checked={form.gender === 'Male'} onChange={handleChange} className="hidden" />
                                             <Users size={20} className={form.gender === 'Male' ? 'text-primary-600' : 'text-gray-400'} />
-                                            <span className={`font-medium ${form.gender === 'Male' ? 'text-primary-600' : 'text-gray-600'}`}>Male</span>
+                                            <span className={`font-medium ${form.gender === 'Male' ? 'text-primary-600' : 'text-gray-600'}`}>{t('pub.apply.male')}</span>
                                         </label>
                                         <label className={`flex items-center gap-3 p-4 border rounded-xl cursor-pointer transition-all ${form.gender === 'Female' ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:border-primary-300'}`}>
                                             <input type="radio" name="gender" value="Female" checked={form.gender === 'Female'} onChange={handleChange} className="hidden" />
                                             <Users size={20} className={form.gender === 'Female' ? 'text-primary-600' : 'text-gray-400'} />
-                                            <span className={`font-medium ${form.gender === 'Female' ? 'text-primary-600' : 'text-gray-600'}`}>Female</span>
+                                            <span className={`font-medium ${form.gender === 'Female' ? 'text-primary-600' : 'text-gray-600'}`}>{t('pub.apply.female')}</span>
                                         </label>
                                     </div>
                                     {errors.gender && <p className="text-red-500 text-xs mt-1">{errors.gender}</p>}
                                 </div>
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">
-                                        <Calendar size={14} className="inline mr-1" /> Date of Birth *
+                                        <Calendar size={14} className="inline mr-1" /> {t('pub.apply.dob')} *
                                     </label>
                                     <input
                                         required
@@ -325,7 +325,7 @@ const ApplyPage = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">
-                                        <Phone size={14} className="inline mr-1" /> {t('pub.apply.phone')} * <span className="font-normal text-gray-400">(SMS izaza hano)</span>
+                                        <Phone size={14} className="inline mr-1" /> {t('pub.apply.phone')} * <span className="font-normal text-gray-400">{t('pub.apply.sms_hint')}</span>
                                     </label>
                                     <input
                                         required
@@ -334,7 +334,7 @@ const ApplyPage = () => {
                                         onChange={handleChange}
                                         type="tel"
                                         className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm ${errors.phone ? 'border-red-500 bg-red-50' : 'border-gray-200'}`}
-                                        placeholder="Ex: 0780000000"
+                                        placeholder={t('pub.apply.placeholder_phone')}
                                     />
                                     {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
                                 </div>
@@ -348,12 +348,12 @@ const ApplyPage = () => {
                                         onChange={handleChange}
                                         type="email"
                                         className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm"
-                                        placeholder="Ex: jean@email.com"
+                                        placeholder={t('pub.apply.placeholder_email')}
                                     />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">
-                                        <MapPin size={14} className="inline mr-1" /> Province *
+                                        <MapPin size={14} className="inline mr-1" /> {t('pub.about.province', { defaultValue: 'Province' })} *
                                     </label>
                                     <div className="relative">
                                         <select
@@ -363,7 +363,7 @@ const ApplyPage = () => {
                                             onChange={handleChange}
                                             className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm appearance-none bg-white pr-10 ${errors.province ? 'border-red-500 bg-red-50' : 'border-gray-200'}`}
                                         >
-                                            <option value="">-- Hitamo Intara --</option>
+                                            <option value="">{t('pub.apply.select_province')}</option>
                                             {PROVINCES.map((p, i) => (
                                                 <option key={p} value={p}>{lang === 'rw' ? PROVINCES_RW[i] : p}</option>
                                             ))}
@@ -374,26 +374,26 @@ const ApplyPage = () => {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">
-                                        <Home size={14} className="inline mr-1" /> District / Akarere
+                                        <Home size={14} className="inline mr-1" /> {t('pub.apply.district')}
                                     </label>
                                     <input
                                         name="district"
                                         value={form.district}
                                         onChange={handleChange}
                                         className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm"
-                                        placeholder="Ex: Gasabo"
+                                        placeholder={t('pub.apply.placeholder_district')}
                                     />
                                 </div>
                                 <div className="md:col-span-2">
                                     <label className="block text-sm font-bold text-gray-700 mb-2">
-                                        Sector / Umurenge
+                                        {t('pub.apply.sector')}
                                     </label>
                                     <input
                                         name="sector"
                                         value={form.sector}
                                         onChange={handleChange}
                                         className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm"
-                                        placeholder="Ex: Kacyiru"
+                                        placeholder={t('pub.apply.placeholder_sector')}
                                     />
                                 </div>
                             </div>
@@ -455,7 +455,7 @@ const ApplyPage = () => {
                                             disabled={!form.trade}
                                             className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm appearance-none bg-white pr-10 disabled:opacity-50 disabled:cursor-not-allowed ${errors.level ? 'border-red-500 bg-red-50' : 'border-gray-200'}`}
                                         >
-                                            <option value="">-- Hitamo Urwego --</option>
+                                            <option value="">{t('pub.apply.select_level')}</option>
                                             {(LEVELS[form.trade] || []).map((lv, i) => (
                                                 <option key={lv} value={lv}>{lang === 'rw' ? LEVELS_RW[form.trade][i] : lv}</option>
                                             ))}
@@ -479,27 +479,27 @@ const ApplyPage = () => {
                                         value={form.previous_school}
                                         onChange={handleChange}
                                         className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm"
-                                        placeholder="Ex: GS Kigali"
+                                        placeholder={t('pub.apply.placeholder_school')}
                                     />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">
-                                        <Award size={14} className="inline mr-1" /> Do you have a laptop?
+                                        <Award size={14} className="inline mr-1" /> {t('pub.apply.has_laptop')}
                                     </label>
                                     <div className="grid grid-cols-2 gap-4">
                                         <label className={`flex items-center gap-3 p-4 border rounded-xl cursor-pointer transition-all ${form.has_laptop === 'yes' ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-green-300'}`}>
                                             <input type="radio" name="has_laptop" value="yes" checked={form.has_laptop === 'yes'} onChange={handleChange} className="hidden" />
-                                            <span className={`font-medium ${form.has_laptop === 'yes' ? 'text-green-600' : 'text-gray-600'}`}>Yes</span>
+                                            <span className={`font-medium ${form.has_laptop === 'yes' ? 'text-green-600' : 'text-gray-600'}`}>{t('pub.apply.yes')}</span>
                                         </label>
                                         <label className={`flex items-center gap-3 p-4 border rounded-xl cursor-pointer transition-all ${form.has_laptop === 'no' ? 'border-amber-500 bg-amber-50' : 'border-gray-200 hover:border-amber-300'}`}>
                                             <input type="radio" name="has_laptop" value="no" checked={form.has_laptop === 'no'} onChange={handleChange} className="hidden" />
-                                            <span className={`font-medium ${form.has_laptop === 'no' ? 'text-amber-600' : 'text-gray-600'}`}>No</span>
+                                            <span className={`font-medium ${form.has_laptop === 'no' ? 'text-amber-600' : 'text-gray-600'}`}>{t('pub.apply.no')}</span>
                                         </label>
                                     </div>
                                 </div>
                                 <div className="md:col-span-2">
                                     <label className="block text-sm font-bold text-gray-700 mb-2">
-                                        How did you hear about us?
+                                        {t('pub.apply.heard_from')}
                                     </label>
                                     <select
                                         name="heard_from"
@@ -507,17 +507,17 @@ const ApplyPage = () => {
                                         onChange={handleChange}
                                         className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm appearance-none bg-white"
                                     >
-                                        <option value="">-- Select --</option>
-                                        <option value="social">Social Media</option>
-                                        <option value="friend">Friend/Relative</option>
-                                        <option value="school">School Visit</option>
-                                        <option value="radio">Radio</option>
-                                        <option value="other">Other</option>
+                                        <option value="">{t('pub.apply.select_option')}</option>
+                                        <option value="social">{t('pub.apply.heard_social')}</option>
+                                        <option value="friend">{t('pub.apply.heard_friend')}</option>
+                                        <option value="school">{t('pub.apply.heard_school')}</option>
+                                        <option value="radio">{t('pub.apply.heard_radio')}</option>
+                                        <option value="other">{t('pub.apply.heard_other')}</option>
                                     </select>
                                 </div>
                                 <div className="md:col-span-2">
                                     <label className="block text-sm font-bold text-gray-700 mb-2">
-                                        Why do you want to join Garden TVET?
+                                        {t('pub.apply.motivation')}
                                     </label>
                                     <textarea
                                         name="motivation"
@@ -525,14 +525,14 @@ const ApplyPage = () => {
                                         onChange={handleChange}
                                         rows={3}
                                         className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm"
-                                        placeholder="Tell us about your goals and motivations..."
+                                        placeholder={t('pub.apply.motivation_placeholder')}
                                     />
                                 </div>
 
                                 {/* Terms notice */}
                                 <div className="md:col-span-2 bg-primary-50 rounded-xl p-4 border border-primary-100">
                                     <p className="text-xs text-primary-700">
-                                        📱 <strong>Note:</strong> You will receive an SMS on your phone after submission. Make sure your phone number is correct.
+                                        📱 {t('pub.apply.terms_note')}
                                     </p>
                                 </div>
                             </div>
@@ -550,7 +550,7 @@ const ApplyPage = () => {
                                 : 'text-gray-600 hover:bg-gray-200'
                                 }`}
                         >
-                            <ArrowLeft size={18} /> Back
+                            <ArrowLeft size={18} /> {t('pub.apply.back')}
                         </button>
 
                         {step < totalSteps ? (
@@ -559,7 +559,7 @@ const ApplyPage = () => {
                                 onClick={handleNext}
                                 className="px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl transition-all flex items-center gap-2"
                             >
-                                Next <ArrowRight size={18} />
+                                {t('pub.apply.next')} <ArrowRight size={18} />
                             </button>
                         ) : (
                             <button
@@ -569,7 +569,7 @@ const ApplyPage = () => {
                             >
                                 {loading ? (
                                     <>
-                                        <Loader2 size={20} className="animate-spin" /> Submitting...
+                                        <Loader2 size={20} className="animate-spin" /> {t('pub.apply.submitting')}
                                     </>
                                 ) : (
                                     <>

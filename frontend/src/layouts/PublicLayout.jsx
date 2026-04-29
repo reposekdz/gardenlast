@@ -48,9 +48,9 @@ const PublicLayout = () => {
         { to: '/home', label: t('pub.nav.home') },
         { to: '/about', label: t('pub.nav.about') },
         { to: '/services', label: t('pub.nav.services') },
-        { to: '/kwiga', label: 'Kwiga' },
+        { to: '/kwiga', label: t('pub.nav.kwiga') },
         { to: '/news', label: t('pub.nav.news') },
-        { to: '/driving-rules', label: 'Kwiga Gutwara Ibinyabiziga' },
+        { to: '/driving-rules', label: t('pub.nav.driving_rules') },
         { to: '/contact', label: t('pub.nav.contact') },
     ];
 
@@ -71,15 +71,15 @@ const PublicLayout = () => {
                         <div className="flex items-center gap-6">
                             <span className="flex items-center gap-2 font-medium">
                                 <MapPin size={14} className="text-accent-400" />
-                                East, Ngoma
+                                {t('pub.topbar.location')}
                             </span>
                             <Link to="/contact" className="flex items-center gap-2 font-medium hover:text-accent-400 transition-colors">
                                 <Phone size={14} className="text-accent-400" />
-                                Contact Us
+                                {t('pub.topbar.contact')}
                             </Link>
                             <span className="flex items-center gap-2 font-medium hidden lg:flex">
                                 <Mail size={14} className="text-accent-400" />
-                                info@gardentvet.rw
+                                {t('pub.topbar.email')}
                             </span>
                         </div>
                         <div className="flex items-center gap-4">
@@ -218,7 +218,7 @@ const PublicLayout = () => {
                                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                                 <input
                                     type="text"
-                                    placeholder="Search for courses, news, events..."
+                                    placeholder={t('pub.nav.search_placeholder')}
                                     className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-lg"
                                     autoFocus
                                 />
@@ -296,7 +296,7 @@ const PublicLayout = () => {
                                 </div>
                             </div>
                             <p className="text-primary-300 leading-relaxed mb-6">
-                                Empowering students with practical skills and knowledge for a brighter future in Rwanda and beyond.
+                                {t('pub.footer.desc')}
                             </p>
                             <div className="flex gap-3">
                                 <a href="#" className="w-10 h-10 rounded-xl bg-primary-800 hover:bg-accent-500 flex items-center justify-center transition-colors group">
@@ -316,7 +316,7 @@ const PublicLayout = () => {
 
                         {/* Quick Links */}
                         <div>
-                            <h4 className="font-bold text-lg mb-6 text-accent-400">Quick Links</h4>
+                            <h4 className="font-bold text-lg mb-6 text-accent-400">{t('pub.footer.quickLinks')}</h4>
                             <ul className="space-y-3">
                                 {navLinks.map(link => (
                                     <li key={link.to}>
@@ -331,34 +331,34 @@ const PublicLayout = () => {
 
                         {/* Programs */}
                         <div>
-                            <h4 className="font-bold text-lg mb-6 text-accent-400">Programs</h4>
+                            <h4 className="font-bold text-lg mb-6 text-accent-400">{t('pub.footer.programs')}</h4>
                             <ul className="space-y-3 text-primary-300">
                                 <li className="flex items-center gap-2">
                                     <ChevronDown size={12} className="rotate-[-90deg]" />
-                                    Software Development
+                                    {t('pub.footer.programs_software')}
                                 </li>
                                 <li className="flex items-center gap-2">
                                     <ChevronDown size={12} className="rotate-[-90deg]" />
-                                    Automobile Technology
+                                    {t('pub.footer.programs_automobile')}
                                 </li>
                                 <li className="flex items-center gap-2">
                                     <ChevronDown size={12} className="rotate-[-90deg]" />
-                                    Building & Construction
+                                    {t('pub.footer.programs_construction')}
                                 </li>
                                 <li className="flex items-center gap-2">
                                     <ChevronDown size={12} className="rotate-[-90deg]" />
-                                    Electrical Engineering
+                                    {t('pub.footer.programs_electrical')}
                                 </li>
                             </ul>
                         </div>
 
                         {/* Contact */}
                         <div>
-                            <h4 className="font-bold text-lg mb-6 text-accent-400">Contact Us</h4>
+                            <h4 className="font-bold text-lg mb-6 text-accent-400">{t('pub.footer.contact')}</h4>
                             <ul className="space-y-4 text-primary-300">
                                 <li className="flex items-start gap-3">
                                     <MapPin size={20} className="text-accent-400 mt-0.5 flex-shrink-0" />
-                                    <span>Kigali City, Rwanda<br />Near Kigali Convention Centre</span>
+                                    <span>{t('pub.footer.address_line1')}<br />{t('pub.footer.address_line2')}</span>
                                 </li>
                                 <li className="flex items-center gap-3">
                                     <Phone size={20} className="text-accent-400 flex-shrink-0" />
@@ -389,16 +389,16 @@ const PublicLayout = () => {
                         <div className="grid grid-cols-2 gap-3 mb-6">
                             <Link to="/apply" className="bg-accent-500 text-primary-900 py-3 px-4 rounded-xl font-bold text-center flex items-center justify-center gap-2">
                                 <GraduationCap size={18} />
-                                Apply Now
+                                {t('pub.footer.apply_btn')}
                             </Link>
                             <Link to="/contact" className="bg-primary-800 text-white py-3 px-4 rounded-xl font-bold text-center flex items-center justify-center gap-2">
                                 <Mail size={18} />
-                                Contact
+                                {t('pub.footer.contact_btn')}
                             </Link>
                         </div>
 
                         {/* Mobile Accordion Sections */}
-                        <MobileFooterSection title="Quick Links" defaultOpen>
+                        <MobileFooterSection title={t('pub.footer.quickLinks')} defaultOpen>
                             {navLinks.map(link => (
                                 <Link key={link.to} to={link.to} className="block py-2 text-primary-300 hover:text-accent-400">
                                     {link.label}
@@ -406,14 +406,14 @@ const PublicLayout = () => {
                             ))}
                         </MobileFooterSection>
 
-                        <MobileFooterSection title="Programs">
-                            <Link to="/services" className="block py-2 text-primary-300 hover:text-accent-400">Software Development</Link>
-                            <Link to="/services" className="block py-2 text-primary-300 hover:text-accent-400">Automobile Technology</Link>
-                            <Link to="/services" className="block py-2 text-primary-300 hover:text-accent-400">Building & Construction</Link>
-                            <Link to="/services" className="block py-2 text-primary-300 hover:text-accent-400">Electrical Engineering</Link>
+                        <MobileFooterSection title={t('pub.footer.programs')}>
+                            <Link to="/services" className="block py-2 text-primary-300 hover:text-accent-400">{t('pub.footer.programs_software')}</Link>
+                            <Link to="/services" className="block py-2 text-primary-300 hover:text-accent-400">{t('pub.footer.programs_automobile')}</Link>
+                            <Link to="/services" className="block py-2 text-primary-300 hover:text-accent-400">{t('pub.footer.programs_construction')}</Link>
+                            <Link to="/services" className="block py-2 text-primary-300 hover:text-accent-400">{t('pub.footer.programs_electrical')}</Link>
                         </MobileFooterSection>
 
-                        <MobileFooterSection title="Contact">
+                        <MobileFooterSection title={t('pub.footer.contact')}>
                             <a href="tel:+250780000000" className="flex items-center gap-3 py-2 text-primary-300">
                                 <Phone size={18} className="text-accent-400" />
                                 +250 780 000 000
@@ -424,7 +424,7 @@ const PublicLayout = () => {
                             </a>
                             <div className="flex items-start gap-3 py-2 text-primary-300">
                                 <MapPin size={18} className="text-accent-400 mt-1" />
-                                Kigali, Rwanda
+                                {t('pub.contact.default_location')}
                             </div>
                         </MobileFooterSection>
 
@@ -451,7 +451,7 @@ const PublicLayout = () => {
                     {/* Bottom Bar */}
                     <div className="border-t border-primary-800 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
                         <p className="text-primary-400 text-sm">
-                            © {new Date().getFullYear()} Garden TVET School. All rights reserved.
+                            © {new Date().getFullYear()} Garden TVET School. {t('pub.footer.rights')}
                         </p>
                         <div className="flex items-center gap-4 text-sm text-primary-400">
                             <a href="#" className="hover:text-accent-400 transition-colors">Privacy</a>
@@ -467,25 +467,25 @@ const PublicLayout = () => {
                 <div className="flex items-center justify-around h-16">
                     <Link to="/home" className={`flex flex-col items-center justify-center flex-1 h-full ${isActive('/home') ? 'text-primary-600' : 'text-gray-500'}`}>
                         <Home size={20} />
-                        <span className="text-xs mt-1">Home</span>
+                        <span className="text-xs mt-1">{t('pub.nav.home')}</span>
                     </Link>
                     <Link to="/services" className={`flex flex-col items-center justify-center flex-1 h-full ${isActive('/services') ? 'text-primary-600' : 'text-gray-500'}`}>
                         <GraduationCap size={20} />
-                        <span className="text-xs mt-1">Programs</span>
+                        <span className="text-xs mt-1">{t('pub.footer.programs')}</span>
                     </Link>
                     <Link to="/apply" className="flex flex-col items-center justify-center flex-1 h-full text-accent-500">
                         <div className="w-12 h-12 -mt-6 bg-gradient-to-r from-accent-400 to-accent-500 rounded-full flex items-center justify-center shadow-lg">
                             <GraduationCap size={24} className="text-primary-900" />
                         </div>
-                        <span className="text-xs mt-1 font-bold">Apply</span>
+                        <span className="text-xs mt-1 font-bold">{t('pub.footer.apply_btn')}</span>
                     </Link>
                     <Link to="/news" className={`flex flex-col items-center justify-center flex-1 h-full ${isActive('/news') ? 'text-primary-600' : 'text-gray-500'}`}>
                         <Bell size={20} />
-                        <span className="text-xs mt-1">News</span>
+                        <span className="text-xs mt-1">{t('pub.nav.news')}</span>
                     </Link>
                     <Link to="/contact" className={`flex flex-col items-center justify-center flex-1 h-full ${isActive('/contact') ? 'text-primary-600' : 'text-gray-500'}`}>
                         <Phone size={20} />
-                        <span className="text-xs mt-1">Contact</span>
+                        <span className="text-xs mt-1">{t('pub.nav.contact')}</span>
                     </Link>
                 </div>
             </div>

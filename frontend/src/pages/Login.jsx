@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import useAuthStore from '../store/authStore';
+import { applyDefaultLanguageForRole } from '../i18n';
 import { toast } from 'react-toastify';
 import {
     Lock, User, Eye, EyeOff, Loader2,
@@ -45,12 +46,13 @@ const Login = () => {
                     });
                     const { accessToken, ...sdata } = sres.data;
                     loginStore(sdata, accessToken);
-                    toast.success('Murakaza neza, ' + (sdata.first_name || ''));
+                    applyDefaultLanguageForRole(sdata.role);
+                    toast.success(t('common.welcome') + ', ' + (sdata.first_name || ''));
                     navigate('/student-dashboard');
                     return;
                 } catch (sErr) {
                     if (sErr.response?.status === 404 || sErr.response?.status === 401) {
-                        toast.error(sErr.response?.data?.message || 'Kode cyangwa ijambobanga si byo');
+                        toast.error(sErr.response?.data?.message || t('login.invalid_credentials'));
                         return;
                     }
                     // fall through to staff login if other error
@@ -61,14 +63,15 @@ const Login = () => {
             const response = await axios.post(`${API_URL}/api/auth/login`, { username, password });
             const { accessToken, ...userData } = response.data;
             loginStore(userData, accessToken);
+            applyDefaultLanguageForRole(userData.role);
 
-            toast.success('Login Successful! Welcome back.');
+            toast.success(t('login.login_success'));
             if (userData.role === 'parent') navigate('/parents');
             else if (userData.role === 'teacher') navigate('/teacher');
             else if (userData.role === 'student') navigate('/student-dashboard');
             else navigate('/dashboard');
         } catch (error) {
-            const message = error.response?.data?.message || 'Login failed. Please check your credentials.';
+            const message = error.response?.data?.message || t('login.login_failed');
             toast.error(message);
         } finally {
             setLoading(false);
@@ -97,17 +100,17 @@ const Login = () => {
                         <span className="text-accent-400">Garden</span> TVET
                     </h1>
                     <p className="text-xl text-primary-200 text-center max-w-md mb-8">
-                        School Management System
+                        {t('login.system_name')}
                     </p>
 
                     <div className="space-y-4 text-center">
                         <div className="flex items-center gap-3 text-primary-200">
                             <Shield size={20} className="text-accent-400" />
-                            <span>Secure Authentication</span>
+                            <span>{t('login.secure_auth')}</span>
                         </div>
                         <div className="flex items-center gap-3 text-primary-200">
                             <Globe size={20} className="text-accent-400" />
-                            <span>Multi-language Support</span>
+                            <span>{t('login.multi_lang')}</span>
                         </div>
                     </div>
                 </div>
@@ -119,7 +122,7 @@ const Login = () => {
                     {/* Back to Home Button */}
                     <Link to="/home" className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium mb-6 transition-colors">
                         <ArrowLeft size={20} />
-                        {t('pub.nav.home') || 'Back to Home'}
+                        {t('login.back_to_home')}
                     </Link>
 
                     {/* Mobile Logo */}
@@ -132,14 +135,14 @@ const Login = () => {
                     </div>
 
                     <div className="text-center mb-8">
-                        <h2 className="text-3xl font-bold text-gray-900">Murakaza neza</h2>
-                        <p className="text-gray-500 mt-2">Injira muri konte yawe</p>
+                        <h2 className="text-3xl font-bold text-gray-900">{t('login.welcome')}</h2>
+                        <p className="text-gray-500 mt-2">{t('login.subtitle')}</p>
                     </div>
 
                     <form onSubmit={handleLogin} className="space-y-6">
                         <div>
                             <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                Izina, Telephone, cyangwa Kode (2026/SOF/001)
+                                {t('login.username_label')}
                             </label>
                             <div className="relative">
                                 <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
@@ -147,19 +150,19 @@ const Login = () => {
                                     type="text"
                                     required
                                     className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-gray-800 placeholder-gray-400"
-                                    placeholder="Andika izina, telephone, cyangwa kode y'umunyeshuri"
+                                    placeholder={t('login.username_placeholder')}
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
                                 />
                             </div>
                             <p className="text-xs text-gray-500 mt-1.5">
-                                Abanyeshuri: koresha kode yawe (urugero: <span className="font-mono font-bold">2026/SOF/001</span>) na ijambobanga rya nyuma 4 z'imibare ya telefoni yawe.
+                                {t('login.student_hint')}
                             </p>
                         </div>
 
                         <div>
                             <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                ijambobanga
+                                {t('login.password')}
                             </label>
                             <div className="relative">
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
@@ -167,7 +170,7 @@ const Login = () => {
                                     type={showPassword ? "text" : "password"}
                                     required
                                     className="w-full pl-12 pr-14 py-4 bg-white border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-gray-800 placeholder-gray-400"
-                                    placeholder="Injira ijambobanga"
+                                    placeholder={t('login.password_placeholder')}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
@@ -189,10 +192,10 @@ const Login = () => {
                                     onChange={(e) => setRememberMe(e.target.checked)}
                                     className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
                                 />
-                                <span className="text-sm text-gray-600">Nigukumbira</span>
+                                <span className="text-sm text-gray-600">{t('login.remember_me')}</span>
                             </label>
                             <a href="#" className="text-sm text-primary-600 hover:text-primary-700 font-medium">
-                                Ibyifuzo by'ijambobanga?
+                                {t('login.forgot_password')}
                             </a>
                         </div>
 
@@ -205,7 +208,7 @@ const Login = () => {
                                 <Loader2 size={24} className="animate-spin" />
                             ) : (
                                 <>
-                                    Injira
+                                    {t('login.button')}
                                     <ArrowRight size={20} className="ml-2" />
                                 </>
                             )}
@@ -214,9 +217,9 @@ const Login = () => {
 
                     <div className="mt-8 text-center">
                         <p className="text-gray-500">
-                            Uri umubyeyi?{' '}
+                            {t('login.no_account')}{' '}
                             <Link to="/register" className="text-primary-600 hover:text-primary-700 font-semibold">
-                                Iyandikishe hano
+                                {t('login.register_here')}
                             </Link>
                         </p>
                     </div>
@@ -231,7 +234,7 @@ const Login = () => {
                             <button
                                 key={lang.code}
                                 onClick={() => i18n.changeLanguage(lang.code)}
-                                className={`px-4-sm rounded-xl transition py-2 text-colors ${i18n.language === lang.code
+                                className={`px-4 py-2 text-sm rounded-xl transition-colors ${i18n.language === lang.code
                                     ? 'bg-primary-100 text-primary-700 font-semibold'
                                     : 'text-gray-500 hover:bg-gray-100'
                                     }`}

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import {
     ArrowLeft, Calendar, User, Eye, Share2, Heart,
     MessageCircle, ChevronLeft, ChevronRight, X, Image,
@@ -10,6 +11,7 @@ import {
 } from 'lucide-react';
 
 const NewsDetailPage = () => {
+    const { t, i18n } = useTranslation();
     const { id } = useParams();
     const [news, setNews] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -62,7 +64,7 @@ const NewsDetailPage = () => {
             const res = await axios.get(`${API_URL}/api/news/${id}`);
             setNews(res.data);
         } catch (err) {
-            toast.error('Habaye ikibazo mu gufungura ikiganiro');
+            toast.error(t('pub.news_detail.load_error'));
         } finally {
             setLoading(false);
         }
@@ -110,7 +112,7 @@ const NewsDetailPage = () => {
             setIsLiked(res.data.liked);
             setLikes(res.data.likes);
         } catch (err) {
-            toast.error('Habaye ikibazo mu gutanga likes');
+            toast.error(t('pub.news_detail.like_error'));
         }
     };
 
@@ -125,10 +127,10 @@ const NewsDetailPage = () => {
 
         if (isBookmarked) {
             newBookmarks = bookmarks.filter(b => b !== id);
-            toast.success('Bookmark removed');
+            toast.success(t('pub.news_detail.bookmark_removed'));
         } else {
             newBookmarks = [...bookmarks, id];
-            toast.success('Article bookmarked!');
+            toast.success(t('pub.news_detail.bookmarked'));
         }
 
         localStorage.setItem('newsBookmarks', JSON.stringify(newBookmarks));
@@ -164,25 +166,25 @@ const NewsDetailPage = () => {
         try {
             const res = await axios.post(`${API_URL}/api/news-engagement/${id}/comments`, {
                 content: newComment,
-                authorName: userInfo.name || 'Umunyamakuru'
+                authorName: userInfo.name || t('pub.news_detail.anonymous_user')
             });
             setComments([res.data, ...comments]);
             setNewComment('');
-            toast.success('Comment yongewe');
+            toast.success(t('pub.news_detail.comment_added'));
         } catch (err) {
-            toast.error('Habaye ikibazo mu gutanga comment');
+            toast.error(t('pub.news_detail.comment_error'));
         }
     };
 
     const handleDeleteComment = async (commentId) => {
-        if (!window.confirm('Urashaka gusiba aka comment?')) return;
+        if (!window.confirm(t('pub.news_detail.confirm_delete'))) return;
 
         try {
             await axios.delete(`${API_URL}/api/news-engagement/${commentId}/comment`);
             setComments(comments.filter(c => c.id !== commentId));
-            toast.success('Comment sibitswe');
+            toast.success(t('pub.news_detail.comment_deleted'));
         } catch (err) {
-            toast.error('Habaye ikibazo mu gusiba comment');
+            toast.error(t('pub.news_detail.comment_delete_error'));
         }
     };
 
@@ -216,22 +218,29 @@ const NewsDetailPage = () => {
 
     const copyLink = () => {
         navigator.clipboard.writeText(window.location.href);
-        toast.success('Link yagutse!');
+        toast.success(t('pub.news_detail.link_copied'));
         setShowShareMenu(false);
     };
 
     const getTitle = () => {
         if (!news) return '';
-        return news.title_en || news.title_rw || news.title_fr || 'News';
+        const lang = i18n.language;
+        if (lang === 'rw') return news.title_rw || news.title_en || news.title_fr || '';
+        if (lang === 'fr') return news.title_fr || news.title_en || news.title_rw || '';
+        return news.title_en || news.title_rw || news.title_fr || '';
     };
 
     const getContent = () => {
         if (!news) return '';
+        const lang = i18n.language;
+        if (lang === 'rw') return news.content_rw || news.content_en || news.content_fr || '';
+        if (lang === 'fr') return news.content_fr || news.content_en || news.content_rw || '';
         return news.content_en || news.content_rw || news.content_fr || '';
     };
 
     const formatDate = (date) => {
-        return new Date(date).toLocaleDateString('en-US', {
+        const localeMap = { en: 'en-US', rw: 'rw-RW', fr: 'fr-FR' };
+        return new Date(date).toLocaleDateString(localeMap[i18n.language] || 'en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
@@ -246,10 +255,10 @@ const NewsDetailPage = () => {
         const diffHours = Math.floor(diffMs / 3600000);
         const diffDays = Math.floor(diffMs / 86400000);
 
-        if (diffMins < 1) return 'None';
-        if (diffMins < 60) return `${diffMins} min`;
-        if (diffHours < 24) return `${diffHours} h`;
-        if (diffDays < 7) return `${diffDays} days`;
+        if (diffMins < 1) return t('pub.news_detail.time_just_now');
+        if (diffMins < 60) return t('pub.news_detail.time_min', { n: diffMins });
+        if (diffHours < 24) return t('pub.news_detail.time_hour', { n: diffHours });
+        if (diffDays < 7) return t('pub.news_detail.time_days', { n: diffDays });
         return formatDate(date);
     };
 
@@ -280,8 +289,8 @@ const NewsDetailPage = () => {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
-                    <p className="text-gray-500 mb-4">Ikiganiro ntikibonetse</p>
-                    <Link to="/" className="text-primary-600 hover:underline">Subira kuri home</Link>
+                    <p className="text-gray-500 mb-4">{t('pub.news_detail.not_found')}</p>
+                    <Link to="/" className="text-primary-600 hover:underline">{t('pub.news_detail.back_home')}</Link>
                 </div>
             </div>
         );
@@ -303,28 +312,28 @@ const NewsDetailPage = () => {
                     <button
                         onClick={handleLike}
                         className={`p-3 rounded-full shadow-lg transition-all ${isLiked ? 'bg-red-500 text-white' : 'bg-white text-gray-600 hover:bg-red-50'}`}
-                        title={isLiked ? 'Unlike' : 'Like'}
+                        title={isLiked ? t('pub.news_detail.unlike') : t('pub.news_detail.like')}
                     >
                         <Heart size={20} fill={isLiked ? 'currentColor' : 'none'} />
                     </button>
                     <button
                         onClick={handleBookmark}
                         className={`p-3 rounded-full shadow-lg transition-all ${isBookmarked ? 'bg-primary-600 text-white' : 'bg-white text-gray-600 hover:bg-primary-50'}`}
-                        title={isBookmarked ? 'Remove Bookmark' : 'Bookmark'}
+                        title={isBookmarked ? t('pub.news_detail.remove_bookmark') : t('pub.news_detail.bookmark')}
                     >
                         <Bookmark size={20} fill={isBookmarked ? 'currentColor' : 'none'} />
                     </button>
                     <button
                         onClick={handlePrint}
                         className="p-3 rounded-full bg-white shadow-lg text-gray-600 hover:bg-gray-50 transition-all"
-                        title="Print"
+                        title={t('pub.news_detail.print')}
                     >
                         <Printer size={20} />
                     </button>
                     <button
                         onClick={() => setShowShareMenu(!showShareMenu)}
                         className="p-3 rounded-full bg-primary-600 shadow-lg text-white hover:bg-primary-700 transition-all"
-                        title="Share"
+                        title={t('pub.news_detail.share')}
                     >
                         <Share2 size={20} />
                     </button>
@@ -380,7 +389,7 @@ const NewsDetailPage = () => {
                     to="/news"
                     className="inline-flex items-center gap-2 text-gray-600 hover:text-primary-600 mb-6 transition-colors"
                 >
-                    <ArrowLeft size={20} /> Back to News
+                    <ArrowLeft size={20} /> {t('pub.news_detail.back_news')}
                 </Link>
 
                 {/* Category Badge */}
@@ -404,16 +413,16 @@ const NewsDetailPage = () => {
                     {news.author_id && (
                         <div className="flex items-center gap-2">
                             <User size={18} />
-                            <span>Admin</span>
+                            <span>{t('pub.news_detail.admin')}</span>
                         </div>
                     )}
                     <div className="flex items-center gap-2">
                         <Eye size={18} />
-                        <span>{views} views</span>
+                        <span>{views} {t('pub.news_detail.views')}</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <Clock size={18} />
-                        <span>{getReadingTime(getContent())} min read</span>
+                        <span>{getReadingTime(getContent())} {t('pub.news_detail.min_read')}</span>
                     </div>
                     {news.location && (
                         <div className="flex items-center gap-2">
@@ -433,7 +442,7 @@ const NewsDetailPage = () => {
                             }`}
                     >
                         <Heart size={20} fill={isLiked ? 'currentColor' : 'none'} />
-                        {isLiked ? 'Liked' : 'Like'} ({likes})
+                        {isLiked ? t('pub.news_detail.liked') : t('pub.news_detail.like')} ({likes})
                     </button>
                     <button
                         onClick={handleBookmark}
@@ -443,20 +452,20 @@ const NewsDetailPage = () => {
                             }`}
                     >
                         <Bookmark size={20} fill={isBookmarked ? 'currentColor' : 'none'} />
-                        {isBookmarked ? 'Bookmarked' : 'Bookmark'}
+                        {isBookmarked ? t('pub.news_detail.bookmarked_btn') : t('pub.news_detail.bookmark')}
                     </button>
                     <button
                         onClick={handlePrint}
                         className="flex items-center gap-2 px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition-all"
                     >
-                        <Printer size={20} /> Print
+                        <Printer size={20} /> {t('pub.news_detail.print')}
                     </button>
                     <div className="relative">
                         <button
                             onClick={() => setShowShareMenu(!showShareMenu)}
                             className="flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-semibold transition-colors"
                         >
-                            <Share2 size={20} /> Share
+                            <Share2 size={20} /> {t('pub.news_detail.share')}
                         </button>
 
                         {/* Share Dropdown */}
@@ -491,7 +500,7 @@ const NewsDetailPage = () => {
                                     onClick={copyLink}
                                     className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-gray-700"
                                 >
-                                    <LinkIcon size={20} /> Copy Link
+                                    <LinkIcon size={20} /> {t('pub.news_detail.copy_link')}
                                 </button>
                             </div>
                         )}
@@ -501,7 +510,7 @@ const NewsDetailPage = () => {
                 {/* Thumbnail Gallery (if not hero) */}
                 {images.length > 1 && (
                     <div className="mb-8">
-                        <p className="text-sm text-gray-500 mb-3">Gallery ({images.length} photos)</p>
+                        <p className="text-sm text-gray-500 mb-3">{t('pub.news_detail.gallery_count', { count: images.length })}</p>
                         <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
                             {images.map((img, idx) => (
                                 <button
@@ -515,7 +524,7 @@ const NewsDetailPage = () => {
                                 >
                                     <img
                                         src={`${API_URL}${img.image_url}`}
-                                        alt={img.caption || `Photo ${idx + 1}`}
+                                        alt={img.caption || t('pub.news_detail.photo', { n: idx + 1 })}
                                         className="w-full h-full object-cover"
                                     />
                                 </button>
@@ -530,7 +539,7 @@ const NewsDetailPage = () => {
                         <div className="relative aspect-video rounded-2xl overflow-hidden bg-black">
                             <iframe
                                 src={news.video_url}
-                                title="Video"
+                                title={t('pub.news_detail.video')}
                                 className="w-full h-full"
                                 allowFullScreen
                             />
@@ -560,9 +569,9 @@ const NewsDetailPage = () => {
                 <div className="mt-12 pt-8 border-t">
                     <div className="flex flex-wrap items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
-                            <span className="text-gray-500">{comments.length} Comments</span>
-                            <span className="text-gray-500">{views} Views</span>
-                            <span className="text-gray-500">{likes} Likes</span>
+                            <span className="text-gray-500">{t('pub.news_detail.comments_count', { count: comments.length })}</span>
+                            <span className="text-gray-500">{t('pub.news_detail.views_count', { count: views })}</span>
+                            <span className="text-gray-500">{t('pub.news_detail.likes_count', { count: likes })}</span>
                         </div>
                     </div>
                 </div>
@@ -571,7 +580,7 @@ const NewsDetailPage = () => {
                 <div className="mt-12 bg-white rounded-2xl shadow-sm p-6 md:p-8">
                     <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
                         <MessageCircle size={24} className="text-primary-600" />
-                        Comments ({comments.length})
+                        {t('pub.news_detail.comments_title', { count: comments.length })}
                     </h3>
 
                     {/* Add Comment Form */}
@@ -581,7 +590,7 @@ const NewsDetailPage = () => {
                                 <textarea
                                     value={newComment}
                                     onChange={(e) => setNewComment(e.target.value)}
-                                    placeholder="Write your comment..."
+                                    placeholder={t('pub.news_detail.write_comment')}
                                     className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
                                     rows={3}
                                 />
@@ -604,7 +613,7 @@ const NewsDetailPage = () => {
                     ) : comments.length === 0 ? (
                         <div className="text-center py-8 text-gray-400">
                             <MessageCircle size={48} className="mx-auto mb-3 opacity-20" />
-                            <p>No comments yet. Be the first to comment!</p>
+                            <p>{t('pub.news_detail.no_comments')}</p>
                         </div>
                     ) : (
                         <div className="space-y-4">
@@ -617,7 +626,7 @@ const NewsDetailPage = () => {
                                             </div>
                                             <div>
                                                 <div className="flex items-center gap-2 mb-1">
-                                                    <span className="font-bold text-gray-900">{comment.author_name || 'Anonymous'}</span>
+                                                    <span className="font-bold text-gray-900">{comment.author_name || t('pub.news_detail.anonymous_user')}</span>
                                                     <span className="text-xs text-gray-400">{formatCommentDate(comment.created_at)}</span>
                                                 </div>
                                                 <p className="text-gray-700">{comment.content}</p>
@@ -641,7 +650,7 @@ const NewsDetailPage = () => {
                 {/* Related Articles */}
                 {relatedNews.length > 0 && (
                     <div className="mt-12">
-                        <h3 className="text-2xl font-bold text-gray-900 mb-6">Related News</h3>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-6">{t('pub.news_detail.related_news')}</h3>
                         <div className="grid md:grid-cols-3 gap-6">
                             {relatedNews.map(article => (
                                 <Link
@@ -682,7 +691,7 @@ const NewsDetailPage = () => {
                 <button
                     onClick={scrollToTop}
                     className="p-3 bg-primary-600 text-white rounded-full shadow-lg hover:bg-primary-700 transition-all"
-                    title="Back to top"
+                    title={t('pub.news_detail.back_to_top')}
                 >
                     <ArrowUp size={20} />
                 </button>
@@ -702,7 +711,7 @@ const NewsDetailPage = () => {
                     </button>
                     <img
                         src={`${API_URL}${selectedImage}`}
-                        alt="Full screen"
+                        alt={t('pub.news_detail.full_screen')}
                         className="max-h-[90vh] max-w-[90vw] object-contain"
                     />
                 </div>

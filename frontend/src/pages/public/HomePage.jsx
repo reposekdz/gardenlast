@@ -327,12 +327,12 @@ const HomePage = () => {
                             {/* Badge */}
                             <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-6 py-3 mb-8 animate-fade-in-up">
                                 <Star size={18} className="text-accent-400 fill-accent-400" />
-                                <span className="text-sm font-bold tracking-widest uppercase">{cmsContent.subtitle || 'Excellence in Technical Education'}</span>
+                                <span className="text-sm font-bold tracking-widest uppercase">{cmsContent.subtitle || t('pub.home.hero_badge')}</span>
                             </div>
 
                             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight mb-6 drop-shadow-2xl animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                                {activeSlides[currentImage]?.title || cmsContent.hero_title || 'Shape Your'} <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-300 to-accent-500">Future Today</span>
+                                {activeSlides[currentImage]?.title || cmsContent.hero_title || t('pub.home.hero_title')} <br />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-300 to-accent-500">{t('pub.home.future_today')}</span>
                             </h1>
 
                             <p className="text-base md:text-lg text-white/80 font-medium leading-relaxed mb-8 max-w-xl drop-shadow-lg animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
@@ -341,12 +341,12 @@ const HomePage = () => {
 
                             <div className="flex flex-wrap gap-4 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
                                 <Link to={activeSlides[currentImage]?.button_link || '/apply'} className="group px-8 py-4 bg-gradient-to-r from-accent-400 to-accent-500 hover:from-accent-300 hover:to-accent-400 text-black font-black uppercase tracking-wider rounded-2xl text-lg transition-all transform hover:scale-105 hover:shadow-2xl shadow-accent-500/30 flex items-center gap-3">
-                                    {activeSlides[currentImage]?.button_text || 'Apply Now'}
+                                    {activeSlides[currentImage]?.button_text || t('pub.home.apply_btn')}
                                     <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
                                 </Link>
                                 <Link to="/about" className="px-8 py-4 bg-white/10 backdrop-blur-md border border-white/30 hover:bg-white/20 text-white font-bold uppercase tracking-wider rounded-2xl text-lg transition-all flex items-center gap-3">
                                     <Play size={20} className="fill-white" />
-                                    Learn More
+                                    {t('pub.home.learn_more')}
                                 </Link>
                             </div>
 
@@ -354,15 +354,15 @@ const HomePage = () => {
                             <div className="flex flex-wrap items-center gap-6 mt-10 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
                                 <div className="flex items-center gap-2">
                                     <CheckCircle size={20} className="text-accent-400" />
-                                    <span className="text-sm font-medium text-white/80">Government Certified</span>
+                                    <span className="text-sm font-medium text-white/80">{t('pub.home.trust_certified')}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <CheckCircle size={20} className="text-accent-400" />
-                                    <span className="text-sm font-medium text-white/80">Industry Partners</span>
+                                    <span className="text-sm font-medium text-white/80">{t('pub.home.trust_partners')}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <CheckCircle size={20} className="text-accent-400" />
-                                    <span className="text-sm font-medium text-white/80">Job Placement</span>
+                                    <span className="text-sm font-medium text-white/80">{t('pub.home.trust_placement')}</span>
                                 </div>
                             </div>
                         </div>
@@ -548,10 +548,10 @@ const HomePage = () => {
             <section className="py-24 bg-gradient-to-br from-gray-50 to-gray-100">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="text-center mb-16">
-                        <span className="inline-block px-4 py-1.5 bg-primary-100 text-primary-600 font-bold text-sm uppercase tracking-widest rounded-full mb-4">School Facilities</span>
-                        <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">Explore Our Campus</h2>
+                        <span className="inline-block px-4 py-1.5 bg-primary-100 text-primary-600 font-bold text-sm uppercase tracking-widest rounded-full mb-4">{t('pub.home.gallery_title')}</span>
+                        <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">{t('pub.home.gallery_subtitle')}</h2>
                         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                            Take a visual tour of our modern facilities and learning environment.
+                            {t('pub.home.gallery_desc', { defaultValue: 'Take a visual tour of our modern facilities and learning environment.' })}
                         </p>
                     </div>
 
@@ -724,19 +724,19 @@ const HomePage = () => {
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="flex flex-col md:flex-row items-end justify-between mb-12">
                         <div>
-                            <span className="inline-block px-4 py-1.5 bg-primary-100 text-primary-600 font-bold text-sm uppercase tracking-widest rounded-full mb-4">Latest News</span>
-                            <h2 className="text-4xl font-black text-gray-900">Stay Updated</h2>
+                            <span className="inline-block px-4 py-1.5 bg-primary-100 text-primary-600 font-bold text-sm uppercase tracking-widest rounded-full mb-4">{t('pub.home.news_title')}</span>
+                            <h2 className="text-4xl font-black text-gray-900">{t('pub.home.news_subtitle')}</h2>
                         </div>
                         <Link to="/news" className="flex items-center gap-2 text-primary-600 font-bold hover:gap-3 transition-all mt-4 md:mt-0">
-                            {t('pub.home.news_title')} <ArrowRight size={18} />
+                            {t('pub.home.readMore')} <ArrowRight size={18} />
                         </Link>
                     </div>
 
                     {news.length === 0 ? (
                         <div className="text-center py-16 bg-gray-50 rounded-3xl">
                             <BookOpen size={64} className="mx-auto mb-4 text-gray-300" />
-                            <p className="text-xl font-bold text-gray-400">No news articles yet</p>
-                            <p className="text-gray-400">Check back soon for updates!</p>
+                            <p className="text-xl font-bold text-gray-400">{t('pub.news.no_news')}</p>
+                            <p className="text-gray-400">{t('pub.news.no_results_desc')}</p>
                         </div>
                     ) : (
                         <div className="grid md:grid-cols-3 gap-8">
@@ -785,14 +785,14 @@ const HomePage = () => {
                                                 </div>
                                             )}
                                             <div className="absolute top-4 left-4 px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-full text-xs font-bold text-primary-700 flex items-center gap-1">
-                                                {article.category || 'News'}
+                                                {article.category || t('pub.news.title')}
                                                 {article.images && article.images.length > 1 && (
                                                     <span className="ml-1 text-gray-500">• {article.images.length} photos</span>
                                                 )}
                                             </div>
                                             {article.is_featured && (
                                                 <div className="absolute top-4 right-4 px-2 py-1 bg-accent-500 rounded-full text-xs font-bold text-primary-900">
-                                                    Featured
+                                                    {t('pub.news.featured')}
                                                 </div>
                                             )}
                                         </div>
@@ -816,7 +816,7 @@ const HomePage = () => {
                                                 {getNewsContent(article)}
                                             </p>
                                             <span className="inline-flex items-center gap-1 text-primary-600 font-bold text-sm hover:gap-2 transition-all">
-                                                Read More <ChevronRight size={14} />
+                                                {t('pub.home.readMore')} <ChevronRight size={14} />
                                             </span>
                                         </div>
                                     </Link>
@@ -835,19 +835,19 @@ const HomePage = () => {
                 </div>
 
                 <div className="max-w-4xl mx-auto text-center px-6 relative z-10">
-                    <h2 className="text-4xl md:text-5xl font-black text-white mb-4">Ready to Start Your Journey?</h2>
+                    <h2 className="text-4xl md:text-5xl font-black text-white mb-4">{t('pub.home.cta_title')}</h2>
                     <p className="text-xl text-primary-100 mb-10 max-w-2xl mx-auto">
-                        Join hundreds of students who have transformed their careers through our quality vocational education programs.
+                        {t('pub.home.cta_subtitle')}
                     </p>
                     <div className="flex flex-wrap justify-center gap-4">
                         <Link to="/apply" className="px-10 py-5 bg-accent-500 hover:bg-accent-400 text-primary-900 font-black text-xl rounded-2xl transition-all transform hover:scale-105 shadow-2xl shadow-accent-500/40 flex items-center gap-3">
-                            Apply Now <ArrowRight size={24} />
+                            {t('pub.home.apply_btn')} <ArrowRight size={24} />
                         </Link>
                         <Link to="/parent-apply" className="px-10 py-5 bg-white/10 backdrop-blur-md border-2 border-white/30 hover:bg-white/20 text-white font-bold text-xl rounded-2xl transition-all flex items-center gap-3">
-                            <Heart size={24} /> Parent Apply
+                            <Heart size={24} /> {t('pub.nav.parent_portal')}
                         </Link>
                         <Link to="/contact" className="px-10 py-5 bg-white/10 backdrop-blur-md border-2 border-white/30 hover:bg-white/20 text-white font-bold text-xl rounded-2xl transition-all flex items-center gap-3">
-                            Contact Us
+                            {t('pub.nav.contact')}
                         </Link>
                     </div>
                 </div>
@@ -858,28 +858,28 @@ const HomePage = () => {
                 <div className="max-w-4xl mx-auto px-6">
                     <div className="text-center mb-16">
                         <span className="inline-block px-4 py-1.5 bg-primary-100 text-primary-600 font-bold text-sm uppercase tracking-widest rounded-full mb-4">FAQ</span>
-                        <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">Frequently Asked Questions</h2>
+                        <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">{t('pub.home.faq_title')}</h2>
                         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                            Find answers to common questions about admissions, programs, and student life.
+                            {t('pub.home.faq_subtitle')}
                         </p>
                     </div>
 
                     <div className="space-y-4">
-                        {faqItems.map((faq, i) => (
-                            <div key={i} className="bg-gray-50 rounded-2xl overflow-hidden border border-gray-100">
+                        {[1, 2, 3, 4, 5].map((idx) => (
+                            <div key={idx} className="bg-gray-50 rounded-2xl overflow-hidden border border-gray-100">
                                 <button
-                                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                                    onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                                     className="w-full flex items-center justify-between p-6 text-left hover:bg-gray-100 transition-colors"
                                 >
                                     <span className="font-bold text-gray-800 text-lg pr-4">
-                                        {lang === 'rw' ? faq.question_rw : faq.question}
+                                        {t(`pub.home.faq.q${idx}`)}
                                     </span>
-                                    <ChevronRight size={24} className={`text-primary-600 transition-transform ${openFaq === i ? 'rotate-90' : ''}`} />
+                                    <ChevronRight size={24} className={`text-primary-600 transition-transform ${openFaq === idx ? 'rotate-90' : ''}`} />
                                 </button>
-                                {openFaq === i && (
+                                {openFaq === idx && (
                                     <div className="px-6 pb-6">
                                         <p className="text-gray-600 leading-relaxed">
-                                            {lang === 'rw' ? faq.answer_rw : faq.answer}
+                                            {t(`pub.home.faq.a${idx}`)}
                                         </p>
                                     </div>
                                 )}
@@ -893,31 +893,37 @@ const HomePage = () => {
             <section className="py-24 bg-gradient-to-b from-gray-50 to-primary-50">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="text-center mb-16">
-                        <span className="inline-block px-4 py-1.5 bg-accent-100 text-accent-600 font-bold text-sm uppercase tracking-widest rounded-full mb-4">Success Stories</span>
-                        <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">What Our Graduates Say</h2>
+                        <span className="inline-block px-4 py-1.5 bg-accent-100 text-accent-600 font-bold text-sm uppercase tracking-widest rounded-full mb-4">{t('pub.home.testimonials_title')}</span>
+                        <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">{t('pub.home.testimonials_subtitle')}</h2>
                         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                            Hear from our alumni about their experience at Garden TVET School.
+                            {t('pub.home.testimonials_desc', { defaultValue: 'Hear from our alumni about their experience at Garden TVET School.' })}
                         </p>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-8">
-                        {testimonials.map((testimonial, i) => (
-                            <div key={i} className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-xl transition-shadow">
-                                <Quote size={40} className="text-accent-400 mb-4" />
-                                <p className="text-gray-600 mb-6 leading-relaxed italic">
-                                    "{lang === 'rw' ? testimonial.quote_rw : testimonial.quote}"
-                                </p>
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white font-bold text-lg">
-                                        {testimonial.name.charAt(0)}
-                                    </div>
-                                    <div>
-                                        <p className="font-bold text-gray-900">{testimonial.name}</p>
-                                        <p className="text-sm text-gray-500">{testimonial.role}</p>
+                        {testimonials.map((testimonial, i) => {
+                            const idx = i + 1;
+                            const name = t(`pub.home.testimonials.${idx}.name`, { defaultValue: testimonial.name });
+                            const role = t(`pub.home.testimonials.${idx}.role`, { defaultValue: testimonial.role });
+                            const quote = t(`pub.home.testimonials.${idx}.quote`, { defaultValue: testimonial.quote });
+                            return (
+                                <div key={i} className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+                                    <Quote size={40} className="text-accent-400 mb-4" />
+                                    <p className="text-gray-600 mb-6 leading-relaxed italic">
+                                        "{quote}"
+                                    </p>
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white font-bold text-lg">
+                                            {name.charAt(0)}
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-gray-900">{name}</p>
+                                            <p className="text-sm text-gray-500">{role}</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             </section>

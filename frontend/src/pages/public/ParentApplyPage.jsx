@@ -152,23 +152,23 @@ const ParentApplyPage = () => {
         const newErrors = {};
 
         if (currentStep === 1) {
-            if (!parentForm.parent_name.trim()) newErrors.parent_name = lang === 'rw' ? 'Izina ry\'umubyeyi rirakenewe' : 'Parent/Guardian name is required';
-            if (!parentForm.parent_phone.trim()) newErrors.parent_phone = lang === 'rw' ? 'Telefone irakenewe' : 'Phone number is required';
-            if (!parentForm.relationship) newErrors.relationship = lang === 'rw' ? 'Hitamo isano n\'umwana' : 'Please select relationship';
-            if (!parentForm.province) newErrors.province = lang === 'rw' ? 'Hitamo intara' : 'Please select province';
+            if (!parentForm.parent_name.trim()) newErrors.parent_name = t('pub.parent_apply.err_parent_name');
+            if (!parentForm.parent_phone.trim()) newErrors.parent_phone = t('pub.parent_apply.err_phone');
+            if (!parentForm.relationship) newErrors.relationship = t('pub.parent_apply.err_relationship');
+            if (!parentForm.province) newErrors.province = t('pub.parent_apply.err_province');
         }
 
         if (currentStep === 2) {
-            if (!studentForm.student_first_name.trim()) newErrors.student_first_name = lang === 'rw' ? 'Izina rya mbere rirakenewe' : 'Student first name is required';
-            if (!studentForm.student_last_name.trim()) newErrors.student_last_name = lang === 'rw' ? 'Izina rya kabiri rirakenewe' : 'Student last name is required';
-            if (!studentForm.student_gender) newErrors.student_gender = lang === 'rw' ? 'Hitamo igitsina' : 'Please select gender';
-            if (!studentForm.student_dob) newErrors.student_dob = lang === 'rw' ? 'Itariki y\'amavuko irakenewe' : 'Date of birth is required';
-            if (!studentForm.trade) newErrors.trade = lang === 'rw' ? 'Hitamo ishami' : 'Please select a trade';
-            if (!studentForm.level) newErrors.level = lang === 'rw' ? 'Hitamo icyiciro' : 'Please select a level';
+            if (!studentForm.student_first_name.trim()) newErrors.student_first_name = t('pub.parent_apply.err_student_first');
+            if (!studentForm.student_last_name.trim()) newErrors.student_last_name = t('pub.parent_apply.err_student_last');
+            if (!studentForm.student_gender) newErrors.student_gender = t('pub.parent_apply.err_gender');
+            if (!studentForm.student_dob) newErrors.student_dob = t('pub.parent_apply.err_dob');
+            if (!studentForm.trade) newErrors.trade = t('pub.parent_apply.err_trade');
+            if (!studentForm.level) newErrors.level = t('pub.parent_apply.err_level');
         }
 
         if (currentStep === 3) {
-            if (!additionalForm.terms_accepted) newErrors.terms_accepted = lang === 'rw' ? 'Ugomba kwemeza amasezerano' : 'You must accept the terms and conditions';
+            if (!additionalForm.terms_accepted) newErrors.terms_accepted = t('pub.parent_apply.err_terms');
         }
 
         setErrors(newErrors);
@@ -214,9 +214,9 @@ const ParentApplyPage = () => {
             const response = await axios.post(`${API_URL}/api/applications`, formData);
             setApplicationId(response.data.id || response.data.application_id);
             setSubmitted(true);
-            toast.success(lang === 'rw' ? 'Byagenze neza! Urasubizwa mu butumwa bugufi (SMS).' : 'Application submitted successfully! You will receive an SMS confirmation.');
+            toast.success(t('pub.parent_apply.success_msg'));
         } catch (err) {
-            toast.error(err.response?.data?.message || (lang === 'rw' ? 'Ntibikunze. Ongera ugerageze.' : 'Submission failed. Please try again.'));
+            toast.error(err.response?.data?.message || t('pub.parent_apply.failed_msg'));
         } finally {
             setLoading(false);
         }
@@ -224,9 +224,9 @@ const ParentApplyPage = () => {
 
     const getStepTitle = () => {
         switch (step) {
-            case 1: return lang === 'rw' ? 'Amakuru y\'Umubyeyi' : 'Parent/Guardian Information';
-            case 2: return lang === 'rw' ? 'Amakuru y\'Umwana' : 'Student Information';
-            case 3: return lang === 'rw' ? 'Ibindi bisobanuro' : 'Additional Information';
+            case 1: return t('pub.parent_apply.step1_title');
+            case 2: return t('pub.parent_apply.step2_title');
+            case 3: return t('pub.parent_apply.step3_title');
             default: return '';
         }
     };
@@ -260,26 +260,27 @@ const ParentApplyPage = () => {
                     <div className="w-20 h-20 md:w-24 md:h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
                         <CheckCircle size={48} className="text-green-500" />
                     </div>
-                    <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-4">{lang === 'rw' ? 'Ubusabe bwakiriwe!' : 'Application Submitted!'}</h2>
-                    <p className="text-gray-500 mb-4">
-                        {lang === 'rw' 
-                            ? <span>Urakoze kwiyandikisha muri Garden TVET! Urahabwa ubutumwa bugufi (SMS) kwemeza kuri <strong>{parentForm.parent_phone}</strong> mbere y'amasaha 24.</span>
-                            : <span>Thank you for applying to Garden TVET! You will receive an SMS confirmation at <strong>{parentForm.parent_phone}</strong> within 24 hours.</span>}
-                    </p>
+                    <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-4">{t('pub.parent_apply.submitted_title')}</h2>
+                    <p
+                        className="text-gray-500 mb-4"
+                        dangerouslySetInnerHTML={{
+                            __html: t('pub.parent_apply.submitted_desc', { phone: parentForm.parent_phone })
+                        }}
+                    />
                     {applicationId && (
                         <p className="text-sm text-primary-600 font-mono bg-primary-50 p-3 rounded-lg mb-6">
-                            {lang === 'rw' ? 'Nomero y\'ubusabe:' : 'Application ID:'} {applicationId}
+                            {t('pub.parent_apply.application_id')} {applicationId}
                         </p>
                     )}
                     <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
                         <p className="text-yellow-800 text-sm">
                             <AlertCircle size={16} className="inline mr-2" />
-                            {lang === 'rw' ? 'Tugusabye kugumana nomero yawe iri k\'umurongo kugirango uhabwe amakuru.' : 'Please keep your phone number active for SMS updates about your application status.'}
+                            {t('pub.parent_apply.keep_phone_active')}
                         </p>
                     </div>
                     <button onClick={() => window.location.href = '/home'}
                         className="w-full md:w-auto px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl transition-colors">
-                        {lang === 'rw' ? 'Subira Ahatangirirwa' : 'Return to Home'}
+                        {t('pub.parent_apply.return_home')}
                     </button>
                 </div>
             </div>
@@ -298,8 +299,8 @@ const ParentApplyPage = () => {
                     <div className="w-16 h-16 md:w-20 md:h-20 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4 md:mb-6">
                         <Heart size={32} className="text-accent-400" />
                     </div>
-                    <h1 className="text-3xl md:text-5xl font-black mb-3">{lang === 'rw' ? 'Iyandikishe nk\'Umubyeyi' : 'Iyandikishe nk\'Umubyeyi'}</h1>
-                    <p className="text-primary-200 text-base md:text-lg max-w-xl mx-auto">{lang === 'rw' ? 'Andikisha umwana wawe mu masomo y\'imyuga muri Garden TVET' : 'Register your child for vocational training at Garden TVET'}</p>
+                    <h1 className="text-3xl md:text-5xl font-black mb-3">{t('pub.parent_apply.title')}</h1>
+                    <p className="text-primary-200 text-base md:text-lg max-w-xl mx-auto">{t('pub.parent_apply.subtitle')}</p>
                 </div>
             </div>
 
@@ -321,9 +322,7 @@ const ParentApplyPage = () => {
                                         {step > s ? <CheckCircle size={18} /> : s}
                                     </div>
                                     <span className="hidden md:inline font-medium text-sm">
-                                        {lang === 'rw' 
-                                            ? (s === 1 ? 'Umubyeyi' : s === 2 ? 'Umwana' : 'Ibindi') 
-                                            : (s === 1 ? 'Parent' : s === 2 ? 'Student' : 'Additional')}
+                                        {s === 1 ? t('pub.parent_apply.step1_short') : s === 2 ? t('pub.parent_apply.step2_short') : t('pub.parent_apply.step3_short')}
                                     </span>
                                 </button>
                                 {s < 3 && (
@@ -355,11 +354,11 @@ const ParentApplyPage = () => {
                                 </div>
                                 <div>
                                     <h2 className="text-lg font-black text-white">{getStepTitle()}</h2>
-                                    <p className="text-white/70 text-xs">{lang === 'rw' ? `Intambwe ya ${step} kuri ${totalSteps}` : `Step ${step} of ${totalSteps}`}</p>
+                                    <p className="text-white/70 text-xs">{t('pub.parent_apply.step_of', { step, total: totalSteps })}</p>
                                 </div>
                             </div>
                             <div className="text-white/60 text-sm font-medium">
-                                {Math.round((step / totalSteps) * 100)}% {lang === 'rw' ? 'Yuzuye' : 'Complete'}
+                                {Math.round((step / totalSteps) * 100)}% {t('pub.parent_apply.percent_complete')}
                             </div>
                         </div>
                     </div>
@@ -370,15 +369,15 @@ const ParentApplyPage = () => {
                             <div className="space-y-6">
                                 <div className="bg-gradient-to-r from-blue-50 to-green-50 border border-blue-200 rounded-2xl p-5 mb-6">
                                     <h3 className="font-bold text-blue-800 flex items-center gap-2 mb-2">
-                                        <Shield size={20} /> {lang === 'rw' ? 'Amakuru Mumbashyashya' : 'Parent/Guardian Details'}
+                                        <Shield size={20} /> {t('pub.parent_apply.parent_details')}
                                     </h3>
-                                    <p className="text-blue-600 text-sm">{lang === 'rw' ? 'Saba utange amakuru yawe y\'umubyeyi cyangwa umugari w\'umwana.' : 'Please provide your information as the parent or guardian of the applicant.'}</p>
+                                    <p className="text-blue-600 text-sm">{t('pub.parent_apply.parent_details_desc')}</p>
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                     <div className="md:col-span-2">
                                         <label className="block text-sm font-bold text-gray-700 mb-2">
-                                            {lang === 'rw' ? 'Izina ry\'Umubyeyi cyangwa Umugari *' : 'Parent/Guardian Name *'}
+                                            {t('pub.parent_apply.parent_name')} *
                                         </label>
                                         <input
                                             required
@@ -386,14 +385,14 @@ const ParentApplyPage = () => {
                                             value={parentForm.parent_name}
                                             onChange={handleParentChange}
                                             className={`w-full px-4 py-3.5 border rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm ${errors.parent_name ? 'border-red-500 bg-red-50' : 'border-gray-200'}`}
-                                            placeholder={lang === 'rw' ? 'Urugero: Jean Pierre Mutabazi' : 'Ex: Jean Pierre Mutabazi'}
+                                            placeholder={t('pub.parent_apply.placeholder_parent_name')}
                                         />
-                                        {errors.parent_name && <p className="text-red-500 text-xs mt-1">{lang === 'rw' ? 'Izina ry\'umubyeyi rirakenewe' : errors.parent_name}</p>}
+                                        {errors.parent_name && <p className="text-red-500 text-xs mt-1">{errors.parent_name}</p>}
                                     </div>
 
                                     <div>
                                         <label className="block text-sm font-bold text-gray-700 mb-2">
-                                            Relationship to Student *
+                                            {t('pub.parent_apply.relationship')} *
                                         </label>
                                         <div className="relative">
                                             <select
@@ -402,9 +401,9 @@ const ParentApplyPage = () => {
                                                 onChange={handleParentChange}
                                                 className={`w-full px-4 py-3.5 border rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm appearance-none bg-white pr-10 ${errors.relationship ? 'border-red-500 bg-red-50' : 'border-gray-200'}`}
                                             >
-                                                <option value="">-- Select --</option>
+                                                <option value="">{t('pub.parent_apply.select_option')}</option>
                                                 {RELATIONSHIPS.map(r => (
-                                                    <option key={r.value} value={r.value}>{lang === 'rw' ? r.label_rw : r.label}</option>
+                                                    <option key={r.value} value={r.value}>{t('pub.parent_apply.rel_' + r.value.toLowerCase())}</option>
                                                 ))}
                                             </select>
                                             <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
@@ -414,7 +413,7 @@ const ParentApplyPage = () => {
 
                                     <div>
                                         <label className="block text-sm font-bold text-gray-700 mb-2">
-                                            <Phone size={14} className="inline mr-1" /> {lang === 'rw' ? 'Telefone *' : 'Phone Number *'}
+                                            <Phone size={14} className="inline mr-1" /> {t('pub.parent_apply.phone')} *
                                         </label>
                                         <input
                                             required
@@ -423,15 +422,15 @@ const ParentApplyPage = () => {
                                             onChange={handleParentChange}
                                             type="tel"
                                             className={`w-full px-4 py-3.5 border rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm ${errors.parent_phone ? 'border-red-500 bg-red-50' : 'border-gray-200'}`}
-                                            placeholder={lang === 'rw' ? 'Urugero: 0780000000' : 'Ex: 0780000000'}
+                                            placeholder={t('pub.parent_apply.placeholder_phone')}
                                         />
-                                        <p className="text-xs text-gray-500 mt-1">{lang === 'rw' ? 'Ubutumwa bugufi buzohererezwa kuri iyi nomero' : 'SMS updates will be sent to this number'}</p>
-                                        {errors.parent_phone && <p className="text-red-500 text-xs mt-1">{lang === 'rw' ? 'Telefone irakenewe' : errors.parent_phone}</p>}
+                                        <p className="text-xs text-gray-500 mt-1">{t('pub.parent_apply.sms_note')}</p>
+                                        {errors.parent_phone && <p className="text-red-500 text-xs mt-1">{errors.parent_phone}</p>}
                                     </div>
 
                                     <div>
                                         <label className="block text-sm font-bold text-gray-700 mb-2">
-                                            <Mail size={14} className="inline mr-1" /> {lang === 'rw' ? 'Imeri (Sikambibi)' : 'Email (Optional)'}
+                                            <Mail size={14} className="inline mr-1" /> {t('pub.parent_apply.email')}
                                         </label>
                                         <input
                                             name="parent_email"
@@ -439,13 +438,13 @@ const ParentApplyPage = () => {
                                             onChange={handleParentChange}
                                             type="email"
                                             className="w-full px-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm"
-                                            placeholder={lang === 'rw' ? 'Urugero: umubyeyi@email.com' : 'Ex: parent@email.com'}
+                                            placeholder={t('pub.parent_apply.placeholder_email')}
                                         />
                                     </div>
 
                                     <div>
                                         <label className="block text-sm font-bold text-gray-700 mb-2">
-                                            <MapPin size={14} className="inline mr-1" /> {lang === 'rw' ? 'Intara *' : 'Province *'}
+                                            <MapPin size={14} className="inline mr-1" /> {t('pub.parent_apply.province')} *
                                         </label>
                                         <div className="relative">
                                             <select
@@ -454,26 +453,26 @@ const ParentApplyPage = () => {
                                                 onChange={handleParentChange}
                                                 className={`w-full px-4 py-3.5 border rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm appearance-none bg-white pr-10 ${errors.province ? 'border-red-500 bg-red-50' : 'border-gray-200'}`}
                                             >
-                                                <option value="">{lang === 'rw' ? '-- Hitamo Intara --' : '-- Select Province --'}</option>
+                                                <option value="">{t('pub.parent_apply.select_province')}</option>
                                                 {PROVINCES.map((p, i) => (
                                                     <option key={p} value={p}>{lang === 'rw' ? PROVINCES_RW[i] : p}</option>
                                                 ))}
                                             </select>
                                             <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                                         </div>
-                                        {errors.province && <p className="text-red-500 text-xs mt-1">{lang === 'rw' ? 'Intara irakenewe' : errors.province}</p>}
+                                        {errors.province && <p className="text-red-500 text-xs mt-1">{errors.province}</p>}
                                     </div>
 
                                     <div>
                                         <label className="block text-sm font-bold text-gray-700 mb-2">
-                                            {lang === 'rw' ? 'Akarere' : 'District'}
+                                            {t('pub.parent_apply.district')}
                                         </label>
                                         <input
                                             name="district"
                                             value={parentForm.district}
                                             onChange={handleParentChange}
                                             className="w-full px-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm"
-                                            placeholder={lang === 'rw' ? 'Urugero: Gasabo' : 'Ex: Gasabo'}
+                                            placeholder={t('pub.parent_apply.placeholder_district')}
                                         />
                                     </div>
                                 </div>
@@ -485,15 +484,15 @@ const ParentApplyPage = () => {
                             <div className="space-y-6">
                                 <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-5 mb-6">
                                     <h3 className="font-bold text-green-800 flex items-center gap-2 mb-2">
-                                        <GraduationCap size={20} /> {lang === 'rw' ? 'Amakuru y\'Umwana' : 'Student Information'}
+                                        <GraduationCap size={20} /> {t('pub.parent_apply.student_info')}
                                     </h3>
-                                    <p className="text-green-600 text-sm">{lang === 'rw' ? 'Saba utange ibisobanuro by\'umwana wiyandikishijwe.' : 'Please provide details about the student you are registering.'}</p>
+                                    <p className="text-green-600 text-sm">{t('pub.parent_apply.student_info_desc')}</p>
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                     <div>
                                         <label className="block text-sm font-bold text-gray-700 mb-2">
-                                            {lang === 'rw' ? 'Izina rya Mbere ry\'Umwana *' : 'Student First Name *'}
+                                            {t('pub.parent_apply.student_first')} *
                                         </label>
                                         <input
                                             required
@@ -501,14 +500,14 @@ const ParentApplyPage = () => {
                                             value={studentForm.student_first_name}
                                             onChange={handleStudentChange}
                                             className={`w-full px-4 py-3.5 border rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm ${errors.student_first_name ? 'border-red-500 bg-red-50' : 'border-gray-200'}`}
-                                            placeholder={lang === 'rw' ? 'Urugero: Emmanuel' : 'Ex: Emmanuel'}
+                                            placeholder={t('pub.parent_apply.placeholder_student_first')}
                                         />
-                                        {errors.student_first_name && <p className="text-red-500 text-xs mt-1">{lang === 'rw' ? 'Izina rya mbere rirakenewe' : errors.student_first_name}</p>}
+                                        {errors.student_first_name && <p className="text-red-500 text-xs mt-1">{errors.student_first_name}</p>}
                                     </div>
 
                                     <div>
                                         <label className="block text-sm font-bold text-gray-700 mb-2">
-                                            {lang === 'rw' ? 'Izina rya Kabiri ry\'Umwana *' : 'Student Last Name *'}
+                                            {t('pub.parent_apply.student_last')} *
                                         </label>
                                         <input
                                             required
@@ -516,31 +515,31 @@ const ParentApplyPage = () => {
                                             value={studentForm.student_last_name}
                                             onChange={handleStudentChange}
                                             className={`w-full px-4 py-3.5 border rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm ${errors.student_last_name ? 'border-red-500 bg-red-50' : 'border-gray-200'}`}
-                                            placeholder={lang === 'rw' ? 'Urugero: Mugisha' : 'Ex: Mugisha'}
+                                            placeholder={t('pub.parent_apply.placeholder_student_last')}
                                         />
-                                        {errors.student_last_name && <p className="text-red-500 text-xs mt-1">{lang === 'rw' ? 'Izina rya kabiri rirakenewe' : errors.student_last_name}</p>}
+                                        {errors.student_last_name && <p className="text-red-500 text-xs mt-1">{errors.student_last_name}</p>}
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-2">{lang === 'rw' ? 'Igitsina *' : 'Gender *'}</label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-2">{t('pub.parent_apply.gender')} *</label>
                                         <div className="grid grid-cols-2 gap-3">
                                             <label className={`flex items-center gap-3 p-4 border-2 rounded-xl cursor-pointer transition-all ${studentForm.student_gender === 'Male' ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-green-300'}`}>
                                                 <input type="radio" name="student_gender" value="Male" checked={studentForm.student_gender === 'Male'} onChange={handleStudentChange} className="hidden" />
                                                 <Smile size={22} className={studentForm.student_gender === 'Male' ? 'text-green-600' : 'text-gray-400'} />
-                                                <span className={`font-medium ${studentForm.student_gender === 'Male' ? 'text-green-600' : 'text-gray-600'}`}>{lang === 'rw' ? 'Gabo' : 'Male'}</span>
+                                                <span className={`font-medium ${studentForm.student_gender === 'Male' ? 'text-green-600' : 'text-gray-600'}`}>{t('pub.parent_apply.male')}</span>
                                             </label>
                                             <label className={`flex items-center gap-3 p-4 border-2 rounded-xl cursor-pointer transition-all ${studentForm.student_gender === 'Female' ? 'border-pink-500 bg-pink-50' : 'border-gray-200 hover:border-pink-300'}`}>
                                                 <input type="radio" name="student_gender" value="Female" checked={studentForm.student_gender === 'Female'} onChange={handleStudentChange} className="hidden" />
                                                 <Frown size={22} className={studentForm.student_gender === 'Female' ? 'text-pink-600' : 'text-gray-400'} />
-                                                <span className={`font-medium ${studentForm.student_gender === 'Female' ? 'text-pink-600' : 'text-gray-600'}`}>{lang === 'rw' ? 'Gore' : 'Female'}</span>
+                                                <span className={`font-medium ${studentForm.student_gender === 'Female' ? 'text-pink-600' : 'text-gray-600'}`}>{t('pub.parent_apply.female')}</span>
                                             </label>
                                         </div>
-                                        {errors.student_gender && <p className="text-red-500 text-xs mt-1">{lang === 'rw' ? 'Igitsina kirakenewe' : errors.student_gender}</p>}
+                                        {errors.student_gender && <p className="text-red-500 text-xs mt-1">{errors.student_gender}</p>}
                                     </div>
 
                                     <div>
                                         <label className="block text-sm font-bold text-gray-700 mb-2">
-                                            <Calendar size={14} className="inline mr-1" /> {lang === 'rw' ? 'Itariki y\'Amavuko *' : 'Date of Birth *'}
+                                            <Calendar size={14} className="inline mr-1" /> {t('pub.parent_apply.dob')} *
                                         </label>
                                         <input
                                             required
@@ -552,16 +551,16 @@ const ParentApplyPage = () => {
                                             className={`w-full px-4 py-3.5 border rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm ${errors.student_dob ? 'border-red-500 bg-red-50' : 'border-gray-200'}`}
                                         />
                                         {studentAge && (
-                                            <p className="text-xs text-green-600 mt-1 font-medium">{lang === 'rw' ? `Umwana afite imyaka ${studentAge}` : `Student will be ${studentAge} years old`}</p>
+                                            <p className="text-xs text-green-600 mt-1 font-medium">{t('pub.parent_apply.age_label', { age: studentAge })}</p>
                                         )}
-                                        {errors.student_dob && <p className="text-red-500 text-xs mt-1">{lang === 'rw' ? 'Itariki y\'amavuko irakenewe' : errors.student_dob}</p>}
+                                        {errors.student_dob && <p className="text-red-500 text-xs mt-1">{errors.student_dob}</p>}
                                     </div>
                                 </div>
 
                                 {/* Trade Selection with Images */}
                                 <div className="mt-8">
                                     <label className="block text-sm font-bold text-gray-700 mb-4">
-                                        {lang === 'rw' ? 'Hitamo Ishami *' : 'Select Trade/Program *'}
+                                        {t('pub.parent_apply.select_trade')} *
                                     </label>
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                         {TRADE_OPTIONS.map((trade) => (
@@ -606,13 +605,13 @@ const ParentApplyPage = () => {
                                 {selectedTrade && (
                                     <div className="mt-6 bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-5 border border-gray-200">
                                         <h4 className="font-bold text-gray-800 mb-3 flex items-center gap-2">
-                                            <BookOpen size={18} /> {lang === 'rw' ? 'Ibyerekeye' : 'About'} {lang === 'rw' ? selectedTrade.name_rw : selectedTrade.name}
+                                            <BookOpen size={18} /> {t('pub.parent_apply.about')} {lang === 'rw' ? selectedTrade.name_rw : selectedTrade.name}
                                         </h4>
                                         <p className="text-gray-600 text-sm mb-4">{lang === 'rw' ? selectedTrade.description_rw : selectedTrade.description}</p>
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
-                                                <p className="text-xs font-bold text-gray-400 uppercase mb-2">{lang === 'rw' ? 'Ibyiciro bihari' : 'Available Levels'}</p>
+                                                <p className="text-xs font-bold text-gray-400 uppercase mb-2">{t('pub.parent_apply.avail_levels')}</p>
                                                 <div className="flex flex-wrap gap-2">
                                                     {(lang === 'rw' ? LEVELS_RW[selectedTrade.id] : selectedTrade.levels).map((level, i) => (
                                                         <span key={i} className="px-3 py-1.5 bg-white border border-gray-300 rounded-full text-xs font-medium">
@@ -622,7 +621,7 @@ const ParentApplyPage = () => {
                                                 </div>
                                             </div>
                                             <div>
-                                                <p className="text-xs font-bold text-gray-400 uppercase mb-2">{lang === 'rw' ? 'Amahiriwe y\'Akazi' : 'Career Opportunities'}</p>
+                                                <p className="text-xs font-bold text-gray-400 uppercase mb-2">{t('pub.parent_apply.career_opps')}</p>
                                                 <div className="flex flex-wrap gap-2">
                                                     {(showAllCareers ? selectedTrade.career_paths : selectedTrade.career_paths.slice(0, 3)).map((career, i) => (
                                                         <span key={i} className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">
@@ -634,7 +633,7 @@ const ParentApplyPage = () => {
                                                             onClick={() => setShowAllCareers(!showAllCareers)}
                                                             className="px-3 py-1.5 text-xs font-medium text-primary-600 hover:underline"
                                                         >
-                                                            {showAllCareers ? (lang === 'rw' ? 'Erekana bike' : 'Show less') : `+${selectedTrade.career_paths.length - 3} ${lang === 'rw' ? 'ibindi' : 'more'}`}
+                                                            {showAllCareers ? t('pub.parent_apply.show_less') : `+${selectedTrade.career_paths.length - 3} ${t('pub.parent_apply.more')}`}
                                                         </button>
                                                     )}
                                                 </div>
@@ -646,7 +645,7 @@ const ParentApplyPage = () => {
                                 {/* Level Selection */}
                                 <div className="mt-6">
                                     <label className="block text-sm font-bold text-gray-700 mb-2">
-                                        {lang === 'rw' ? 'Hitamo Icyiciro *' : 'Select Level *'}
+                                        {t('pub.parent_apply.select_level')} *
                                     </label>
                                     <div className="relative">
                                         <select
@@ -657,14 +656,14 @@ const ParentApplyPage = () => {
                                             disabled={!studentForm.trade}
                                             className={`w-full px-4 py-3.5 border rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm appearance-none bg-white pr-10 disabled:opacity-50 disabled:cursor-not-allowed ${errors.level ? 'border-red-500 bg-red-50' : 'border-gray-200'}`}
                                         >
-                                            <option value="">{lang === 'rw' ? '-- Hitamo Icyiciro --' : '-- Select Level --'}</option>
+                                            <option value="">{t('pub.parent_apply.select_level_opt')}</option>
                                             {(LEVELS[studentForm.trade] || []).map((lv, i) => (
                                                 <option key={lv} value={lv}>{lang === 'rw' ? LEVELS_RW[studentForm.trade][i] : lv}</option>
                                             ))}
                                         </select>
                                         <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                                     </div>
-                                    {errors.level && <p className="text-red-500 text-xs mt-1">{lang === 'rw' ? 'Icyiciro kirakenewe' : errors.level}</p>}
+                                    {errors.level && <p className="text-red-500 text-xs mt-1">{errors.level}</p>}
                                 </div>
                             </div>
                         )}
@@ -674,37 +673,37 @@ const ParentApplyPage = () => {
                             <div className="space-y-6">
                                 <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-5 mb-6">
                                     <h3 className="font-bold text-amber-800 flex items-center gap-2 mb-2">
-                                        <FileText size={20} /> {lang === 'rw' ? 'Ibindi Bisobanuro' : 'Additional Information'}
+                                        <FileText size={20} /> {t('pub.parent_apply.additional_info')}
                                     </h3>
-                                    <p className="text-amber-600 text-sm">{lang === 'rw' ? 'Dufashe kumenya byinshi ku mwana wiyandikishijwe.' : 'Help us know more about the student\'s background.'}</p>
+                                    <p className="text-amber-600 text-sm">{t('pub.parent_apply.additional_info_desc')}</p>
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                     <div>
                                         <label className="block text-sm font-bold text-gray-700 mb-2">
-                                            <Building2 size={14} className="inline mr-1" /> {lang === 'rw' ? 'Ishuri Yigagaho Mbere' : 'Previous School'}
+                                            <Building2 size={14} className="inline mr-1" /> {t('pub.parent_apply.prev_school')}
                                         </label>
                                         <input
                                             name="previous_school"
                                             value={additionalForm.previous_school}
                                             onChange={handleAdditionalChange}
                                             className="w-full px-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm"
-                                            placeholder={lang === 'rw' ? 'Urugero: GS Kigali' : 'Ex: GS Kigali'}
+                                            placeholder={t('pub.parent_apply.placeholder_school')}
                                         />
                                     </div>
 
                                     <div>
                                         <label className="block text-sm font-bold text-gray-700 mb-2">
-                                            <Wallet size={14} className="inline mr-1" /> {lang === 'rw' ? 'Umwana afite mudasobwa (Laptop)?' : 'Does the student have a laptop?'}
+                                            <Wallet size={14} className="inline mr-1" /> {t('pub.parent_apply.has_laptop')}
                                         </label>
                                         <div className="grid grid-cols-2 gap-3">
                                             <label className={`flex items-center justify-center gap-2 p-4 border-2 rounded-xl cursor-pointer transition-all ${additionalForm.has_laptop === 'yes' ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-green-300'}`}>
                                                 <input type="radio" name="has_laptop" value="yes" checked={additionalForm.has_laptop === 'yes'} onChange={handleAdditionalChange} className="hidden" />
-                                                <span className={`font-medium ${additionalForm.has_laptop === 'yes' ? 'text-green-600' : 'text-gray-600'}`}>{lang === 'rw' ? 'Yego' : 'Yes'}</span>
+                                                <span className={`font-medium ${additionalForm.has_laptop === 'yes' ? 'text-green-600' : 'text-gray-600'}`}>{t('pub.parent_apply.yes')}</span>
                                             </label>
                                             <label className={`flex items-center justify-center gap-2 p-4 border-2 rounded-xl cursor-pointer transition-all ${additionalForm.has_laptop === 'no' ? 'border-amber-500 bg-amber-50' : 'border-gray-200 hover:border-amber-300'}`}>
                                                 <input type="radio" name="has_laptop" value="no" checked={additionalForm.has_laptop === 'no'} onChange={handleAdditionalChange} className="hidden" />
-                                                <span className={`font-medium ${additionalForm.has_laptop === 'no' ? 'text-amber-600' : 'text-gray-600'}`}>{lang === 'rw' ? 'Oya' : 'No'}</span>
+                                                <span className={`font-medium ${additionalForm.has_laptop === 'no' ? 'text-amber-600' : 'text-gray-600'}`}>{t('pub.parent_apply.no')}</span>
                                             </label>
                                         </div>
                                     </div>
@@ -712,7 +711,7 @@ const ParentApplyPage = () => {
 
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">
-                                        <Target size={14} className="inline mr-1" /> {lang === 'rw' ? 'Ni iyihe mpamvu ushaka kwiga muri Garden TVET?' : 'Why do you want to join Garden TVET? (Motivation)'}
+                                        <Target size={14} className="inline mr-1" /> {t('pub.parent_apply.motivation')}
                                     </label>
                                     <textarea
                                         name="motivation"
@@ -720,7 +719,7 @@ const ParentApplyPage = () => {
                                         onChange={handleAdditionalChange}
                                         rows={4}
                                         className="w-full px-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-sm"
-                                        placeholder={lang === 'rw' ? 'Tubwire impamvu zawe zo kwiga iri shami...' : 'Tell us about your motivation to join this program...'}
+                                        placeholder={t('pub.parent_apply.motivation_placeholder')}
                                     />
                                 </div>
 
@@ -735,27 +734,27 @@ const ParentApplyPage = () => {
                                             className="mt-1 w-5 h-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
                                         />
                                         <div>
-                                            <p className="font-bold text-gray-800">{lang === 'rw' ? 'Amasezerano *' : 'Terms and Conditions *'}</p>
+                                            <p className="font-bold text-gray-800">{t('pub.parent_apply.terms')} *</p>
                                             <p className="text-sm text-gray-500 mt-1">
-                                                {lang === 'rw' ? 'Ndemeza ko amakuru yose natanze ari ukuri:' : 'I confirm that all information provided is accurate:'}
+                                                {t('pub.parent_apply.terms_intro')}
                                             </p>
                                             <ul className="text-sm text-gray-500 mt-2 space-y-1.5">
                                                 <li className="flex items-center gap-2">
                                                     <CheckCircle size={14} className="text-green-500 flex-shrink-0" />
-                                                    {lang === 'rw' ? 'Umwana agomba kwitabira amasomo nkuko biteganijwe' : 'The student must attend regular classes'}
+                                                    {t('pub.parent_apply.term1')}
                                                 </li>
                                                 <li className="flex items-center gap-2">
                                                     <CheckCircle size={14} className="text-green-500 flex-shrink-0" />
-                                                    {lang === 'rw' ? 'Kwishyura amafaranga y\'ishuri ku gihe' : 'Fees must be paid on time each term'}
+                                                    {t('pub.parent_apply.term2')}
                                                 </li>
                                                 <li className="flex items-center gap-2">
                                                     <CheckCircle size={14} className="text-green-500 flex-shrink-0" />
-                                                    {lang === 'rw' ? 'Kwimenyereza umwuga (Internship) ni itegeko' : 'Practical internship is required'}
+                                                    {t('pub.parent_apply.term3')}
                                                 </li>
                                             </ul>
                                         </div>
                                     </label>
-                                    {errors.terms_accepted && <p className="text-red-500 text-xs mt-2">{lang === 'rw' ? 'Ugomba kwemeza amasezerano' : errors.terms_accepted}</p>}
+                                    {errors.terms_accepted && <p className="text-red-500 text-xs mt-2">{errors.terms_accepted}</p>}
                                 </div>
                             </div>
                         )}
@@ -768,7 +767,7 @@ const ParentApplyPage = () => {
                                     onClick={handleBack}
                                     className="flex-1 md:flex-none px-6 py-3.5 border-2 border-gray-300 text-gray-700 font-bold rounded-xl hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
                                 >
-                                    <ArrowLeft size={18} /> {lang === 'rw' ? 'Subira inyuma' : 'Back'}
+                                    <ArrowLeft size={18} /> {t('pub.parent_apply.back')}
                                 </button>
                             )}
                             {step < totalSteps ? (
@@ -777,7 +776,7 @@ const ParentApplyPage = () => {
                                     onClick={handleNext}
                                     className="flex-1 px-6 py-3.5 bg-gradient-to-r from-primary-600 to-green-600 text-white font-bold rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2"
                                 >
-                                    {lang === 'rw' ? 'Komeza' : 'Continue'} <ArrowRight size={18} />
+                                    {t('pub.parent_apply.continue')} <ArrowRight size={18} />
                                 </button>
                             ) : (
                                 <button
@@ -787,10 +786,10 @@ const ParentApplyPage = () => {
                                 >
                                     {loading ? (
                                         <>
-                                            <Loader2 size={18} className="animate-spin" /> {lang === 'rw' ? 'Biratunganywa...' : 'Submitting...'}
+                                            <Loader2 size={18} className="animate-spin" /> {t('pub.parent_apply.submitting')}
                                         </>
                                     ) : (
-                                        <>{lang === 'rw' ? 'Ohereza Ubusabe' : 'Submit Application'} <Send size={18} /></>
+                                        <>{t('pub.parent_apply.submit')} <Send size={18} /></>
                                     )}
                                 </button>
                             )}
@@ -801,7 +800,7 @@ const ParentApplyPage = () => {
                 {/* Help Text */}
                 <div className="mt-6 text-center">
                     <p className="text-gray-500 text-sm">
-                        {lang === 'rw' ? 'Ukeneye ubufasha?' : 'Need help?'} <a href="/contact" className="text-primary-600 font-medium hover:underline">{lang === 'rw' ? 'Twandikire' : 'Contact us'}</a> {lang === 'rw' ? 'cyangwa uhamagare' : 'or call'} +250 780 000 000
+                        {t('pub.parent_apply.need_help')} <a href="/contact" className="text-primary-600 font-medium hover:underline">{t('pub.parent_apply.contact_us')}</a> {t('pub.parent_apply.or_call')} +250 780 000 000
                     </p>
                 </div>
             </div>

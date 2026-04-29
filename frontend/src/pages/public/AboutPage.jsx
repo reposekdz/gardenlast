@@ -42,18 +42,9 @@ const AboutPage = () => {
     };
 
     const getRoleLabel = (role) => {
-        const labels = {
-            director: i18n.language === 'rw' ? 'Director' : i18n.language === 'fr' ? 'Directeur' : 'Director',
-            admin: i18n.language === 'rw' ? 'Admin' : i18n.language === 'fr' ? 'Administrateur' : 'Administrator',
-            director_of_discipline: i18n.language === 'rw' ? 'Dir. Discipline' : i18n.language === 'fr' ? 'Dir. Discipline' : 'Discipline Director',
-            dod: i18n.language === 'rw' ? 'DOD' : i18n.language === 'fr' ? 'DOD' : 'DOD',
-            accountant: i18n.language === 'rw' ? 'Accounting' : i18n.language === 'fr' ? 'Comptable' : 'Accountant',
-            registrar: i18n.language === 'rw' ? 'Registrar' : i18n.language === 'fr' ? 'Secrétaire' : 'Registrar',
-            librarian: i18n.language === 'rw' ? 'Librarian' : i18n.language === 'fr' ? 'Bibliothécaire' : 'Librarian',
-            stock_manager: i18n.language === 'rw' ? 'Stok Manager' : i18n.language === 'fr' ? 'Gestionnaire' : 'Stock Manager',
-            teacher: i18n.language === 'rw' ? 'Teacher' : i18n.language === 'fr' ? 'Enseignant' : 'Teacher'
-        };
-        return labels[role] || role;
+        const key = `pub.about.roles.${role}`;
+        const translated = t(key);
+        return translated === key ? role : translated;
     };
 
     return (
@@ -209,7 +200,7 @@ const AboutPage = () => {
                     ) : (
                         <div className="text-center py-12 text-gray-500">
                             <Users size={48} className="mx-auto mb-4 opacity-50" />
-                            <p>No leadership team members found</p>
+                            <p>{t('pub.about.no_leadership')}</p>
                         </div>
                     )}
                 </div>

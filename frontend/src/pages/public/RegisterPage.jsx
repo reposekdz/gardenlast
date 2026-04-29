@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import RWANDA_LOCATIONS from '../../utils/rwandaLocations';
@@ -9,6 +10,7 @@ const API_URL = import.meta.env.VITE_API_URL || '';
 
 const RegisterPage = () => {
     const navigate = useNavigate();
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [form, setForm] = useState({
@@ -33,10 +35,10 @@ const RegisterPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (form.password !== form.confirm_password) {
-            return toast.error('Amagambo ibanga ntahuza. Ongera ugerageze.');
+            return toast.error(t('register.passwords_no_match'));
         }
         if (form.phone.length < 10) {
-            return toast.error('Nimero ya telefone ntahuza. Andika neza (urugero: 0780000000)');
+            return toast.error(t('register.invalid_phone'));
         }
         setLoading(true);
         try {
@@ -49,10 +51,10 @@ const RegisterPage = () => {
                 district: form.district,
                 sector: form.sector,
             });
-            toast.success('🎉 Konti yashyizweho! Injira ukoresheje nimero ya telefone yawe.');
+            toast.success(t('register.account_created'));
             navigate('/login');
         } catch (err) {
-            toast.error(err.response?.data?.message || 'Habaye ikibazo. Ongera ugerageze.');
+            toast.error(err.response?.data?.message || t('register.register_failed'));
         } finally {
             setLoading(false);
         }
@@ -67,19 +69,19 @@ const RegisterPage = () => {
                 {/* Header */}
                 <div className="text-center mb-8">
                     <Link to="/home" className="inline-flex items-center gap-2 text-sm text-primary-600 hover:text-primary-800 mb-6">
-                        <ArrowLeft size={16} /> Subira ahabanza
+                        <ArrowLeft size={16} /> {t('common.back_home')}
                     </Link>
                     <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary-600 to-primary-800 flex items-center justify-center mx-auto mb-4 shadow-xl shadow-primary-500/30">
                         <GraduationCap size={36} className="text-white" />
                     </div>
-                    <h1 className="text-3xl font-black text-gray-900">Iyandikishe nk'Umubyeyi</h1>
-                    <p className="text-gray-500 mt-2">Twandikishe kugira ngo ukurikire umwana wawe muri Garden TVET</p>
+                    <h1 className="text-3xl font-black text-gray-900">{t('register.title')}</h1>
+                    <p className="text-gray-500 mt-2">{t('register.subtitle')}</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
                     <div className="bg-gradient-to-r from-primary-600 to-primary-700 px-8 py-5">
-                        <h2 className="text-white font-black text-lg">Amakuru Yawe</h2>
-                        <p className="text-primary-200 text-sm">Amakuru yose ni ngombwa keretse ahabikiriwe</p>
+                        <h2 className="text-white font-black text-lg">{t('register.your_info')}</h2>
+                        <p className="text-primary-200 text-sm">{t('register.info_note')}</p>
                     </div>
 
                     <div className="p-8 space-y-6">
@@ -87,14 +89,14 @@ const RegisterPage = () => {
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-bold text-gray-700 mb-2">
-                                    <User size={14} className="inline mr-1" />Izina ry'Ibanze *
+                                    <User size={14} className="inline mr-1" />{t('register.first_name')} *
                                 </label>
                                 <input required name="first_name" value={form.first_name} onChange={handleChange}
                                     className={inputClass} placeholder="Jean Pierre" />
                             </div>
                             <div>
                                 <label className="block text-sm font-bold text-gray-700 mb-2">
-                                    <User size={14} className="inline mr-1" />Izina Ryanyuma *
+                                    <User size={14} className="inline mr-1" />{t('register.last_name')} *
                                 </label>
                                 <input required name="last_name" value={form.last_name} onChange={handleChange}
                                     className={inputClass} placeholder="Mugisha" />
@@ -104,19 +106,19 @@ const RegisterPage = () => {
                         {/* Phone */}
                         <div>
                             <label className="block text-sm font-bold text-gray-700 mb-2">
-                                <Phone size={14} className="inline mr-1" />Nimero ya Telefone * <span className="font-normal text-gray-400">(Izakoreshwa mu kwinjira)</span>
+                                <Phone size={14} className="inline mr-1" />{t('register.phone_label')} * <span className="font-normal text-gray-400">{t('register.phone_hint')}</span>
                             </label>
                             <input required name="phone" value={form.phone} onChange={handleChange}
                                 type="tel" maxLength={13}
                                 className={inputClass} placeholder="0780000000" />
-                            <p className="text-xs text-gray-400 mt-1">📱 Uzabona SMS yo kwemeza kuri iyi nimero</p>
+                            <p className="text-xs text-gray-400 mt-1">📱 {t('register.sms_hint')}</p>
                         </div>
 
                         {/* Password */}
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-bold text-gray-700 mb-2">
-                                    <Lock size={14} className="inline mr-1" />Ijambobanga Rishya *
+                                    <Lock size={14} className="inline mr-1" />{t('register.new_password')} *
                                 </label>
                                 <div className="relative">
                                     <input required name="password" value={form.password} onChange={handleChange}
@@ -130,7 +132,7 @@ const RegisterPage = () => {
                             </div>
                             <div>
                                 <label className="block text-sm font-bold text-gray-700 mb-2">
-                                    <Lock size={14} className="inline mr-1" />Emeza Ijambobanga *
+                                    <Lock size={14} className="inline mr-1" />{t('register.confirm_password')} *
                                 </label>
                                 <input required name="confirm_password" value={form.confirm_password} onChange={handleChange}
                                     type="password"
@@ -142,29 +144,29 @@ const RegisterPage = () => {
                         <div className="bg-primary-50 border border-primary-100 rounded-2xl p-6">
                             <h3 className="font-bold text-primary-800 mb-4 flex items-center gap-2">
                                 <MapPin size={18} className="text-primary-600" />
-                                Aho Utuye mu Rwanda
+                                {t('register.rwanda_address')}
                             </h3>
                             <div className="grid md:grid-cols-3 gap-4">
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">Intara *</label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">{t('register.province')} *</label>
                                     <select required name="province" value={form.province} onChange={handleChange} className={selectClass}>
-                                        <option value="">-- Hitamo Intara --</option>
+                                        <option value="">{t('register.select_province')}</option>
                                         {provinces.map(p => <option key={p} value={p}>{p}</option>)}
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">Akarere *</label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">{t('register.district')} *</label>
                                     <select required name="district" value={form.district} onChange={handleChange}
                                         className={selectClass} disabled={!form.province}>
-                                        <option value="">-- Hitamo Akarere --</option>
+                                        <option value="">{t('register.select_district')}</option>
                                         {districts.map(d => <option key={d} value={d}>{d}</option>)}
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">Umurenge *</label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">{t('register.sector')} *</label>
                                     <select required name="sector" value={form.sector} onChange={handleChange}
                                         className={selectClass} disabled={!form.district}>
-                                        <option value="">-- Hitamo Umurenge --</option>
+                                        <option value="">{t('register.select_sector')}</option>
                                         {sectors.map(s => <option key={s} value={s}>{s}</option>)}
                                     </select>
                                 </div>
@@ -174,12 +176,12 @@ const RegisterPage = () => {
                         <button type="submit" disabled={loading}
                             className="w-full py-4 bg-primary-600 hover:bg-primary-700 text-white font-black text-lg rounded-xl transition-all flex items-center justify-center gap-3 shadow-lg shadow-primary-500/30 disabled:opacity-60">
                             {loading ? (
-                                <><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> Tubitegura...</>
-                            ) : <>Iyandikishe Ubu</>}
+                                <><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> {t('register.creating')}</>
+                            ) : <>{t('register.register_now')}</>}
                         </button>
 
                         <p className="text-center text-sm text-gray-500">
-                            Usanzwe ufite konti? <Link to="/login" className="text-primary-600 font-bold hover:underline">Injira hano</Link>
+                            {t('register.have_account')} <Link to="/login" className="text-primary-600 font-bold hover:underline">{t('register.login_here')}</Link>
                         </p>
                     </div>
                 </form>

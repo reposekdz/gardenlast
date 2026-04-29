@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet, Navigate, Link, useNavigate, useLocation } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
+import { useTranslation } from 'react-i18next';
 import {
     LayoutDashboard, BookOpen, DollarSign, Calendar, ShieldAlert, Bell,
     Settings, LogOut, Menu, X, GraduationCap, Clock, Globe
@@ -8,6 +9,7 @@ import {
 
 const StudentLayout = () => {
     const { user, logout } = useAuthStore();
+    const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -18,16 +20,18 @@ const StudentLayout = () => {
     const isActive = (hash) => location.hash === hash || (hash === '#overview' && !location.hash);
 
     const navItems = [
-        { hash: '#overview',     icon: LayoutDashboard,  label: 'Akanya k\'Ibanze' },
-        { hash: '#grades',       icon: BookOpen,         label: 'Amanota' },
-        { hash: '#fees',         icon: DollarSign,       label: 'Amafaranga' },
-        { hash: '#attendance',   icon: Calendar,         label: 'Kwitabira' },
-        { hash: '#conduct',      icon: ShieldAlert,      label: 'Imyitwarire' },
-        { hash: '#notifications',icon: Bell,             label: 'Ubutumwa' },
-        { hash: '#settings',     icon: Settings,         label: 'Hindura ijambobanga' }
+        { hash: '#overview',     icon: LayoutDashboard,  label: t('student.nav.overview') },
+        { hash: '#grades',       icon: BookOpen,         label: t('student.nav.grades') },
+        { hash: '#fees',         icon: DollarSign,       label: t('student.nav.fees') },
+        { hash: '#attendance',   icon: Calendar,         label: t('student.nav.attendance') },
+        { hash: '#conduct',      icon: ShieldAlert,      label: t('student.nav.conduct') },
+        { hash: '#notifications',icon: Bell,             label: t('student.nav.notifications') },
+        { hash: '#settings',     icon: Settings,         label: t('student.nav.settings') }
     ];
 
     const handleLogout = () => { logout(); navigate('/login'); };
+
+    const localeTag = { rw: 'rw-RW', fr: 'fr-FR', en: 'en-GB' }[i18n.language] || 'rw-RW';
 
     return (
         <div className="flex h-screen bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
@@ -47,7 +51,7 @@ const StudentLayout = () => {
                         <div>
                             <span className="text-xl font-black tracking-tight">Garden</span>
                             <span className="text-accent-400 font-bold">TVET</span>
-                            <p className="text-[10px] text-emerald-200 font-bold uppercase tracking-wider">Student Portal</p>
+                            <p className="text-[10px] text-emerald-200 font-bold uppercase tracking-wider">{t('student.portal')}</p>
                         </div>
                     </Link>
                     <button onClick={() => setSidebarOpen(false)} className="ml-auto lg:hidden p-2 rounded-lg hover:bg-emerald-600">
@@ -83,7 +87,7 @@ const StudentLayout = () => {
                         className="flex items-center px-4 py-3.5 text-sm font-semibold rounded-xl text-emerald-100 hover:bg-emerald-600 hover:text-white"
                     >
                         <Globe className="mr-3 h-5 w-5" />
-                        Inyandiko z'amasomo
+                        {t('student.nav.kwiga')}
                     </Link>
                 </nav>
 
@@ -101,7 +105,7 @@ const StudentLayout = () => {
                         onClick={handleLogout}
                         className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-100 text-sm font-bold"
                     >
-                        <LogOut size={16} /> Sohoka
+                        <LogOut size={16} /> {t('student.logout')}
                     </button>
                 </div>
             </aside>
@@ -113,10 +117,10 @@ const StudentLayout = () => {
                             <Menu size={24} className="text-gray-600" />
                         </button>
                         <div>
-                            <h1 className="text-xl font-bold text-gray-800">Murakaza neza, {user.first_name}</h1>
+                            <h1 className="text-xl font-bold text-gray-800">{t('student.welcome', { name: user.first_name })}</h1>
                             <p className="text-xs text-gray-400 flex items-center gap-1">
                                 <Clock size={12} />
-                                {new Date().toLocaleDateString('rw-RW', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                                {new Date().toLocaleDateString(localeTag, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                             </p>
                         </div>
                     </div>

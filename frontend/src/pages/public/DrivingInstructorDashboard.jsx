@@ -7,7 +7,7 @@ import {
     DollarSign, Package, Bookmark, Target, TrendingUp,
     Play, Clock, Image, Video, File, Settings, LogOut,
     Search, Filter, Download, Eye, CheckSquare, Square,
-    Bell, BookText, History, ArrowLeftRight
+    Bell, BookText, History, ArrowLeftRight, Calendar
 } from 'lucide-react';
 import * as api from '../../utils/drivingApi';
 
@@ -109,7 +109,7 @@ const DrivingInstructorDashboard = () => {
     const submitLesson = async (e) => {
         e.preventDefault();
         if (!lessonsCourseId) {
-            alert('Hitamo ishuri mbere');
+            alert(t('dash.driving_instructor.alerts.lesson_choose_course'));
             return;
         }
         setLessonSaving(true);
@@ -134,22 +134,22 @@ const DrivingInstructorDashboard = () => {
             setLessonFiles({ pdf: null, image: null, attachments: [] });
             setLessonImagePreview('');
             await loadLessons(lessonsCourseId);
-            alert('Isomo ryongereyemo neza!');
+            alert(t('dash.driving_instructor.alerts.lesson_added'));
         } catch (err) {
-            alert('Habayemo ikibazo: ' + err.message);
+            alert(t('dash.driving_instructor.alerts.lesson_save_error') + err.message);
         } finally {
             setLessonSaving(false);
         }
     };
 
     const deleteLesson = async (id) => {
-        if (!confirm('Wifuza gusiba iri somo?')) return;
+        if (!confirm(t('dash.driving_instructor.confirms.delete_lesson'))) return;
         try {
             const res = await fetch(`/api/driving-school/lessons/${id}`, { method: 'DELETE' });
             if (!res.ok) throw new Error();
             await loadLessons(lessonsCourseId);
         } catch (e) {
-            alert('Gusiba byanze');
+            alert(t('dash.driving_instructor.alerts.lesson_delete_failed'));
         }
     };
 
@@ -294,13 +294,13 @@ const DrivingInstructorDashboard = () => {
 
         // Validate form
         const errors = {};
-        if (!learnerForm.firstName.trim()) errors.firstName = 'Izina ry\'ibanze ritazozwa';
-        if (!learnerForm.lastName.trim()) errors.lastName = 'Izina ry\'anyuma ritazozwa';
-        if (!learnerForm.nationalId.trim()) errors.nationalId = 'Nomero y\'igikomete ritazozwa';
-        if (!learnerForm.phone.trim()) errors.phone = 'Nimero ya telefone ritazozwa';
-        if (!learnerForm.email.trim()) errors.email = 'Imeli ritazozwa';
-        if (!learnerForm.dateOfBirth) errors.dateOfBirth = 'Itariki y\'avuko ritazozwa';
-        if (!learnerForm.address.trim()) errors.address = 'Aderesi ritazozwa';
+        if (!learnerForm.firstName.trim()) errors.firstName = t('dash.driving_instructor.errors.first_name_required');
+        if (!learnerForm.lastName.trim()) errors.lastName = t('dash.driving_instructor.errors.last_name_required');
+        if (!learnerForm.nationalId.trim()) errors.nationalId = t('dash.driving_instructor.errors.national_id_required');
+        if (!learnerForm.phone.trim()) errors.phone = t('dash.driving_instructor.errors.phone_required');
+        if (!learnerForm.email.trim()) errors.email = t('dash.driving_instructor.errors.email_required');
+        if (!learnerForm.dateOfBirth) errors.dateOfBirth = t('dash.driving_instructor.errors.dob_required');
+        if (!learnerForm.address.trim()) errors.address = t('dash.driving_instructor.errors.address_required');
 
         if (Object.keys(errors).length > 0) {
             setLearnerErrors(errors);
@@ -321,17 +321,17 @@ const DrivingInstructorDashboard = () => {
             });
 
             if (result.success) {
-                alert('Umunyeshuri mushya yabonetse!');
+                alert(t('dash.driving_instructor.alerts.learner_added'));
                 setShowAddLearner(false);
                 setLearnerForm({ firstName: '', lastName: '', nationalId: '', phone: '', email: '', dateOfBirth: '', address: '' });
                 // Refresh learners list
                 loadInstructorData();
             } else {
-                alert('Habaye ikibazo: ' + (result.message || 'Unknown error'));
+                alert(t('dash.driving_instructor.alerts.generic_error') + (result.message || 'Unknown error'));
             }
         } catch (error) {
             console.error('Error adding learner:', error);
-            alert('Habaye ikibazo. Ongera ugerageze.');
+            alert(t('dash.driving_instructor.alerts.try_again'));
         }
     };
 
@@ -341,10 +341,10 @@ const DrivingInstructorDashboard = () => {
 
         // Validate form
         const errors = {};
-        if (!courseForm.titleKinya.trim()) errors.titleKinya = 'Izina ry\'ishuri ritazozwa';
-        if (!courseForm.descriptionKinya.trim()) errors.descriptionKinya = 'Ibisobanuro ritazozwa';
-        if (courseForm.durationHours <= 0) errors.durationHours = 'Igihe kizotse kuba kuri 0';
-        if (courseForm.price < 0) errors.price = 'Igiciro kizotse kuba kuri 0';
+        if (!courseForm.titleKinya.trim()) errors.titleKinya = t('dash.driving_instructor.errors.course_title_required');
+        if (!courseForm.descriptionKinya.trim()) errors.descriptionKinya = t('dash.driving_instructor.errors.description_required');
+        if (courseForm.durationHours <= 0) errors.durationHours = t('dash.driving_instructor.errors.duration_invalid');
+        if (courseForm.price < 0) errors.price = t('dash.driving_instructor.errors.price_invalid');
 
         if (Object.keys(errors).length > 0) {
             setCourseErrors(errors);
@@ -360,17 +360,17 @@ const DrivingInstructorDashboard = () => {
             }, token);
 
             if (result.success) {
-                alert('Ishuri ryashya!');
+                alert(t('dash.driving_instructor.alerts.course_added'));
                 setShowAddCourse(false);
                 setCourseForm({ title: '', titleKinya: '', description: '', descriptionKinya: '', category: 'amategeko', level: 'rusange', durationHours: 0, price: 0, isPublished: false });
                 // Refresh courses list
                 loadInstructorData();
             } else {
-                alert('Habaye ikibazo: ' + (result.message || 'Unknown error'));
+                alert(t('dash.driving_instructor.alerts.generic_error') + (result.message || 'Unknown error'));
             }
         } catch (error) {
             console.error('Error adding course:', error);
-            alert('Habaye ikibazo. Ongera ugerageze.');
+            alert(t('dash.driving_instructor.alerts.try_again'));
         }
     };
 
@@ -380,11 +380,11 @@ const DrivingInstructorDashboard = () => {
 
         // Validate form
         const errors = {};
-        if (!quizForm.courseId) errors.courseId = 'Ishuri ritazozwa';
-        if (!quizForm.questionKinya.trim()) errors.questionKinya = 'Ikibazo ritazozwa';
-        if (quizForm.options.some(opt => !opt.trim())) errors.options = 'Ampahula zose kizotse zitazozwa';
-        if (quizForm.correctAnswer < 0 || quizForm.correctAnswer > 3) errors.correctAnswer = 'Ampahula yigize ritazozwa';
-        if (!quizForm.explanationKinya.trim()) errors.explanationKinya = 'Ibisobanuro ritazozwa';
+        if (!quizForm.courseId) errors.courseId = t('dash.driving_instructor.errors.course_required');
+        if (!quizForm.questionKinya.trim()) errors.questionKinya = t('dash.driving_instructor.errors.question_required');
+        if (quizForm.options.some(opt => !opt.trim())) errors.options = t('dash.driving_instructor.errors.options_required');
+        if (quizForm.correctAnswer < 0 || quizForm.correctAnswer > 3) errors.correctAnswer = t('dash.driving_instructor.errors.correct_invalid');
+        if (!quizForm.explanationKinya.trim()) errors.explanationKinya = t('dash.driving_instructor.errors.explanation_required');
 
         if (Object.keys(errors).length > 0) {
             setQuizErrors(errors);
@@ -403,17 +403,17 @@ const DrivingInstructorDashboard = () => {
             }, token);
 
             if (result.success) {
-                alert('Ikibazo kyamle!');
+                alert(t('dash.driving_instructor.alerts.quiz_added'));
                 setShowAddQuiz(false);
                 setQuizForm({ courseId: '', question: '', questionKinya: '', options: ['', '', '', ''], correctAnswer: 0, explanation: '', explanationKinya: '', points: 1 });
                 // Refresh quiz questions if needed
                 loadInstructorData();
             } else {
-                alert('Habaye ikibazo: ' + (result.message || 'Unknown error'));
+                alert(t('dash.driving_instructor.alerts.generic_error') + (result.message || 'Unknown error'));
             }
         } catch (error) {
             console.error('Error adding quiz question:', error);
-            alert('Habaye ikibazo. Ongera ugerageze.');
+            alert(t('dash.driving_instructor.alerts.try_again'));
         }
     };
 
@@ -423,9 +423,9 @@ const DrivingInstructorDashboard = () => {
 
         // Validate form
         const errors = {};
-        if (!stockForm.name.trim()) errors.name = 'Izina ritazozwa';
-        if (stockForm.quantity < 0) errors.quantity = 'Ingano kizotse kuba kuri 0';
-        if (stockForm.price < 0) errors.price = 'Igiciro kizotse kuba kuri 0';
+        if (!stockForm.name.trim()) errors.name = t('dash.driving_instructor.errors.name_required');
+        if (stockForm.quantity < 0) errors.quantity = t('dash.driving_instructor.errors.quantity_invalid');
+        if (stockForm.price < 0) errors.price = t('dash.driving_instructor.errors.price_invalid');
 
         if (Object.keys(errors).length > 0) {
             setStockErrors(errors);
@@ -451,7 +451,7 @@ const DrivingInstructorDashboard = () => {
             }
 
             if (result.success) {
-                alert(editingStock ? 'Amakuru y\'ibikoresho yarungutse!' : 'Ikintu gishya cyamle!');
+                alert(editingStock ? t('dash.driving_instructor.alerts.stock_updated') : t('dash.driving_instructor.alerts.stock_added'));
                 setShowAddStock(false);
                 setEditingStock(false);
                 setStockForm({ 
@@ -460,11 +460,11 @@ const DrivingInstructorDashboard = () => {
                 });
                 loadInstructorData();
             } else {
-                alert('Habaye ikibazo: ' + (result.message || 'Unknown error'));
+                alert(t('dash.driving_instructor.alerts.generic_error') + (result.message || 'Unknown error'));
             }
         } catch (error) {
             console.error('Error saving stock:', error);
-            alert('Habaye ikibazo. Ongera ugerageze.');
+            alert(t('dash.driving_instructor.alerts.try_again'));
         }
     };
 
@@ -498,7 +498,7 @@ const DrivingInstructorDashboard = () => {
             }, token);
 
             if (result.success) {
-                alert('Amakuru y\'ibihererezo yabitswe!');
+                alert(t('dash.driving_instructor.alerts.transaction_saved'));
                 setShowTransactionModal(false);
                 setTransactionForm({
                     transaction_type: 'usage',
@@ -509,11 +509,11 @@ const DrivingInstructorDashboard = () => {
                 });
                 loadInstructorData();
             } else {
-                alert('Habaye ikibazo: ' + (result.message || 'Unknown error'));
+                alert(t('dash.driving_instructor.alerts.generic_error') + (result.message || 'Unknown error'));
             }
         } catch (error) {
             console.error('Error adding transaction:', error);
-            alert('Habaye ikibazo. Ongera ugerageze.');
+            alert(t('dash.driving_instructor.alerts.try_again'));
         }
     };
 
@@ -528,12 +528,12 @@ const DrivingInstructorDashboard = () => {
             }
         } catch (error) {
             console.error('Error fetching history:', error);
-            alert('Habaye ikibazo mu gushaka amateka.');
+            alert(t('dash.driving_instructor.alerts.transaction_history_error'));
         }
     };
 
     const deleteLearner = async (id) => {
-        if (!window.confirm('Urashaka gusiba uyu munyeshuri?')) return;
+        if (!window.confirm(t('dash.driving_instructor.confirms.delete_learner'))) return;
         if (!user) return;
 
         try {
@@ -542,16 +542,16 @@ const DrivingInstructorDashboard = () => {
                 // Refresh learners list
                 loadInstructorData();
             } else {
-                alert('Habaye ikibazo: ' + (result.message || 'Unknown error'));
+                alert(t('dash.driving_instructor.alerts.generic_error') + (result.message || 'Unknown error'));
             }
         } catch (error) {
             console.error('Error deleting learner:', error);
-            alert('Habaye ikibazo. Ongera ugerageze.');
+            alert(t('dash.driving_instructor.alerts.try_again'));
         }
     };
 
     const deleteCourse = async (id) => {
-        if (!window.confirm('Urashaka gusiba ishuri rishya?')) return;
+        if (!window.confirm(t('dash.driving_instructor.confirms.delete_course'))) return;
         if (!user) return;
 
         try {
@@ -561,16 +561,16 @@ const DrivingInstructorDashboard = () => {
                 // Refresh courses list
                 loadInstructorData();
             } else {
-                alert('Habaye ikibazo: ' + (result.message || 'Unknown error'));
+                alert(t('dash.driving_instructor.alerts.generic_error') + (result.message || 'Unknown error'));
             }
         } catch (error) {
             console.error('Error deleting course:', error);
-            alert('Habaye ikibazo. Ongera ugerageze.');
+            alert(t('dash.driving_instructor.alerts.try_again'));
         }
     };
 
     const deleteStock = async (id) => {
-        if (!window.confirm('Urashaka gusiba ikintu?')) return;
+        if (!window.confirm(t('dash.driving_instructor.confirms.delete_stock'))) return;
         if (!user) return;
 
         try {
@@ -580,11 +580,11 @@ const DrivingInstructorDashboard = () => {
                 // Refresh stock list
                 loadInstructorData();
             } else {
-                alert('Habaye ikibazo: ' + (result.message || 'Unknown error'));
+                alert(t('dash.driving_instructor.alerts.generic_error') + (result.message || 'Unknown error'));
             }
         } catch (error) {
             console.error('Error deleting stock:', error);
-            alert('Habaye ikibazo. Ongera ugerageze.');
+            alert(t('dash.driving_instructor.alerts.try_again'));
         }
     };
 
@@ -604,9 +604,9 @@ const DrivingInstructorDashboard = () => {
 
         // Validate form
         const errors = {};
-        if (!signForm.title.trim()) errors.title = 'Izina ritazozwa';
-        if (!signForm.description.trim()) errors.description = 'Ibisobanuro ritazozwa';
-        if (!signImage) errors.image = 'Ifoto itazozwa';
+        if (!signForm.title.trim()) errors.title = t('dash.driving_instructor.errors.title_required');
+        if (!signForm.description.trim()) errors.description = t('dash.driving_instructor.errors.description_required');
+        if (!signImage) errors.image = t('dash.driving_instructor.errors.image_required');
 
         if (Object.keys(errors).length > 0) {
             setSignErrors(errors);
@@ -626,24 +626,24 @@ const DrivingInstructorDashboard = () => {
             const result = await api.uploadRoadSign(formData, token);
 
             if (result.success) {
-                alert('Icyapa cyamle!');
+                alert(t('dash.driving_instructor.alerts.sign_added'));
                 setShowAddSign(false);
                 setSignForm({ title: '', description: '', category: 'danger' });
                 setSignImage(null);
                 setSignImagePreview(null);
                 loadInstructorData();
             } else {
-                alert('Habaye ikibazo: ' + (result.message || 'Unknown error'));
+                alert(t('dash.driving_instructor.alerts.generic_error') + (result.message || 'Unknown error'));
             }
         } catch (error) {
             console.error('Error uploading sign:', error);
-            alert('Habaye ikibazo. Ongera ugerageze.');
+            alert(t('dash.driving_instructor.alerts.try_again'));
         }
     };
 
     // Delete Road Sign
     const deleteRoadSign = async (id) => {
-        if (!window.confirm('Urashaka gusiba icyapa?')) return;
+        if (!window.confirm(t('dash.driving_instructor.confirms.delete_sign'))) return;
         if (!user) return;
 
         try {
@@ -652,11 +652,11 @@ const DrivingInstructorDashboard = () => {
             if (result.success) {
                 loadInstructorData();
             } else {
-                alert('Habaye ikibazo: ' + (result.message || 'Unknown error'));
+                alert(t('dash.driving_instructor.alerts.generic_error') + (result.message || 'Unknown error'));
             }
         } catch (error) {
             console.error('Error deleting sign:', error);
-            alert('Habaye ikibazo. Ongera ugerageze.');
+            alert(t('dash.driving_instructor.alerts.try_again'));
         }
     };
 
@@ -676,8 +676,8 @@ const DrivingInstructorDashboard = () => {
             <div className="min-h-screen bg-gray-100 flex items-center justify-center">
                 <div className="text-center">
                     <Car className="w-16 h-16 text-primary-600 mx-auto mb-4" />
-                    <h2 className="text-2xl font-bold text-gray-800 mb-4">Injira nka Muduto</h2>
-                    <p className="text-gray-600">Fata konti yawe ya muduto kugira ngo ufashe</p>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-4">{t('dash.driving_instructor.login_gate.title')}</h2>
+                    <p className="text-gray-600">{t('dash.driving_instructor.login_gate.subtitle')}</p>
                 </div>
             </div>
         );
@@ -694,8 +694,8 @@ const DrivingInstructorDashboard = () => {
                                 <User className="w-6 h-6" />
                             </div>
                             <div>
-                                <h1 className="text-xl font-black">Ishuri ry'Imodoka - Dashboard</h1>
-                                <p className="text-primary-200">Muduto: {user.firstName} {user.lastName}</p>
+                                <h1 className="text-xl font-black">{t('dash.driving_instructor.header.title')}</h1>
+                                <p className="text-primary-200">{t('dash.driving_instructor.header.instructor')}: {user.firstName} {user.lastName}</p>
                             </div>
                         </div>
                         <button
@@ -707,7 +707,7 @@ const DrivingInstructorDashboard = () => {
                             className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl font-bold flex items-center gap-2"
                         >
                             <LogOut className="w-5 h-5" />
-                            Soka
+                            {t('dash.driving_instructor.header.logout')}
                         </button>
                     </div>
                 </div>
@@ -718,17 +718,17 @@ const DrivingInstructorDashboard = () => {
                 <div className="max-w-7xl mx-auto px-4">
                     <div className="flex gap-2 overflow-x-auto py-3">
                         {[
-                            { id: 'dashboard', label: 'Ahibanze', icon: Target },
-                            { id: 'learners', label: 'Abavyigishwa', icon: Users },
-                            { id: 'courses', label: 'Amashuri', icon: BookOpen },
-                            { id: 'lessons', label: 'Amasomo (PDF)', icon: FileText },
-                            { id: 'quizzes', label: 'Ibiganiro', icon: GraduationCap },
-                            { id: 'stock', label: 'Ububiko', icon: Package },
-                            { id: 'ibyapa', label: 'Ibyapa (Signs)', icon: Target },
-                            { id: 'results', label: 'Ibibanza', icon: Award },
-                            { id: 'calendar', label: 'Igitiro', icon: Calendar },
-                            { id: 'notifications', label: 'Ibisubizo', icon: Bell },
-                            { id: 'reports', label: 'Ibitekerezo', icon: TrendingUp },
+                            { id: 'dashboard', label: t('dash.driving_instructor.tabs.dashboard'), icon: Target },
+                            { id: 'learners', label: t('dash.driving_instructor.tabs.learners'), icon: Users },
+                            { id: 'courses', label: t('dash.driving_instructor.tabs.courses'), icon: BookOpen },
+                            { id: 'lessons', label: t('dash.driving_instructor.tabs.lessons'), icon: FileText },
+                            { id: 'quizzes', label: t('dash.driving_instructor.tabs.quizzes'), icon: GraduationCap },
+                            { id: 'stock', label: t('dash.driving_instructor.tabs.stock'), icon: Package },
+                            { id: 'ibyapa', label: t('dash.driving_instructor.tabs.ibyapa'), icon: Target },
+                            { id: 'results', label: t('dash.driving_instructor.tabs.results'), icon: Award },
+                            { id: 'calendar', label: t('dash.driving_instructor.tabs.calendar'), icon: Calendar },
+                            { id: 'notifications', label: t('dash.driving_instructor.tabs.notifications'), icon: Bell },
+                            { id: 'reports', label: t('dash.driving_instructor.tabs.reports'), icon: TrendingUp },
                         ].map(tab => (
                             <button
                                 key={tab.id}
@@ -758,64 +758,64 @@ const DrivingInstructorDashboard = () => {
                                     <Users className="w-6 h-6 text-primary-600" />
                                 </div>
                                 <p className="text-3xl font-black text-primary-800">{stats.totalLearners}</p>
-                                <p className="text-gray-600 font-medium">Abavyigishwa Bose</p>
+                                <p className="text-gray-600 font-medium">{t('dash.driving_instructor.dashboard.stats.total_learners')}</p>
                             </div>
                             <div className="bg-white p-6 rounded-2xl shadow-lg">
                                 <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
                                     <CheckCircle className="w-6 h-6 text-green-600" />
                                 </div>
                                 <p className="text-3xl font-black text-green-600">{stats.activeLearners}</p>
-                                <p className="text-gray-600 font-medium">Barimo Kwiga</p>
+                                <p className="text-gray-600 font-medium">{t('dash.driving_instructor.dashboard.stats.active')}</p>
                             </div>
                             <div className="bg-white p-6 rounded-2xl shadow-lg">
                                 <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
                                     <BookOpen className="w-6 h-6 text-blue-600" />
                                 </div>
                                 <p className="text-3xl font-black text-blue-600">{stats.totalCourses}</p>
-                                <p className="text-gray-600 font-medium">Amashuri</p>
+                                <p className="text-gray-600 font-medium">{t('dash.driving_instructor.dashboard.stats.courses')}</p>
                             </div>
                             <div className="bg-white p-6 rounded-2xl shadow-lg">
                                 <div className="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center mb-4">
                                     <Package className="w-6 h-6 text-yellow-600" />
                                 </div>
                                 <p className="text-3xl font-black text-yellow-600">{stats.totalStock}</p>
-                                <p className="text-gray-600 font-medium">Ibikoresho</p>
+                                <p className="text-gray-600 font-medium">{t('dash.driving_instructor.dashboard.stats.stock')}</p>
                             </div>
                         </div>
 
                         {/* Recent Activity */}
                         <div className="bg-white rounded-2xl shadow-lg p-6">
-                            <h3 className="text-lg font-bold text-gray-800 mb-4">Ibyakozwe ubushize</h3>
+                            <h3 className="text-lg font-bold text-gray-800 mb-4">{t('dash.driving_instructor.dashboard.recent_activity')}</h3>
                             <div className="space-y-4">
                                 <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
                                     <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
                                         <User className="w-5 h-5 text-green-600" />
                                     </div>
                                     <div className="flex-1">
-                                        <p className="font-bold text-gray-800">Umunyeshuri mushya</p>
-                                        <p className="text-sm text-gray-500">Emmanuel Niyonkuri yiyandikishije</p>
+                                        <p className="font-bold text-gray-800">{t('dash.driving_instructor.dashboard.activity.new_learner_title')}</p>
+                                        <p className="text-sm text-gray-500">{t('dash.driving_instructor.dashboard.activity.new_learner_msg')}</p>
                                     </div>
-                                    <span className="text-sm text-gray-400">2 saa zashize</span>
+                                    <span className="text-sm text-gray-400">{t('dash.driving_instructor.dashboard.activity.new_learner_time')}</span>
                                 </div>
                                 <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
                                     <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                                         <GraduationCap className="w-5 h-5 text-blue-600" />
                                     </div>
                                     <div className="flex-1">
-                                        <p className="font-bold text-gray-800">Ikiganiro cyuzuye</p>
-                                        <p className="text-sm text-gray-500">Alice Mukamana yize 80%</p>
+                                        <p className="font-bold text-gray-800">{t('dash.driving_instructor.dashboard.activity.quiz_done_title')}</p>
+                                        <p className="text-sm text-gray-500">{t('dash.driving_instructor.dashboard.activity.quiz_done_msg')}</p>
                                     </div>
-                                    <span className="text-sm text-gray-400">1 umunsi ushize</span>
+                                    <span className="text-sm text-gray-400">{t('dash.driving_instructor.dashboard.activity.quiz_done_time')}</span>
                                 </div>
                                 <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
                                     <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
                                         <Award className="w-5 h-5 text-yellow-600" />
                                     </div>
                                     <div className="flex-1">
-                                        <p className="font-bold text-gray-800">Impamyabumenyi</p>
-                                        <p className="text-sm text-gray-500">Marie yemerewe gutwara</p>
+                                        <p className="font-bold text-gray-800">{t('dash.driving_instructor.dashboard.activity.cert_title')}</p>
+                                        <p className="text-sm text-gray-500">{t('dash.driving_instructor.dashboard.activity.cert_msg')}</p>
                                     </div>
-                                    <span className="text-sm text-gray-400">3 iminsi zashize</span>
+                                    <span className="text-sm text-gray-400">{t('dash.driving_instructor.dashboard.activity.cert_time')}</span>
                                 </div>
                             </div>
                         </div>
@@ -826,24 +826,24 @@ const DrivingInstructorDashboard = () => {
                 {activeTab === 'learners' && (
                     <div className="space-y-6">
                         <div className="flex items-center justify-between">
-                            <h2 className="text-2xl font-black text-gray-800">Abavyigishwa</h2>
+                            <h2 className="text-2xl font-black text-gray-800">{t('dash.driving_instructor.learners.heading')}</h2>
                             <button
                                 onClick={() => setShowAddLearner(true)}
                                 className="px-6 py-3 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 flex items-center gap-2"
                             >
                                 <Plus className="w-5 h-5" />
-                                Fata Umunyeshuri
+                                {t('dash.driving_instructor.learners.add_btn')}
                             </button>
                         </div>
 
                         {/* Add Learner Form */}
                         {showAddLearner && (
                             <div className="bg-white rounded-2xl shadow-lg p-6">
-                                <h3 className="text-xl font-bold text-gray-800 mb-4">Fata Umunyeshuri Mushya</h3>
+                                <h3 className="text-xl font-bold text-gray-800 mb-4">{t('dash.driving_instructor.learners.form_title')}</h3>
                                 <form onSubmit={handleAddLearner} className="space-y-4">
                                     <div className="grid md:grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-700 mb-1">Izina ry'Ibanze</label>
+                                            <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.learners.first_name')}</label>
                                             <input
                                                 type="text"
                                                 value={learnerForm.firstName}
@@ -854,7 +854,7 @@ const DrivingInstructorDashboard = () => {
                                             {learnerErrors.firstName && <p className="text-red-500 text-sm mt-1">{learnerErrors.firstName}</p>}
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-700 mb-1">Izina Ryanyuma</label>
+                                            <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.learners.last_name')}</label>
                                             <input
                                                 type="text"
                                                 value={learnerForm.lastName}
@@ -867,7 +867,7 @@ const DrivingInstructorDashboard = () => {
                                     </div>
                                     <div className="grid md:grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-700 mb-1">Nomero y'Igikomete</label>
+                                            <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.learners.national_id')}</label>
                                             <input
                                                 type="text"
                                                 value={learnerForm.nationalId}
@@ -878,7 +878,7 @@ const DrivingInstructorDashboard = () => {
                                             {learnerErrors.nationalId && <p className="text-red-500 text-sm mt-1">{learnerErrors.nationalId}</p>}
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-700 mb-1">Nimero ya Telefone</label>
+                                            <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.learners.phone')}</label>
                                             <input
                                                 type="tel"
                                                 value={learnerForm.phone}
@@ -891,7 +891,7 @@ const DrivingInstructorDashboard = () => {
                                     </div>
                                     <div className="grid md:grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-700 mb-1">Imeli</label>
+                                            <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.learners.email')}</label>
                                             <input
                                                 type="email"
                                                 value={learnerForm.email}
@@ -901,7 +901,7 @@ const DrivingInstructorDashboard = () => {
                                             {learnerErrors.email && <p className="text-red-500 text-sm mt-1">{learnerErrors.email}</p>}
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-700 mb-1">Itariki y'Amavuko</label>
+                                            <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.learners.date_of_birth')}</label>
                                             <input
                                                 type="date"
                                                 value={learnerForm.dateOfBirth}
@@ -912,7 +912,7 @@ const DrivingInstructorDashboard = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-1">Aderesi</label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.learners.address')}</label>
                                         <input
                                             type="text"
                                             value={learnerForm.address}
@@ -923,10 +923,10 @@ const DrivingInstructorDashboard = () => {
                                     </div>
                                     <div className="flex gap-4">
                                         <button type="submit" className="px-6 py-3 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700">
-                                            Bika
+                                            {t('dash.driving_instructor.learners.save')}
                                         </button>
                                         <button type="button" onClick={() => setShowAddLearner(false)} className="px-6 py-3 bg-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-300">
-                                            Cancela
+                                            {t('dash.driving_instructor.learners.cancel')}
                                         </button>
                                     </div>
                                 </form>
@@ -938,12 +938,12 @@ const DrivingInstructorDashboard = () => {
                             <table className="w-full">
                                 <thead className="bg-gray-50">
                                     <tr>
-                                        <th className="px-6 py-4 text-left font-bold text-gray-700">Izina</th>
-                                        <th className="px-6 py-4 text-left font-bold text-gray-700">Nimero</th>
-                                        <th className="px-6 py-4 text-left font-bold text-gray-700">Telefone</th>
-                                        <th className="px-6 py-4 text-left font-bold text-gray-700">Amashuri</th>
-                                        <th className="px-6 py-4 text-left font-bold text-gray-700">Status</th>
-                                        <th className="px-6 py-4 text-left font-bold text-gray-700">Ibikorwa</th>
+                                        <th className="px-6 py-4 text-left font-bold text-gray-700">{t('dash.driving_instructor.learners.table.name')}</th>
+                                        <th className="px-6 py-4 text-left font-bold text-gray-700">{t('dash.driving_instructor.learners.table.id_no')}</th>
+                                        <th className="px-6 py-4 text-left font-bold text-gray-700">{t('dash.driving_instructor.learners.table.phone')}</th>
+                                        <th className="px-6 py-4 text-left font-bold text-gray-700">{t('dash.driving_instructor.learners.table.courses')}</th>
+                                        <th className="px-6 py-4 text-left font-bold text-gray-700">{t('dash.driving_instructor.learners.table.status')}</th>
+                                        <th className="px-6 py-4 text-left font-bold text-gray-700">{t('dash.driving_instructor.learners.table.actions')}</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-100">
@@ -958,7 +958,7 @@ const DrivingInstructorDashboard = () => {
                                                     learner.status === 'completed' ? 'bg-blue-100 text-blue-700' :
                                                         'bg-yellow-100 text-yellow-700'
                                                     }`}>
-                                                    {learner.status === 'active' ? 'Arimo' : learner.status === 'completed' ? 'Yarize' : 'Ariamari'}
+                                                    {learner.status === 'active' ? t('dash.driving_instructor.learners.status.active') : learner.status === 'completed' ? t('dash.driving_instructor.learners.status.completed') : t('dash.driving_instructor.learners.status.pending')}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4">
@@ -977,25 +977,25 @@ const DrivingInstructorDashboard = () => {
                 {/* Courses Tab */}
                 {activeTab === 'courses' && (
                     <div className="space-y-6">
-                        <div class className="flex items-center justify-between">
-                            <h2 className="text-2xl font-black text-gray-800">Amashuri</h2>
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-2xl font-black text-gray-800">{t('dash.driving_instructor.courses.heading')}</h2>
                             <button
                                 onClick={() => setShowAddCourse(true)}
                                 className="px-6 py-3 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 flex items-center gap-2"
                             >
                                 <Plus className="w-5 h-5" />
-                                Fata Ishuri Rishya
+                                {t('dash.driving_instructor.courses.add_btn')}
                             </button>
                         </div>
 
                         {/* Add Course Form */}
                         {showAddCourse && (
                             <div className="bg-white rounded-2xl shadow-lg p-6">
-                                <h3 className="text-xl font-bold text-gray-800 mb-4">Fata Ishuri Rishya</h3>
+                                <h3 className="text-xl font-bold text-gray-800 mb-4">{t('dash.driving_instructor.courses.form_title')}</h3>
                                 <form onSubmit={handleAddCourse} className="space-y-4">
                                     <div className="grid md:grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-700 mb-1">Izina ry'Ishuri (Ikinyarwanda)</label>
+                                            <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.courses.title_kinya')}</label>
                                             <input
                                                 type="text"
                                                 value={courseForm.titleKinya}
@@ -1006,22 +1006,22 @@ const DrivingInstructorDashboard = () => {
                                             {courseErrors.titleKinya && <p className="text-red-500 text-sm mt-1">{courseErrors.titleKinya}</p>}
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-700 mb-1">Ikiganiro</label>
+                                            <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.courses.category')}</label>
                                             <select
                                                 value={courseForm.category}
                                                 onChange={(e) => setCourseForm({ ...courseForm, category: e.target.value })}
                                                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:outline-none"
                                             >
-                                                <option value="amategeko">Amategeko y'Umuhanda</option>
-                                                <option value="ibirwanisho">Ibirwanisho by'Imodoka</option>
-                                                <option value="ibikoresho">Ibikoresho by'Imodoka</option>
-                                                <option value="imyitozo">Imyitozo y'Umuhanda</option>
-                                                <option value="umutekano">Umutekano w'Umuhanda</option>
+                                                <option value="amategeko">{t('dash.driving_instructor.courses.categories.amategeko')}</option>
+                                                <option value="ibirwanisho">{t('dash.driving_instructor.courses.categories.ibirwanisho')}</option>
+                                                <option value="ibikoresho">{t('dash.driving_instructor.courses.categories.ibikoresho')}</option>
+                                                <option value="imyitozo">{t('dash.driving_instructor.courses.categories.imyitozo')}</option>
+                                                <option value="umutekano">{t('dash.driving_instructor.courses.categories.umutekano')}</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-1">Ibisobanuro</label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.courses.description')}</label>
                                         <textarea
                                             value={courseForm.descriptionKinya}
                                             onChange={(e) => setCourseForm({ ...courseForm, descriptionKinya: e.target.value })}
@@ -1032,7 +1032,7 @@ const DrivingInstructorDashboard = () => {
                                     </div>
                                     <div className="grid md:grid-cols-3 gap-4">
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-700 mb-1">Igihe (amasaha)</label>
+                                            <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.courses.duration_hours')}</label>
                                             <input
                                                 type="number"
                                                 value={courseForm.durationHours}
@@ -1042,19 +1042,19 @@ const DrivingInstructorDashboard = () => {
                                             {courseErrors.durationHours && <p className="text-red-500 text-sm mt-1">{courseErrors.durationHours}</p>}
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-700 mb-1">Ibigo</label>
+                                            <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.courses.level')}</label>
                                             <select
                                                 value={courseForm.level}
                                                 onChange={(e) => setCourseForm({ ...courseForm, level: e.target.value })}
                                                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:outline-none"
                                             >
-                                                <option value="rusange">Rusange</option>
-                                                <option value="inzavuja">Inzavuja</option>
-                                                <option value="kuruze">Kuruze</option>
+                                                <option value="rusange">{t('dash.driving_instructor.courses.levels.rusange')}</option>
+                                                <option value="inzavuja">{t('dash.driving_instructor.courses.levels.inzavuja')}</option>
+                                                <option value="kuruze">{t('dash.driving_instructor.courses.levels.kuruze')}</option>
                                             </select>
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-700 mb-1">Igiciro (Rwf)</label>
+                                            <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.courses.price')}</label>
                                             <input
                                                 type="number"
                                                 value={courseForm.price}
@@ -1066,7 +1066,7 @@ const DrivingInstructorDashboard = () => {
                                     </div>
                                     <div className="grid md:grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-700 mb-1">Ibisobanuro (Ikinyarwanda)</label>
+                                            <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.courses.description_kinya')}</label>
                                             <textarea
                                                 value={courseForm.description}
                                                 onChange={(e) => setCourseForm({ ...courseForm, description: e.target.value })}
@@ -1081,24 +1081,24 @@ const DrivingInstructorDashboard = () => {
                                                     checked={courseForm.isPublished}
                                                     onChange={(e) => setCourseForm({ ...courseForm, isPublished: e.target.checked })}
                                                 />
-                                                Ishuri rwerekanje
+                                                {t('dash.driving_instructor.courses.published')}
                                             </label>
                                         </div>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-1">Ifoto y'Ishuri</label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.courses.image_label')}</label>
                                         <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center">
                                             <Upload className="w-10 h-10 text-gray-400 mx-auto mb-2" />
-                                            <p className="text-gray-500">Kanda hano wongeremo ifoto</p>
+                                            <p className="text-gray-500">{t('dash.driving_instructor.courses.image_drop')}</p>
                                             <input type="file" className="hidden" accept="image/*" />
                                         </div>
                                     </div>
                                     <div className="flex gap-4">
                                         <button type="submit" className="px-6 py-3 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700">
-                                            Bika Ishuri
+                                            {t('dash.driving_instructor.courses.save_btn')}
                                         </button>
                                         <button type="button" onClick={() => setShowAddCourse(false)} className="px-6 py-3 bg-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-300">
-                                            Cancela
+                                            {t('dash.driving_instructor.courses.cancel')}
                                         </button>
                                     </div>
                                 </form>
@@ -1115,12 +1115,12 @@ const DrivingInstructorDashboard = () => {
                                     <div className="p-6">
                                         <h3 className="font-bold text-gray-800 mb-2">{course.title_kinya}</h3>
                                         <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                                            <span className="flex items-center gap-1"><BookText className="w-4 h-4" /> {course.lessons_count} ibice</span>
+                                            <span className="flex items-center gap-1"><BookText className="w-4 h-4" /> {t('dash.driving_instructor.courses.card.lessons_count', { count: course.lessons_count })}</span>
                                             <span className="flex items-center gap-1"><Users className="w-4 h-4" /> {course.enrolled_count}</span>
                                         </div>
                                         <div className="flex items-center justify-between">
                                             <span className={`px-3 py-1 rounded-full text-xs font-bold ${course.is_published ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                                                {course.is_published ? 'Rwerekanwa' : 'Ntirwerekanwa'}
+                                                {course.is_published ? t('dash.driving_instructor.courses.card.published') : t('dash.driving_instructor.courses.card.unpublished')}
                                             </span>
                                             <div className="flex gap-2">
                                                 <button className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg">
@@ -1142,13 +1142,13 @@ const DrivingInstructorDashboard = () => {
                 {activeTab === 'lessons' && (
                     <div className="space-y-6">
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                            <h2 className="text-2xl font-black text-gray-800">Amasomo n'Ibitabo (PDF)</h2>
+                            <h2 className="text-2xl font-black text-gray-800">{t('dash.driving_instructor.lessons.heading')}</h2>
                             <select
                                 value={lessonsCourseId}
                                 onChange={(e) => setLessonsCourseId(e.target.value)}
                                 className="px-4 py-2.5 border-2 border-gray-200 rounded-xl bg-white font-semibold text-gray-700 focus:border-primary-500 focus:outline-none w-full sm:w-auto"
                             >
-                                <option value="">— Hitamo ishuri —</option>
+                                <option value="">{t('dash.driving_instructor.lessons.select_placeholder')}</option>
                                 {courses.map(c => (
                                     <option key={c.id} value={c.id}>{c.title_kinya || c.title}</option>
                                 ))}
@@ -1157,30 +1157,30 @@ const DrivingInstructorDashboard = () => {
 
                         {/* Upload form */}
                         <form onSubmit={submitLesson} className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 space-y-4">
-                            <h3 className="text-lg sm:text-xl font-bold text-gray-800">Ongera isomo rishya</h3>
+                            <h3 className="text-lg sm:text-xl font-bold text-gray-800">{t('dash.driving_instructor.lessons.add_form_title')}</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-1">Izina (Ikinyarwanda)</label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.lessons.title_kinya')}</label>
                                     <input type="text" required value={lessonForm.titleKinya}
                                         onChange={e => setLessonForm({ ...lessonForm, titleKinya: e.target.value })}
                                         className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:outline-none" />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-1">Izina (English)</label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.lessons.title_en')}</label>
                                     <input type="text" value={lessonForm.title}
                                         onChange={e => setLessonForm({ ...lessonForm, title: e.target.value })}
                                         className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:outline-none" />
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-1">Ibisobanuro birambuye</label>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.lessons.detailed_description')}</label>
                                 <textarea rows={4} value={lessonForm.description}
                                     onChange={e => setLessonForm({ ...lessonForm, description: e.target.value })}
-                                    placeholder="Andika ibisobanuro by'isomo ku munyeshuri..."
+                                    placeholder={t('dash.driving_instructor.lessons.description_placeholder')}
                                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:outline-none" />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-1">Inyandiko (content)</label>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.lessons.content')}</label>
                                 <textarea rows={3} value={lessonForm.content}
                                     onChange={e => setLessonForm({ ...lessonForm, content: e.target.value })}
                                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:outline-none" />
@@ -1188,19 +1188,19 @@ const DrivingInstructorDashboard = () => {
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-1">Igihe (iminota)</label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.lessons.duration_minutes')}</label>
                                     <input type="number" min="0" value={lessonForm.durationMinutes}
                                         onChange={e => setLessonForm({ ...lessonForm, durationMinutes: parseInt(e.target.value) || 0 })}
                                         className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:outline-none" />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-1">Urutonde</label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.lessons.order')}</label>
                                     <input type="number" min="0" value={lessonForm.orderNum}
                                         onChange={e => setLessonForm({ ...lessonForm, orderNum: parseInt(e.target.value) || 0 })}
                                         className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:outline-none" />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-1">YouTube / Video URL (optional)</label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.lessons.video_url')}</label>
                                     <input type="url" value={lessonForm.videoUrl}
                                         onChange={e => setLessonForm({ ...lessonForm, videoUrl: e.target.value })}
                                         placeholder="https://..."
@@ -1210,7 +1210,7 @@ const DrivingInstructorDashboard = () => {
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div className="border-2 border-dashed border-gray-300 rounded-xl p-4">
-                                    <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2"><Image className="w-4 h-4" /> Ifoto</label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2"><Image className="w-4 h-4" /> {t('dash.driving_instructor.lessons.image')}</label>
                                     <input type="file" accept="image/*"
                                         onChange={e => handleLessonFile('image', e.target.files?.[0])}
                                         className="block w-full text-sm" />
@@ -1219,19 +1219,19 @@ const DrivingInstructorDashboard = () => {
                                     )}
                                 </div>
                                 <div className="border-2 border-dashed border-gray-300 rounded-xl p-4">
-                                    <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2"><FileText className="w-4 h-4" /> PDF y'isomo</label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2"><FileText className="w-4 h-4" /> {t('dash.driving_instructor.lessons.pdf')}</label>
                                     <input type="file" accept="application/pdf"
                                         onChange={e => handleLessonFile('pdf', e.target.files?.[0])}
                                         className="block w-full text-sm" />
                                     {lessonFiles.pdf && <p className="text-xs text-green-600 mt-2 truncate">✓ {lessonFiles.pdf.name}</p>}
                                 </div>
                                 <div className="border-2 border-dashed border-gray-300 rounded-xl p-4">
-                                    <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2"><File className="w-4 h-4" /> Ibindi (multiple)</label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2"><File className="w-4 h-4" /> {t('dash.driving_instructor.lessons.attachments')}</label>
                                     <input type="file" multiple
                                         onChange={e => handleLessonFile('attachments', e.target.files)}
                                         className="block w-full text-sm" />
                                     {lessonFiles.attachments.length > 0 && (
-                                        <p className="text-xs text-green-600 mt-2">✓ {lessonFiles.attachments.length} files</p>
+                                        <p className="text-xs text-green-600 mt-2">✓ {t('dash.driving_instructor.lessons.files_count', { count: lessonFiles.attachments.length })}</p>
                                     )}
                                 </div>
                             </div>
@@ -1240,23 +1240,23 @@ const DrivingInstructorDashboard = () => {
                                 <label className="flex items-center gap-2 text-sm font-bold text-gray-700">
                                     <input type="checkbox" checked={lessonForm.isPublished}
                                         onChange={e => setLessonForm({ ...lessonForm, isPublished: e.target.checked })} />
-                                    Rwerekanwa ku banyeshuri
+                                    {t('dash.driving_instructor.lessons.published_to_learners')}
                                 </label>
                                 <button type="submit" disabled={lessonSaving || !lessonsCourseId}
                                     className="ml-auto px-6 py-3 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 disabled:opacity-50 flex items-center gap-2">
                                     <Upload className="w-5 h-5" />
-                                    {lessonSaving ? 'Birabikwa...' : 'Bika isomo'}
+                                    {lessonSaving ? t('dash.driving_instructor.lessons.saving') : t('dash.driving_instructor.lessons.save_lesson')}
                                 </button>
                             </div>
                         </form>
 
                         {/* Existing lessons list */}
                         <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6">
-                            <h3 className="text-lg font-bold text-gray-800 mb-4">Amasomo amaze gushyirwaho ({lessons.length})</h3>
+                            <h3 className="text-lg font-bold text-gray-800 mb-4">{t('dash.driving_instructor.lessons.list_title', { count: lessons.length })}</h3>
                             {lessonsLoading ? (
-                                <p className="text-gray-400 text-center py-8">Birapakurura...</p>
+                                <p className="text-gray-400 text-center py-8">{t('dash.driving_instructor.lessons.loading')}</p>
                             ) : lessons.length === 0 ? (
-                                <p className="text-gray-400 text-center py-8">Nta isomo rikiri muri iri shuri</p>
+                                <p className="text-gray-400 text-center py-8">{t('dash.driving_instructor.lessons.empty')}</p>
                             ) : (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                     {lessons.map(l => (
@@ -1275,11 +1275,11 @@ const DrivingInstructorDashboard = () => {
                                                     {l.pdf_url && <span className="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold">PDF</span>}
                                                     {l.video_url && <span className="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-bold">VIDEO</span>}
                                                     {l.image_url && <span className="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold">IMG</span>}
-                                                    {l.duration_minutes > 0 && <span className="text-[10px] bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full">{l.duration_minutes} min</span>}
+                                                    {l.duration_minutes > 0 && <span className="text-[10px] bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full">{t('dash.driving_instructor.lessons.min_short', { count: l.duration_minutes })}</span>}
                                                 </div>
                                                 <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
                                                     <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${l.is_published ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                                                        {l.is_published ? 'Rwerekanwa' : 'Rifunze'}
+                                                        {l.is_published ? t('dash.driving_instructor.lessons.pill_published') : t('dash.driving_instructor.lessons.pill_hidden')}
                                                     </span>
                                                     <button onClick={() => deleteLesson(l.id)} className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg">
                                                         <Trash2 className="w-4 h-4" />
@@ -1298,36 +1298,36 @@ const DrivingInstructorDashboard = () => {
                 {activeTab === 'quizzes' && (
                     <div className="space-y-6">
                         <div className="flex items-center justify-between">
-                            <h2 className="text-2xl font-black text-gray-800">Ibiganiro</h2>
+                            <h2 className="text-2xl font-black text-gray-800">{t('dash.driving_instructor.quizzes.heading')}</h2>
                             <button
                                 onClick={() => setShowAddQuiz(true)}
                                 className="px-6 py-3 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 flex items-center gap-2"
                             >
                                 <Plus className="w-5 h-5" />
-                                Fata Ikibazo
+                                {t('dash.driving_instructor.quizzes.add_btn')}
                             </button>
                         </div>
 
                         {/* Add Quiz Form */}
                         {showAddQuiz && (
                             <div className="bg-white rounded-2xl shadow-lg p-6">
-                                <h3 className="text-xl font-bold text-gray-800 mb-4">Fata Ikibazo Gift</h3>
+                                <h3 className="text-xl font-bold text-gray-800 mb-4">{t('dash.driving_instructor.quizzes.form_title')}</h3>
                                 <form onSubmit={handleAddQuiz} className="space-y-4">
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-1">Ishuri</label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.quizzes.course')}</label>
                                         <select
                                             value={quizForm.courseId}
                                             onChange={(e) => setQuizForm({ ...quizForm, courseId: e.target.value })}
                                             required
                                             className={`w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:outline-none ${quizErrors.courseId ? 'border-red-500' : ''}`}
                                         >
-                                            <option value="">Hitamo ishuri</option>
+                                            <option value="">{t('dash.driving_instructor.quizzes.choose_course')}</option>
                                             {courses.map(c => <option key={c.id} value={c.id}>{c.title_kinya}</option>)}
                                         </select>
                                         {quizErrors.courseId && <p className="text-red-500 text-sm mt-1">{quizErrors.courseId}</p>}
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-1">Ikibazo (Ikinyarwanda)</label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.quizzes.question_kinya')}</label>
                                         <input
                                             type="text"
                                             value={quizForm.questionKinya}
@@ -1338,7 +1338,7 @@ const DrivingInstructorDashboard = () => {
                                         {quizErrors.questionKinya && <p className="text-red-500 text-sm mt-1">{quizErrors.questionKinya}</p>}
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="block text-sm font-bold text-gray-700">Ampahula</label>
+                                        <label className="block text-sm font-bold text-gray-700">{t('dash.driving_instructor.quizzes.options_label')}</label>
                                         {quizForm.options.map((opt, i) => (
                                             <div key={i} className="flex items-center gap-2">
                                                 <input
@@ -1355,7 +1355,7 @@ const DrivingInstructorDashboard = () => {
                                                         newOptions[i] = e.target.value;
                                                         setQuizForm({ ...quizForm, options: newOptions });
                                                     }}
-                                                    placeholder={`Ampahula ${i + 1}`}
+                                                    placeholder={t('dash.driving_instructor.quizzes.option_placeholder', { n: i + 1 })}
                                                     className={`flex-1 px-4 py-2 border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:outline-none ${quizErrors.options ? 'border-red-500' : ''}`}
                                                 />
                                             </div>
@@ -1363,7 +1363,7 @@ const DrivingInstructorDashboard = () => {
                                         {quizErrors.options && <p className="text-red-500 text-sm mt-1">{quizErrors.options}</p>}
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-1">Ibisobanuro</label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.quizzes.explanation')}</label>
                                         <textarea
                                             value={quizForm.explanationKinya}
                                             onChange={(e) => setQuizForm({ ...quizForm, explanationKinya: e.target.value })}
@@ -1374,10 +1374,10 @@ const DrivingInstructorDashboard = () => {
                                     </div>
                                     <div className="flex gap-4">
                                         <button type="submit" className="px-6 py-3 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700">
-                                            Bika Ikibazo
+                                            {t('dash.driving_instructor.quizzes.save_btn')}
                                         </button>
                                         <button type="button" onClick={() => setShowAddQuiz(false)} className="px-6 py-3 bg-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-300">
-                                            Cancela
+                                            {t('dash.driving_instructor.quizzes.cancel')}
                                         </button>
                                     </div>
                                 </form>
@@ -1385,7 +1385,7 @@ const DrivingInstructorDashboard = () => {
                         )}
 
                         <div className="bg-white rounded-2xl shadow-lg p-6">
-                            <p className="text-gray-600">Nta bibazo ufite ubu. Kanda "Fata Ikibazo" wongeremo.</p>
+                            <p className="text-gray-600">{t('dash.driving_instructor.quizzes.empty')}</p>
                         </div>
                     </div>
                 )}
@@ -1394,7 +1394,7 @@ const DrivingInstructorDashboard = () => {
                 {activeTab === 'stock' && (
                     <div className="space-y-6">
                         <div className="flex items-center justify-between">
-                            <h2 className="text-2xl font-black text-gray-800">Ububiko n'Ibikoresho</h2>
+                            <h2 className="text-2xl font-black text-gray-800">{t('dash.driving_instructor.stock.heading')}</h2>
                             <button
                                 onClick={() => {
                                     setEditingStock(false);
@@ -1407,26 +1407,26 @@ const DrivingInstructorDashboard = () => {
                                 className="px-6 py-3 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 flex items-center gap-2"
                             >
                                 <Plus className="w-5 h-5" />
-                                Ongeramo Igikoresho
+                                {t('dash.driving_instructor.stock.add_btn')}
                             </button>
                         </div>
 
                         {/* Stock Summary Cards */}
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                             <div className="bg-white p-6 rounded-2xl shadow-lg border-l-4 border-primary-500">
-                                <p className="text-gray-500 text-sm font-bold uppercase">Byose</p>
+                                <p className="text-gray-500 text-sm font-bold uppercase">{t('dash.driving_instructor.stock.summary.all')}</p>
                                 <p className="text-2xl font-black text-gray-800">{stockItems.length}</p>
                             </div>
                             <div className="bg-white p-6 rounded-2xl shadow-lg border-l-4 border-yellow-500">
-                                <p className="text-gray-500 text-sm font-bold uppercase">Bike</p>
+                                <p className="text-gray-500 text-sm font-bold uppercase">{t('dash.driving_instructor.stock.summary.low')}</p>
                                 <p className="text-2xl font-black text-gray-800">{stockItems.filter(i => i.quantity > 0 && i.quantity <= (i.min_quantity || 5)).length}</p>
                             </div>
                             <div className="bg-white p-6 rounded-2xl shadow-lg border-l-4 border-red-500">
-                                <p className="text-gray-500 text-sm font-bold uppercase">Byashize</p>
+                                <p className="text-gray-500 text-sm font-bold uppercase">{t('dash.driving_instructor.stock.summary.out')}</p>
                                 <p className="text-2xl font-black text-gray-800">{stockItems.filter(i => i.quantity <= 0).length}</p>
                             </div>
                             <div className="bg-white p-6 rounded-2xl shadow-lg border-l-4 border-green-500">
-                                <p className="text-gray-500 text-sm font-bold uppercase">Agaciro</p>
+                                <p className="text-gray-500 text-sm font-bold uppercase">{t('dash.driving_instructor.stock.summary.value')}</p>
                                 <p className="text-2xl font-black text-gray-800">
                                     {stockItems.reduce((acc, curr) => acc + (curr.quantity * (curr.purchase_price || curr.price || 0)), 0).toLocaleString()} RWF
                                 </p>
@@ -1437,46 +1437,46 @@ const DrivingInstructorDashboard = () => {
                         {showAddStock && (
                             <div className="bg-white rounded-2xl shadow-lg p-6 animate-in fade-in slide-in-from-top-4 duration-300">
                                 <h3 className="text-xl font-bold text-gray-800 mb-6">
-                                    {editingStock ? 'Vugurura Igikoresho' : 'Ongeramo Igikoresho Gishya'}
+                                    {editingStock ? t('dash.driving_instructor.stock.form.edit_title') : t('dash.driving_instructor.stock.form.new_title')}
                                 </h3>
                                 <form onSubmit={handleAddStock} className="grid md:grid-cols-4 gap-4">
                                     <div className="md:col-span-2">
-                                        <label className="block text-sm font-bold text-gray-700 mb-1">Izina ry'igikoresho</label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.stock.form.name')}</label>
                                         <input
                                             type="text"
                                             value={stockForm.name}
                                             onChange={(e) => setStockForm({ ...stockForm, name: e.target.value })}
                                             className={`w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:outline-none ${stockErrors.name ? 'border-red-500' : ''}`}
-                                            placeholder="Urugero: Imodoka Toyota"
+                                            placeholder={t('dash.driving_instructor.stock.form.name_placeholder')}
                                         />
                                         {stockErrors.name && <p className="text-red-500 text-sm mt-1">{stockErrors.name}</p>}
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-1">Kode (Item Code)</label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.stock.form.code')}</label>
                                         <input
                                             type="text"
                                             value={stockForm.item_code}
                                             onChange={(e) => setStockForm({ ...stockForm, item_code: e.target.value })}
                                             className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:outline-none"
-                                            placeholder="ST-001"
+                                            placeholder={t('dash.driving_instructor.stock.form.code_placeholder')}
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-1">Ikiganiro (Category)</label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.stock.form.category')}</label>
                                         <select
                                             value={stockForm.category}
                                             onChange={(e) => setStockForm({ ...stockForm, category: e.target.value })}
                                             className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:outline-none"
                                         >
-                                            <option value="vehicle">Imodoka</option>
-                                            <option value="equipment">Ibikoresho</option>
-                                            <option value="safety">Umutekano</option>
-                                            <option value="signs">Ibimenyetso</option>
-                                            <option value="other">Ibindi</option>
+                                            <option value="vehicle">{t('dash.driving_instructor.stock.categories.vehicle')}</option>
+                                            <option value="equipment">{t('dash.driving_instructor.stock.categories.equipment')}</option>
+                                            <option value="safety">{t('dash.driving_instructor.stock.categories.safety')}</option>
+                                            <option value="signs">{t('dash.driving_instructor.stock.categories.signs')}</option>
+                                            <option value="other">{t('dash.driving_instructor.stock.categories.other')}</option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-1">Ingano (Quantity)</label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.stock.form.quantity')}</label>
                                         <input
                                             type="number"
                                             value={stockForm.quantity}
@@ -1485,17 +1485,17 @@ const DrivingInstructorDashboard = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-1">Igipimo (Unit)</label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.stock.form.unit')}</label>
                                         <input
                                             type="text"
                                             value={stockForm.unit}
                                             onChange={(e) => setStockForm({ ...stockForm, unit: e.target.value })}
                                             className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:outline-none"
-                                            placeholder="Pieces, Liters, etc."
+                                            placeholder={t('dash.driving_instructor.stock.form.unit_placeholder')}
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-1">Igipimo Ntarengwa (Min Qty)</label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.stock.form.min_qty')}</label>
                                         <input
                                             type="number"
                                             value={stockForm.min_quantity}
@@ -1504,7 +1504,7 @@ const DrivingInstructorDashboard = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-1">Igiciro (Price/Unit)</label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.stock.form.price')}</label>
                                         <input
                                             type="number"
                                             value={stockForm.price}
@@ -1513,17 +1513,17 @@ const DrivingInstructorDashboard = () => {
                                         />
                                     </div>
                                     <div className="md:col-span-2">
-                                        <label className="block text-sm font-bold text-gray-700 mb-1">Aho giherereye (Location)</label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.stock.form.location')}</label>
                                         <input
                                             type="text"
                                             value={stockForm.location}
                                             onChange={(e) => setStockForm({ ...stockForm, location: e.target.value })}
                                             className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:outline-none"
-                                            placeholder="Store A, Shelf 2"
+                                            placeholder={t('dash.driving_instructor.stock.form.location_placeholder')}
                                         />
                                     </div>
                                     <div className="md:col-span-2">
-                                        <label className="block text-sm font-bold text-gray-700 mb-1">Uwagabohoje (Supplier)</label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.stock.form.supplier')}</label>
                                         <input
                                             type="text"
                                             value={stockForm.supplier}
@@ -1534,7 +1534,7 @@ const DrivingInstructorDashboard = () => {
                                     <div className="md:col-span-4 flex gap-4 pt-4 border-t border-gray-100">
                                         <button type="submit" className="px-8 py-3 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 flex items-center gap-2">
                                             {editingStock ? <Edit className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
-                                            {editingStock ? 'Vugurura' : 'Ongerera'}
+                                            {editingStock ? t('dash.driving_instructor.stock.form.save_edit') : t('dash.driving_instructor.stock.form.save_new')}
                                         </button>
                                         <button 
                                             type="button" 
@@ -1544,7 +1544,7 @@ const DrivingInstructorDashboard = () => {
                                             }} 
                                             className="px-8 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200"
                                         >
-                                            Reka
+                                            {t('dash.driving_instructor.stock.form.cancel')}
                                         </button>
                                     </div>
                                 </form>
@@ -1557,12 +1557,12 @@ const DrivingInstructorDashboard = () => {
                                 <table className="w-full text-left border-collapse">
                                     <thead>
                                         <tr className="bg-gray-50 border-b border-gray-100">
-                                            <th className="px-6 py-4 font-black text-gray-700 text-sm uppercase tracking-wider">Igikoresho</th>
-                                            <th className="px-6 py-4 font-black text-gray-700 text-sm uppercase tracking-wider">Category</th>
-                                            <th className="px-6 py-4 font-black text-gray-700 text-sm uppercase tracking-wider text-center">Ingano</th>
-                                            <th className="px-6 py-4 font-black text-gray-700 text-sm uppercase tracking-wider">Agaciro (Unit)</th>
-                                            <th className="px-6 py-4 font-black text-gray-700 text-sm uppercase tracking-wider">Status</th>
-                                            <th className="px-6 py-4 font-black text-gray-700 text-sm uppercase tracking-wider text-right">Ibikorwa</th>
+                                            <th className="px-6 py-4 font-black text-gray-700 text-sm uppercase tracking-wider">{t('dash.driving_instructor.stock.table.item')}</th>
+                                            <th className="px-6 py-4 font-black text-gray-700 text-sm uppercase tracking-wider">{t('dash.driving_instructor.stock.table.category')}</th>
+                                            <th className="px-6 py-4 font-black text-gray-700 text-sm uppercase tracking-wider text-center">{t('dash.driving_instructor.stock.table.quantity')}</th>
+                                            <th className="px-6 py-4 font-black text-gray-700 text-sm uppercase tracking-wider">{t('dash.driving_instructor.stock.table.price')}</th>
+                                            <th className="px-6 py-4 font-black text-gray-700 text-sm uppercase tracking-wider">{t('dash.driving_instructor.stock.table.status')}</th>
+                                            <th className="px-6 py-4 font-black text-gray-700 text-sm uppercase tracking-wider text-right">{t('dash.driving_instructor.stock.table.actions')}</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-50">
@@ -1570,16 +1570,16 @@ const DrivingInstructorDashboard = () => {
                                             <tr key={item.id} className="hover:bg-primary-50/30 transition-colors">
                                                 <td className="px-6 py-4">
                                                     <div className="font-bold text-gray-800">{item.item_name || item.name}</div>
-                                                    <div className="text-xs text-gray-400 font-medium uppercase">{item.item_code || 'No Code'}</div>
+                                                    <div className="text-xs text-gray-400 font-medium uppercase">{item.item_code || t('dash.driving_instructor.stock.table.no_code')}</div>
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-bold capitalize">
-                                                        {item.category}
+                                                        {t(`dash.driving_instructor.stock.categories.${item.category}`, { defaultValue: item.category })}
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4 text-center">
                                                     <div className="font-black text-gray-800">{item.quantity}</div>
-                                                    <div className="text-[10px] text-gray-400 font-bold uppercase">{item.unit || 'pcs'}</div>
+                                                    <div className="text-[10px] text-gray-400 font-bold uppercase">{item.unit || t('dash.driving_instructor.stock.table.pcs')}</div>
                                                 </td>
                                                 <td className="px-6 py-4 font-bold text-gray-700">
                                                     {(item.purchase_price || item.price || 0).toLocaleString()} RWF
@@ -1589,9 +1589,9 @@ const DrivingInstructorDashboard = () => {
                                                         ${item.quantity <= 0 ? 'bg-red-100 text-red-700' : 
                                                           item.quantity <= (item.min_quantity || 5) ? 'bg-yellow-100 text-yellow-700' : 
                                                           'bg-green-100 text-green-700'}`}>
-                                                        {item.quantity <= 0 ? 'Byashize' : 
-                                                         item.quantity <= (item.min_quantity || 5) ? 'Biri Kugabanuka' : 
-                                                         'Bihari'}
+                                                        {item.quantity <= 0 ? t('dash.driving_instructor.stock.status.out') : 
+                                                         item.quantity <= (item.min_quantity || 5) ? t('dash.driving_instructor.stock.status.low') : 
+                                                         t('dash.driving_instructor.stock.status.in_stock')}
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4 text-right space-x-1">
@@ -1602,28 +1602,28 @@ const DrivingInstructorDashboard = () => {
                                                             setShowTransactionModal(true);
                                                         }}
                                                         className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                                        title="Record Transaction"
+                                                        title={t('dash.driving_instructor.stock.tooltips.transaction')}
                                                     >
                                                         <ArrowLeftRight className="w-5 h-5" />
                                                     </button>
                                                     <button 
                                                         onClick={() => viewHistory(item)}
                                                         className="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
-                                                        title="View History"
+                                                        title={t('dash.driving_instructor.stock.tooltips.history')}
                                                     >
                                                         <History className="w-5 h-5" />
                                                     </button>
                                                     <button 
                                                         onClick={() => handleEditStock(item)}
                                                         className="p-2 text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
-                                                        title="Vugurura"
+                                                        title={t('dash.driving_instructor.stock.tooltips.edit')}
                                                     >
                                                         <Edit className="w-5 h-5" />
                                                     </button>
                                                     <button 
                                                         onClick={() => deleteStock(item.id)} 
                                                         className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                                                        title="Siba"
+                                                        title={t('dash.driving_instructor.stock.tooltips.delete')}
                                                     >
                                                         <Trash2 className="w-5 h-5" />
                                                     </button>
@@ -1633,7 +1633,7 @@ const DrivingInstructorDashboard = () => {
                                         {stockItems.length === 0 && (
                                             <tr>
                                                 <td colSpan="6" className="px-6 py-12 text-center text-gray-400 italic">
-                                                    Nta bikoresho birashyirwamo mu bubiko.
+                                                    {t('dash.driving_instructor.stock.empty')}
                                                 </td>
                                             </tr>
                                         )}
@@ -1647,17 +1647,17 @@ const DrivingInstructorDashboard = () => {
                 {/* Results Tab */}
                 {activeTab === 'results' && (
                     <div className="space-y-6">
-                        <h2 className="text-2xl font-black text-gray-800">Ibibanza by'Ibiganiro</h2>
+                        <h2 className="text-2xl font-black text-gray-800">{t('dash.driving_instructor.results.heading')}</h2>
 
                         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
                             <table className="w-full">
                                 <thead className="bg-gray-50">
                                     <tr>
-                                        <th className="px-6 py-4 text-left font-bold text-gray-700">Umunyeshuri</th>
-                                        <th className="px-6 py-4 text-left font-bold text-gray-700">Ishuri</th>
-                                        <th className="px-6 py-4 text-left font-bold text-gray-700">Ibibanza</th>
-                                        <th className="px-6 py-4 text-left font-bold text-gray-700">Itariki</th>
-                                        <th className="px-6 py-4 text-left font-bold text-gray-700">Status</th>
+                                        <th className="px-6 py-4 text-left font-bold text-gray-700">{t('dash.driving_instructor.results.table.learner')}</th>
+                                        <th className="px-6 py-4 text-left font-bold text-gray-700">{t('dash.driving_instructor.results.table.course')}</th>
+                                        <th className="px-6 py-4 text-left font-bold text-gray-700">{t('dash.driving_instructor.results.table.score')}</th>
+                                        <th className="px-6 py-4 text-left font-bold text-gray-700">{t('dash.driving_instructor.results.table.date')}</th>
+                                        <th className="px-6 py-4 text-left font-bold text-gray-700">{t('dash.driving_instructor.results.table.status')}</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-100">
@@ -1669,7 +1669,7 @@ const DrivingInstructorDashboard = () => {
                                             <td className="px-6 py-4 text-gray-600">{result.taken_at}</td>
                                             <td className="px-6 py-4">
                                                 <span className={`px-3 py-1 rounded-full text-xs font-bold ${result.passed ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                                                    {result.passed ? 'Yatsinze' : 'Yagaragijwe'}
+                                                    {result.passed ? t('dash.driving_instructor.results.passed') : t('dash.driving_instructor.results.failed')}
                                                 </span>
                                             </td>
                                         </tr>
@@ -1684,26 +1684,26 @@ const DrivingInstructorDashboard = () => {
                 {activeTab === 'ibyapa' && (
                     <div className="space-y-6">
                         <div className="flex items-center justify-between">
-                            <h2 className="text-2xl font-black text-gray-800">Ibyapa by'Umuhanda</h2>
+                            <h2 className="text-2xl font-black text-gray-800">{t('dash.driving_instructor.signs.heading')}</h2>
                             <button
                                 onClick={() => setShowAddSign(!showAddSign)}
                                 className="px-6 py-3 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 flex items-center gap-2"
                             >
                                 <Plus className="w-5 h-5" />
-                                Ongeramo Icyapa
+                                {t('dash.driving_instructor.signs.add_btn')}
                             </button>
                         </div>
 
                         {/* Add Sign Form */}
                         {showAddSign && (
                             <div className="bg-white rounded-2xl shadow-lg p-6">
-                                <h3 className="text-xl font-bold text-gray-800 mb-6">Ongeramo Icyapa Kireba Abanyeshuri</h3>
+                                <h3 className="text-xl font-bold text-gray-800 mb-6">{t('dash.driving_instructor.signs.form_title')}</h3>
                                 <form onSubmit={handleAddRoadSign} className="grid md:grid-cols-2 gap-6">
                                     
                                     {/* Left Column: Form Fields */}
                                     <div className="space-y-4">
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-700 mb-1">Izina ry'Icyapa</label>
+                                            <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.signs.title')}</label>
                                             <input
                                                 type="text"
                                                 value={signForm.title}
@@ -1715,22 +1715,22 @@ const DrivingInstructorDashboard = () => {
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-700 mb-1">Ibyiciro</label>
+                                            <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.signs.category')}</label>
                                             <select
                                                 value={signForm.category}
                                                 onChange={(e) => setSignForm({ ...signForm, category: e.target.value })}
                                                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:outline-none"
                                             >
-                                                <option value="danger">Iburira (Danger)</option>
-                                                <option value="prohibition">Ibuza (Interdiction)</option>
-                                                <option value="mandatory">Itegeko (Obligation)</option>
-                                                <option value="priority">Priyorite (Priorité)</option>
-                                                <option value="indication">Ndanga (Indication)</option>
+                                                <option value="danger">{t('dash.driving_instructor.signs.categories.danger')}</option>
+                                                <option value="prohibition">{t('dash.driving_instructor.signs.categories.prohibition')}</option>
+                                                <option value="mandatory">{t('dash.driving_instructor.signs.categories.mandatory')}</option>
+                                                <option value="priority">{t('dash.driving_instructor.signs.categories.priority')}</option>
+                                                <option value="indication">{t('dash.driving_instructor.signs.categories.indication')}</option>
                                             </select>
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-700 mb-1">Ibisobanuro by'Icyapa</label>
+                                            <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.signs.description')}</label>
                                             <textarea
                                                 value={signForm.description}
                                                 onChange={(e) => setSignForm({ ...signForm, description: e.target.value })}
@@ -1744,7 +1744,7 @@ const DrivingInstructorDashboard = () => {
 
                                     {/* Right Column: Image Upload & Preview */}
                                     <div className="space-y-4">
-                                        <label className="block text-sm font-bold text-gray-700 mb-1">Ifoto y'Icyapa</label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.signs.image_label')}</label>
                                         
                                         <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-2xl bg-gray-50">
                                             {signImagePreview ? (
@@ -1761,8 +1761,8 @@ const DrivingInstructorDashboard = () => {
                                             ) : (
                                                 <div className="text-center">
                                                     <Image className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                                                    <p className="text-gray-500 font-medium mb-1">Kanda hano cyangwa uzane ifoto</p>
-                                                    <p className="text-xs text-gray-400">PNG, JPG ingano idakabije (Max 5MB)</p>
+                                                    <p className="text-gray-500 font-medium mb-1">{t('dash.driving_instructor.signs.drop_text')}</p>
+                                                    <p className="text-xs text-gray-400">{t('dash.driving_instructor.signs.drop_hint')}</p>
                                                 </div>
                                             )}
                                             
@@ -1779,10 +1779,10 @@ const DrivingInstructorDashboard = () => {
                                     <div className="md:col-span-2 pt-4 border-t border-gray-100 flex gap-4">
                                         <button type="submit" className="px-8 py-3 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 flex items-center gap-2">
                                             <Upload className="w-5 h-5" />
-                                            Bika Icyapa
+                                            {t('dash.driving_instructor.signs.save_btn')}
                                         </button>
                                         <button type="button" onClick={() => setShowAddSign(false)} className="px-8 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200">
-                                            Reka
+                                            {t('dash.driving_instructor.signs.cancel')}
                                         </button>
                                     </div>
                                 </form>
@@ -1806,7 +1806,7 @@ const DrivingInstructorDashboard = () => {
                                                   sign.category === 'mandatory' ? 'bg-blue-100 text-blue-700' : 
                                                   sign.category === 'priority' ? 'bg-yellow-100 text-yellow-700' : 
                                                   'bg-gray-100 text-gray-600'}`}>
-                                                {sign.category}
+                                                {t(`dash.driving_instructor.signs.categories.${sign.category}`, { defaultValue: sign.category })}
                                             </span>
                                         </div>
                                     </div>
@@ -1819,7 +1819,7 @@ const DrivingInstructorDashboard = () => {
                                                 onClick={() => deleteRoadSign(sign.id)} 
                                                 className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-1 text-sm font-semibold"
                                             >
-                                                <Trash2 className="w-4 h-4" /> Siba
+                                                <Trash2 className="w-4 h-4" /> {t('dash.driving_instructor.signs.delete')}
                                             </button>
                                         </div>
                                     </div>
@@ -1830,13 +1830,13 @@ const DrivingInstructorDashboard = () => {
                         {roadSigns.length === 0 && (
                             <div className="bg-white rounded-2xl shadow-lg p-12 text-center border-2 border-dashed border-gray-200">
                                 <Target className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                                <h3 className="text-xl font-bold text-gray-500 mb-2">Nta byapa birashyirwamo</h3>
-                                <p className="text-gray-400 mb-6">Ushobora gushyiramo ibyapa ukanda kuri buto yo hejuru.</p>
+                                <h3 className="text-xl font-bold text-gray-500 mb-2">{t('dash.driving_instructor.signs.empty_title')}</h3>
+                                <p className="text-gray-400 mb-6">{t('dash.driving_instructor.signs.empty_subtitle')}</p>
                                 <button
                                     onClick={() => setShowAddSign(true)}
                                     className="px-6 py-2.5 bg-primary-50 text-primary-600 font-bold rounded-xl hover:bg-primary-100"
                                 >
-                                    Ongeramo Icyapa
+                                    {t('dash.driving_instructor.signs.empty_btn')}
                                 </button>
                             </div>
                         )}
@@ -1850,7 +1850,7 @@ const DrivingInstructorDashboard = () => {
                     <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 duration-200">
                         <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-primary-50">
                             <div>
-                                <h3 className="text-xl font-black text-primary-900">Record Movement</h3>
+                                <h3 className="text-xl font-black text-primary-900">{t('dash.driving_instructor.transaction.title')}</h3>
                                 <p className="text-sm text-primary-600 font-bold">{selectedItem.item_name}</p>
                             </div>
                             <button onClick={() => setShowTransactionModal(false)} className="p-2 hover:bg-white rounded-full transition-colors text-primary-500">
@@ -1859,22 +1859,22 @@ const DrivingInstructorDashboard = () => {
                         </div>
                         <form onSubmit={handleTransactionSubmit} className="p-6 space-y-4">
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-1">Ubwoko (Type)</label>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.transaction.type')}</label>
                                 <select 
                                     value={transactionForm.transaction_type}
                                     onChange={e => setTransactionForm({...transactionForm, transaction_type: e.target.value})}
                                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:outline-none font-bold"
                                 >
-                                    <option value="usage">Gukoresha (Usage)</option>
-                                    <option value="purchase">Kugura (Purchase)</option>
-                                    <option value="return">Kugarura (Return)</option>
-                                    <option value="damage">Kwangirika (Damage)</option>
-                                    <option value="disposal">Kujugunya (Disposal)</option>
+                                    <option value="usage">{t('dash.driving_instructor.transaction.types.usage')}</option>
+                                    <option value="purchase">{t('dash.driving_instructor.transaction.types.purchase')}</option>
+                                    <option value="return">{t('dash.driving_instructor.transaction.types.return')}</option>
+                                    <option value="damage">{t('dash.driving_instructor.transaction.types.damage')}</option>
+                                    <option value="disposal">{t('dash.driving_instructor.transaction.types.disposal')}</option>
                                 </select>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-1">Ingano (Qty)</label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.transaction.quantity')}</label>
                                     <input 
                                         type="number"
                                         min="1"
@@ -1885,7 +1885,7 @@ const DrivingInstructorDashboard = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-1">Igiciro (Price/Unit)</label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.transaction.price')}</label>
                                     <input 
                                         type="number"
                                         value={transactionForm.unit_price}
@@ -1895,17 +1895,17 @@ const DrivingInstructorDashboard = () => {
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-1">Referansi (Reference #)</label>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.transaction.reference')}</label>
                                 <input 
                                     type="text"
                                     value={transactionForm.reference}
                                     onChange={e => setTransactionForm({...transactionForm, reference: e.target.value})}
-                                    placeholder="Invoice, Receipt, or Order #"
+                                    placeholder={t('dash.driving_instructor.transaction.reference_placeholder')}
                                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:outline-none"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-1">Ibindi (Notes)</label>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">{t('dash.driving_instructor.transaction.notes')}</label>
                                 <textarea 
                                     value={transactionForm.notes}
                                     onChange={e => setTransactionForm({...transactionForm, notes: e.target.value})}
@@ -1915,7 +1915,7 @@ const DrivingInstructorDashboard = () => {
                             </div>
                             <div className="pt-4">
                                 <button type="submit" className="w-full py-4 bg-primary-600 text-white font-black rounded-2xl hover:bg-primary-700 shadow-lg shadow-primary-200 transition-all active:scale-[0.98]">
-                                    Record Movement
+                                    {t('dash.driving_instructor.transaction.submit')}
                                 </button>
                             </div>
                         </form>
@@ -1929,7 +1929,7 @@ const DrivingInstructorDashboard = () => {
                     <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[80vh] overflow-hidden animate-in fade-in zoom-in-95 duration-200 flex flex-col">
                         <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-amber-50">
                             <div>
-                                <h3 className="text-xl font-black text-amber-900">Transaction History</h3>
+                                <h3 className="text-xl font-black text-amber-900">{t('dash.driving_instructor.history.title')}</h3>
                                 <p className="text-sm text-amber-600 font-bold">{selectedItem.item_name} ({selectedItem.item_code})</p>
                             </div>
                             <button onClick={() => setShowHistoryModal(false)} className="p-2 hover:bg-white rounded-full transition-colors text-amber-500">
@@ -1940,44 +1940,44 @@ const DrivingInstructorDashboard = () => {
                             <table className="w-full text-left border-collapse">
                                 <thead>
                                     <tr className="bg-gray-50 text-gray-400 font-black text-[10px] uppercase tracking-widest border-b border-gray-100">
-                                        <th className="px-4 py-3">Date</th>
-                                        <th className="px-4 py-3">Type</th>
-                                        <th className="px-4 py-3 text-center">Change</th>
-                                        <th className="px-4 py-3 text-center">Balance</th>
-                                        <th className="px-4 py-3">Reference</th>
-                                        <th className="px-4 py-3">Notes</th>
+                                        <th className="px-4 py-3">{t('dash.driving_instructor.history.table.date')}</th>
+                                        <th className="px-4 py-3">{t('dash.driving_instructor.history.table.type')}</th>
+                                        <th className="px-4 py-3 text-center">{t('dash.driving_instructor.history.table.change')}</th>
+                                        <th className="px-4 py-3 text-center">{t('dash.driving_instructor.history.table.balance')}</th>
+                                        <th className="px-4 py-3">{t('dash.driving_instructor.history.table.reference')}</th>
+                                        <th className="px-4 py-3">{t('dash.driving_instructor.history.table.notes')}</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-50">
-                                    {transactions.map(t => (
-                                        <tr key={t.id} className="text-sm">
+                                    {transactions.map(tx => (
+                                        <tr key={tx.id} className="text-sm">
                                             <td className="px-4 py-4 whitespace-nowrap text-gray-500">
-                                                {new Date(t.transaction_date).toLocaleDateString()}
+                                                {new Date(tx.transaction_date).toLocaleDateString()}
                                             </td>
                                             <td className="px-4 py-4 font-bold capitalize">
                                                 <span className={`px-2 py-1 rounded-lg text-[10px] uppercase
-                                                    ${t.transaction_type === 'purchase' || t.transaction_type === 'return' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                                                    {t.transaction_type}
+                                                    ${tx.transaction_type === 'purchase' || tx.transaction_type === 'return' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                                    {t(`dash.driving_instructor.transaction.types.${tx.transaction_type}`, { defaultValue: tx.transaction_type })}
                                                 </span>
                                             </td>
-                                            <td className={`px-4 py-4 text-center font-black ${t.transaction_type === 'purchase' || t.transaction_type === 'return' ? 'text-green-600' : 'text-red-600'}`}>
-                                                {t.transaction_type === 'purchase' || t.transaction_type === 'return' ? '+' : '-'}{t.quantity}
+                                            <td className={`px-4 py-4 text-center font-black ${tx.transaction_type === 'purchase' || tx.transaction_type === 'return' ? 'text-green-600' : 'text-red-600'}`}>
+                                                {tx.transaction_type === 'purchase' || tx.transaction_type === 'return' ? '+' : '-'}{tx.quantity}
                                             </td>
                                             <td className="px-4 py-4 text-center font-bold text-gray-800">
-                                                {t.quantity_after}
+                                                {tx.quantity_after}
                                             </td>
                                             <td className="px-4 py-4 text-gray-500 italic">
-                                                {t.reference || '-'}
+                                                {tx.reference || '-'}
                                             </td>
                                             <td className="px-4 py-4 text-gray-500">
-                                                {t.notes || '-'}
+                                                {tx.notes || '-'}
                                             </td>
                                         </tr>
                                     ))}
                                     {transactions.length === 0 && (
                                         <tr>
                                             <td colSpan="6" className="px-4 py-12 text-center text-gray-400 italic">
-                                                Nta mateka y'iki kikoresho arahari.
+                                                {t('dash.driving_instructor.history.empty')}
                                             </td>
                                         </tr>
                                     )}
