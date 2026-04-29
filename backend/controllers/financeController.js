@@ -100,11 +100,9 @@ exports.getTradesAndLevels = async (req, res) => {
 exports.bulkCreateFees = async (req, res) => {
     try {
         const {
-            term,
+            term_id,  // REQUIRED: ID from academic_terms (active/upcoming)
             description,
             due_date,
-            term_start_date,
-            term_end_date,
             public_fee_amount,
             private_fee_amount,
             both_fee_amount,
@@ -115,15 +113,23 @@ exports.bulkCreateFees = async (req, res) => {
 
         const created_by = req.user.id;
 
-        // Restrict to Term 1/2/3 only
-        const termPart = String(term || '').split(' ')[0];
-        if (!['Term', 'Trimester'].includes(termPart) && !['Term 1', 'Term 2', 'Term 3'].some(t => String(term).startsWith(t))) {
-            return res.status(400).json({ message: 'Term must be Term 1, Term 2 or Term 3' });
+        // Validate term_id exists and is active/upcoming in current year
+        if (!term_id) {
+            return res.status(400).json({ message: 'term_id (from academic_terms) is required' });
         }
-        const validTermPrefix = ['Term 1', 'Term 2', 'Term 3'];
-        if (!validTermPrefix.some(p => String(term).startsWith(p))) {
-            return res.status(400).json({ message: 'Term must be Term 1, Term 2 or Term 3' });
+        const [termRow] = await db.query(`
+            SELECT t.*, y.is_current, y.name as year_name 
+            FROM academic_terms t 
+            JOIN academic_years y ON t.academic_year_id = y.id 
+            WHERE t.id = ? AND (t.status IN ('active','upcoming') OR y.is_current = 1)
+        `, [term_id]);
+        if (!termRow.length) {
+            return res.status(400).json({ message: 'Invalid or inactive term_id. Use active/upcoming terms from /api/academic-years/terms/active' });
         }
+        const term = termRow[0];
+        const termText = term.name;
+        const termStartDate = term.start_date;
+        const termEndDate = term.end_date;
 
         // Load real trades from DB
         const [tradeRows] = await db.query('SELECT name, levels FROM trades');
@@ -166,40 +172,40 @@ exports.bulkCreateFees = async (req, res) => {
                 try {
                     if (category === 'both' && both_fee_amount) {
                         await db.execute(
-                            `INSERT INTO fees (term, trade, level, amount, description, due_date, term_start_date, term_end_date, created_by, student_category)
-                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'both')`,
-                            [term, trade.name, level, both_fee_amount, feeDescription, due_date || null, term_start_date || null, term_end_date || null, created_by]
+                            `INSERT INTO fees (term, term_id, trade, level, amount, description, due_date, term_start_date, term_end_date, created_by, student_category)
+                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'both')`,
+                            [termText, term_id, trade.name, level, both_fee_amount, feeDescription, due_date || null, termStartDate, termEndDate, created_by]
                         );
                         feesCreated++;
                     } else if (category === 'public' && public_fee_amount) {
                         await db.execute(
-                            `INSERT INTO fees (term, trade, level, amount, description, due_date, term_start_date, term_end_date, created_by, student_category)
-                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'public')`,
-                            [term, trade.name, level, public_fee_amount, feeDescription, due_date || null, term_start_date || null, term_end_date || null, created_by]
+                            `INSERT INTO fees (term, term_id, trade, level, amount, description, due_date, term_start_date, term_end_date, created_by, student_category)
+                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'public')`,
+                            [termText, term_id, trade.name, level, public_fee_amount, feeDescription, due_date || null, termStartDate, termEndDate, created_by]
                         );
                         feesCreated++;
                     } else if (category === 'private' && private_fee_amount) {
                         await db.execute(
-                            `INSERT INTO fees (term, trade, level, amount, description, due_date, term_start_date, term_end_date, created_by, student_category)
-                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'private')`,
-                            [term, trade.name, level, private_fee_amount, feeDescription, due_date || null, term_start_date || null, term_end_date || null, created_by]
+                            `INSERT INTO fees (term, term_id, trade, level, amount, description, due_date, term_start_date, term_end_date, created_by, student_category)
+                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'private')`,
+                            [termText, term_id, trade.name, level, private_fee_amount, feeDescription, due_date || null, termStartDate, termEndDate, created_by]
                         );
                         feesCreated++;
                     } else if (public_fee_amount || private_fee_amount) {
                         // Create both rows when both prices provided without category=both
                         if (public_fee_amount) {
                             await db.execute(
-                                `INSERT INTO fees (term, trade, level, amount, description, due_date, term_start_date, term_end_date, created_by, student_category)
-                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'public')`,
-                                [term, trade.name, level, public_fee_amount, feeDescription, due_date || null, term_start_date || null, term_end_date || null, created_by]
+                                `INSERT INTO fees (term, term_id, trade, level, amount, description, due_date, term_start_date, term_end_date, created_by, student_category)
+                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'public')`,
+                                [termText, term_id, trade.name, level, public_fee_amount, feeDescription, due_date || null, termStartDate, termEndDate, created_by]
                             );
                             feesCreated++;
                         }
                         if (private_fee_amount) {
                             await db.execute(
-                                `INSERT INTO fees (term, trade, level, amount, description, due_date, term_start_date, term_end_date, created_by, student_category)
-                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'private')`,
-                                [term, trade.name, level, private_fee_amount, feeDescription, due_date || null, term_start_date || null, term_end_date || null, created_by]
+                                `INSERT INTO fees (term, term_id, trade, level, amount, description, due_date, term_start_date, term_end_date, created_by, student_category)
+                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'private')`,
+                                [termText, term_id, trade.name, level, private_fee_amount, feeDescription, due_date || null, termStartDate, termEndDate, created_by]
                             );
                             feesCreated++;
                         }
@@ -251,21 +257,42 @@ exports.bulkCreateFees = async (req, res) => {
     }
 };
 
-// Create new fee structure
+// Create new fee (supports term_id for admin-set terms)
 exports.createFee = async (req, res) => {
     try {
-        const { term, trade, level, amount, description, due_date, student_category } = req.body;
+        const { term_id, term, trade, level, amount, description, due_date, student_category } = req.body;
         const created_by = req.user.id;
 
+        let finalTerm = term;
+        let termStartDate = null;
+        let termEndDate = null;
+
+        // Prefer term_id (admin term) over free-text term
+        if (term_id) {
+            const [termRow] = await db.query(`
+                SELECT name, start_date, end_date FROM academic_terms t 
+                JOIN academic_years y ON t.academic_year_id = y.id 
+                WHERE t.id = ? AND (t.status IN ('active','upcoming') OR y.is_current = 1)
+            `, [term_id]);
+            if (termRow.length) {
+                finalTerm = termRow[0].name;
+                termStartDate = termRow[0].start_date;
+                termEndDate = termRow[0].end_date;
+            } else {
+                return res.status(400).json({ message: 'Invalid term_id. Use active terms from /api/academic-years/terms/active' });
+            }
+        }
+
         const [result] = await db.execute(
-            'INSERT INTO fees (term, trade, level, amount, description, due_date, created_by, student_category) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [term, trade, level, amount, description || null, due_date || null, created_by, student_category || 'both']
+            `INSERT INTO fees (term, term_id, trade, level, amount, description, due_date, term_start_date, term_end_date, created_by, student_category) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [finalTerm, term_id || null, trade, level, amount, description || null, due_date || null, termStartDate, termEndDate, created_by, student_category || 'both']
         );
 
-        res.status(201).json({ message: 'Fee structure added', feeId: result.insertId });
+        res.status(201).json({ message: 'Fee created', feeId: result.insertId });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
 
@@ -302,10 +329,36 @@ exports.deleteAllFees = async (req, res) => {
     }
 };
 
-// Get all fees
+// Get all fees (supports ?term_id & ?active_only)
 exports.getFees = async (req, res) => {
     try {
-        const [fees] = await db.execute('SELECT * FROM fees ORDER BY created_at DESC');
+        const { term_id, active_only, trade, level } = req.query;
+        let query = 'SELECT * FROM fees';
+        const params = [];
+        const whereClauses = [];
+
+        if (active_only !== undefined) {
+            whereClauses.push('is_active = 1');
+        }
+        if (term_id) {
+            whereClauses.push('term_id = ?');
+            params.push(term_id);
+        }
+        if (trade) {
+            whereClauses.push('trade = ?');
+            params.push(trade);
+        }
+        if (level) {
+            whereClauses.push('level = ?');
+            params.push(level);
+        }
+
+        if (whereClauses.length) {
+            query += ' WHERE ' + whereClauses.join(' AND ');
+        }
+        query += ' ORDER BY created_at DESC';
+
+        const [fees] = await db.execute(query, params);
         res.status(200).json(fees);
     } catch (error) {
         console.error(error);
@@ -328,14 +381,18 @@ exports.getFeeById = async (req, res) => {
     }
 };
 
-// Get current term fee for a trade and level
+// Get current/active term fee for trade/level (supports term_id)
 exports.getCurrentFee = async (req, res) => {
     try {
-        const { trade, level, term, student_type } = req.query;
+        const { trade, level, term_id, term, student_type } = req.query;
         let query = 'SELECT * FROM fees WHERE trade = ? AND level = ? AND is_active = 1';
         const params = [trade, level];
 
-        if (term) {
+        // Prefer term_id filter
+        if (term_id) {
+            query += ' AND term_id = ?';
+            params.push(term_id);
+        } else if (term) {
             query += ' AND term = ?';
             params.push(term);
         }
@@ -350,7 +407,7 @@ exports.getCurrentFee = async (req, res) => {
 
         const [fees] = await db.execute(query, params);
         if (fees.length === 0) {
-            return res.status(404).json({ message: 'No fee found for this trade/level' });
+            return res.status(404).json({ message: 'No fee found for this trade/level/term' });
         }
         res.status(200).json(fees[0]);
     } catch (error) {

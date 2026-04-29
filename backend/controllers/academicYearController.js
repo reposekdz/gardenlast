@@ -1060,6 +1060,32 @@ exports.getTermDetails = async (req, res) => {
     }
 };
 
+exports.listActiveTerms = async (req, res) => {
+    try {
+        const { year_id } = req.query;
+        let query = `
+            SELECT t.*, y.name as year_name, y.is_current
+            FROM academic_terms t 
+            JOIN academic_years y ON t.academic_year_id = y.id
+            WHERE (t.status IN ('active', 'upcoming') OR y.is_current = 1)
+        `;
+        const params = [];
+        if (year_id) {
+            query += ' AND t.academic_year_id = ?';
+            params.push(year_id);
+        } else {
+            query += ' AND y.is_current = 1';
+        }
+        query += ' ORDER BY t.term_number ASC, t.start_date ASC';
+        
+        const [terms] = await db.query(query, params);
+        res.json(terms);
+    } catch (err) {
+        console.error('listActiveTerms', err);
+        res.status(500).json({ message: 'Error fetching active terms' });
+    }
+};
+
 /* ─── Graduates yearbook ──────────────────────────────────────────
    Lists every student archived by `student_promotions.action='graduated'`,
    grouped by academic year and trade. Used by the printable yearbook

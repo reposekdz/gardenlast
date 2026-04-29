@@ -16,6 +16,7 @@ router.delete('/fees/:id', [verifyToken, verifyRole(['admin', 'accountant'])], f
 router.delete('/fees', [verifyToken, verifyRole(['admin', 'accountant'])], financeController.deleteAllFees);
 
 // Bulk Fee Management
+router.get('/terms', [verifyToken, verifyRole(viewRoles)], require('../controllers/academicYearController').listActiveTerms);
 router.get('/fees/trades-levels', [verifyToken], financeController.getTradesAndLevels);
 router.post('/fees/bulk', [verifyToken, verifyRole(financeRoles)], financeController.bulkCreateFees);
 

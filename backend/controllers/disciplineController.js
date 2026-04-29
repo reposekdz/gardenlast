@@ -85,7 +85,7 @@ exports.addDisciplineRecord = async (req, res) => {
 // Get all discipline records
 exports.getDisciplineRecords = async (req, res) => {
     try {
-        const { student_id, action_type, status, severity, date_from, date_to, trade, level } = req.query;
+        const { student_id, action_type, status, severity, date_from, date_to, term_id, trade, level } = req.query;
 
         let query = `
             SELECT d.*, s.first_name, s.last_name, s.reg_number, s.trade, s.level, s.guardian_phone, s.guardian_name,
@@ -115,12 +115,22 @@ exports.getDisciplineRecords = async (req, res) => {
             query += ' AND d.severity = ?';
             params.push(severity);
         }
-        if (date_from) {
-            query += ' AND DATE(d.created_at) >= ?';
+        if (term_id) {
+            // Auto-filter by term dates
+            const [termRow] = await db.query(
+                'SELECT start_date, end_date FROM academic_terms WHERE id = ?',
+                [term_id]
+            );
+            if (termRow.length) {
+                query += ' AND d.incident_date BETWEEN ? AND ?';
+                params.push(termRow[0].start_date, termRow[0].end_date);
+            }
+        } else if (date_from) {
+            query += ' AND DATE(d.incident_date) >= ?';
             params.push(date_from);
         }
         if (date_to) {
-            query += ' AND DATE(d.created_at) <= ?';
+            query += ' AND DATE(d.incident_date) <= ?';
             params.push(date_to);
         }
         if (trade) {
@@ -249,36 +259,45 @@ exports.resolveDisciplineRecord = async (req, res) => {
 
 // ==================== DISCIPLINE STATISTICS ====================
 
-// Get discipline statistics
+// Get discipline statistics (supports term_id filter)
 exports.getDisciplineStats = async (req, res) => {
     try {
-        const { period } = req.query;
+        const { period, term_id } = req.query;
 
         let dateFilter = '';
-        if (period === 'week') {
-            dateFilter = 'AND d.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)';
+        if (term_id) {
+            // Term-specific stats
+            const [termRow] = await db.query(
+                'SELECT start_date, end_date FROM academic_terms WHERE id = ?',
+                [term_id]
+            );
+            if (termRow.length) {
+                dateFilter = `AND d.incident_date BETWEEN '${termRow[0].start_date}' AND '${termRow[0].end_date}'`;
+            }
+        } else if (period === 'week') {
+            dateFilter = 'AND d.incident_date >= DATE_SUB(NOW(), INTERVAL 7 DAY)';
         } else if (period === 'month') {
-            dateFilter = 'AND d.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)';
+            dateFilter = 'AND d.incident_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)';
         } else if (period === 'term') {
-            dateFilter = 'AND d.created_at >= DATE_SUB(NOW(), INTERVAL 90 DAY)';
+            dateFilter = 'AND d.incident_date >= DATE_SUB(NOW(), INTERVAL 90 DAY)';
         }
 
         // Total records
-        const [[total]] = await db.execute('SELECT COUNT(*) as count FROM discipline_records');
+        const [[total]] = await db.execute(`SELECT COUNT(*) as count FROM discipline_records d WHERE 1=1 ${dateFilter}`);
 
         // Records by type
         const [byType] = await db.execute(
-            `SELECT action_type, COUNT(*) as count FROM discipline_records WHERE 1=1 ${dateFilter.replace('AND', 'WHERE')} GROUP BY action_type`
+            `SELECT action_type, COUNT(*) as count FROM discipline_records d WHERE 1=1 ${dateFilter} GROUP BY action_type`
         );
 
         // Records by severity
         const [bySeverity] = await db.execute(
-            `SELECT severity, COUNT(*) as count FROM discipline_records GROUP BY severity`
+            `SELECT severity, COUNT(*) as count FROM discipline_records d WHERE 1=1 ${dateFilter} GROUP BY severity`
         );
 
         // Records by status
         const [byStatus] = await db.execute(
-            `SELECT status, COUNT(*) as count FROM discipline_records GROUP BY status`
+            `SELECT status, COUNT(*) as count FROM discipline_records d WHERE 1=1 ${dateFilter} GROUP BY status`
         );
 
         // Records by trade
@@ -286,28 +305,28 @@ exports.getDisciplineStats = async (req, res) => {
             `SELECT s.trade, COUNT(*) as count 
              FROM discipline_records d 
              JOIN students s ON d.student_id = s.id 
-             GROUP BY s.trade`
+             WHERE 1=1 ${dateFilter} GROUP BY s.trade`
         );
 
         // Recent trends
         const [recent] = await db.execute(
-            `SELECT DATE(created_at) as date, COUNT(*) as count 
+            `SELECT DATE(incident_date) as date, COUNT(*) as count 
              FROM discipline_records 
-             WHERE created_at >= DATE_SUB(NOW(), INTERVAL 14 DAY)
-             GROUP BY DATE(created_at)
+             WHERE incident_date >= DATE_SUB(NOW(), INTERVAL 14 DAY)
+             GROUP BY DATE(incident_date)
              ORDER BY date DESC`
         );
 
         // Active suspensions
         const [[activeSuspensions]] = await db.execute(
-            `SELECT COUNT(*) as count FROM discipline_records 
-             WHERE action_type IN ('suspension', 'punish') AND status = 'active'`
+            `SELECT COUNT(*) as count FROM discipline_records d 
+             WHERE action_type IN ('suspension', 'punish') AND status = 'active' ${dateFilter}`
         );
 
         // Pending follow-ups
         const [[pendingFollowUps]] = await db.execute(
-            `SELECT COUNT(*) as count FROM discipline_records 
-             WHERE follow_up_required = TRUE AND status = 'active' AND follow_up_date <= CURDATE()`
+            `SELECT COUNT(*) as count FROM discipline_records d
+             WHERE follow_up_required = TRUE AND status = 'active' AND follow_up_date <= CURDATE() ${dateFilter}`
         );
 
         res.status(200).json({
@@ -318,7 +337,8 @@ exports.getDisciplineStats = async (req, res) => {
             by_trade: byTrade,
             recent_trends: recent,
             active_suspensions: activeSuspensions.count,
-            pending_follow_ups: pendingFollowUps.count
+            pending_follow_ups: pendingFollowUps.count,
+            filter_used: term_id ? 'term' : period || 'all'
         });
     } catch (error) {
         console.error(error);
@@ -326,33 +346,48 @@ exports.getDisciplineStats = async (req, res) => {
     }
 };
 
-// Get discipline dashboard
+// Get discipline dashboard (supports term_id)
 exports.getDisciplineDashboard = async (req, res) => {
     try {
+        const { term_id } = req.query;
+        let dateFilter = '';
+        let termDates = null;
+
+        if (term_id) {
+            const [termRow] = await db.query(
+                'SELECT start_date, end_date FROM academic_terms WHERE id = ?',
+                [term_id]
+            );
+            if (termRow.length) {
+                termDates = termRow[0];
+                dateFilter = `AND d.incident_date BETWEEN '${termDates.start_date}' AND '${termDates.end_date}'`;
+            }
+        }
+
         // Today's incidents
         const [[todayIncidents]] = await db.execute(
-            `SELECT COUNT(*) as count FROM discipline_records WHERE DATE(created_at) = CURDATE()`
+            `SELECT COUNT(*) as count FROM discipline_records d WHERE DATE(d.incident_date) = CURDATE() ${dateFilter}`
         );
 
         // This week
         const [[weekIncidents]] = await db.execute(
-            `SELECT COUNT(*) as count FROM discipline_records WHERE YEARWEEK(created_at) = YEARWEEK(CURDATE())`
+            `SELECT COUNT(*) as count FROM discipline_records d WHERE YEARWEEK(d.incident_date) = YEARWEEK(CURDATE()) ${dateFilter}`
         );
 
         // This month
         const [[monthIncidents]] = await db.execute(
-            `SELECT COUNT(*) as count FROM discipline_records WHERE YEAR(created_at) = YEAR(CURDATE()) AND MONTH(created_at) = MONTH(CURDATE())`
+            `SELECT COUNT(*) as count FROM discipline_records d WHERE YEAR(d.incident_date) = YEAR(CURDATE()) AND MONTH(d.incident_date) = MONTH(CURDATE()) ${dateFilter}`
         );
 
         // Active cases
         const [[activeCases]] = await db.execute(
-            `SELECT COUNT(*) as count FROM discipline_records WHERE status = 'active'`
+            `SELECT COUNT(*) as count FROM discipline_records d WHERE d.status = 'active' ${dateFilter}`
         );
 
-        // Resolved this month
+        // Resolved this month/term
         const [[resolvedThisMonth]] = await db.execute(
-            `SELECT COUNT(*) as count FROM discipline_records 
-             WHERE status = 'resolved' AND YEAR(resolved_at) = YEAR(CURDATE()) AND MONTH(resolved_at) = MONTH(CURDATE())`
+            `SELECT COUNT(*) as count FROM discipline_records d 
+             WHERE d.status = 'resolved' AND YEAR(d.resolved_at) = YEAR(CURDATE()) AND MONTH(d.resolved_at) = MONTH(CURDATE()) ${dateFilter}`
         );
 
         // Recent records
@@ -360,6 +395,7 @@ exports.getDisciplineDashboard = async (req, res) => {
             `SELECT d.*, s.first_name, s.last_name, s.reg_number, s.trade, s.level
              FROM discipline_records d
              JOIN students s ON d.student_id = s.id
+             WHERE 1=1 ${dateFilter}
              ORDER BY d.created_at DESC LIMIT 10`
         );
 
@@ -368,17 +404,17 @@ exports.getDisciplineDashboard = async (req, res) => {
             `SELECT s.id, s.first_name, s.last_name, s.reg_number, s.trade, s.level, COUNT(*) as incident_count
              FROM discipline_records d
              JOIN students s ON d.student_id = s.id
-             WHERE d.created_at >= DATE_SUB(NOW(), INTERVAL 90 DAY)
+             WHERE d.incident_date >= DATE_SUB(NOW(), INTERVAL 90 DAY) ${dateFilter}
              GROUP BY s.id
              ORDER BY incident_count DESC LIMIT 10`
         );
 
-        // By action type this month
+        // By action type this month/term
         const [byActionType] = await db.execute(
-            `SELECT action_type, COUNT(*) as count 
-             FROM discipline_records 
-             WHERE YEAR(created_at) = YEAR(CURDATE()) AND MONTH(created_at) = MONTH(CURDATE())
-             GROUP BY action_type`
+            `SELECT d.action_type, COUNT(*) as count 
+             FROM discipline_records d
+             WHERE YEAR(d.incident_date) = YEAR(CURDATE()) AND MONTH(d.incident_date) = MONTH(CURDATE()) ${dateFilter}
+             GROUP BY d.action_type`
         );
 
         res.status(200).json({
@@ -389,7 +425,8 @@ exports.getDisciplineDashboard = async (req, res) => {
             resolved_this_month: resolvedThisMonth.count,
             recent_records: recentRecords,
             top_offenders: topOffenders,
-            by_action_type: byActionType
+            by_action_type: byActionType,
+            term_filter: term_id ? termDates : null
         });
     } catch (error) {
         console.error(error);

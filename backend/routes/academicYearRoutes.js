@@ -28,6 +28,7 @@ router.get('/:id/admin-details',    verifyToken, verifyRole(ADMINS), ctrl.getAdm
 router.get('/:id/terms/:termId/details', verifyToken, verifyRole(ADMINS), ctrl.getTermDetails);
 
 // Terms
+router.get('/terms/active',             verifyToken, verifyRole(['admin', 'accountant']), ctrl.listActiveTerms);
 router.put('/:yearId/terms/:termId',     verifyToken, verifyRole(ADMINS), ctrl.updateTerm);
 router.post('/:yearId/terms/:termId/end',verifyToken, verifyRole(ADMINS), ctrl.endTerm);
 

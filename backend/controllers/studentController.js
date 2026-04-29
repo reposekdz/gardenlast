@@ -256,7 +256,7 @@ exports.createStudent = async (req, res) => {
             );
             // SMS the credentials to the student (best effort)
             if (contact_phone) {
-                const msg = `Murakaza neza ${first_name} kuri Garden TVET! Kode yawe: ${finalRegNumber}, Ijambobanga: ${hint}. Hindura ijambobanga unjira bwa mbere.`;
+                const msg = `Murakaza neza ${first_name} kuri Garden TVET! Kode yawe: ${finalRegNumber}, Ijambobanga: 123456. Hindura ijambobanga unjira bwa mbere ku portal ya student.`;
                 smsService.sendSMS(contact_phone, msg).catch(() => {});
             }
         } catch (e) { console.log('Default password setup skipped:', e.message); }

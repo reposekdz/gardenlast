@@ -523,7 +523,7 @@ const initDatabase = async () => {
             }
         } catch (e) { console.error('Error adding payment_status:', e.message); }
 
-        // ===== Add term_start_date / term_end_date to fees =====
+// ===== Add term_start_date / term_end_date / term_id to fees =====
         try {
             const addFeeCol = async (col, type) => {
                 const [exists] = await connection.query(
@@ -537,7 +537,30 @@ const initDatabase = async () => {
             };
             await addFeeCol('term_start_date', 'DATE');
             await addFeeCol('term_end_date', 'DATE');
-        } catch (e) { console.error('Error adding term dates to fees:', e.message); }
+            await addFeeCol('term_id', 'INT NULL');
+            
+            // Add FK constraint if column exists
+            const [termIdExists] = await connection.query(
+                "SELECT COUNT(*) as count FROM information_schema.columns WHERE table_schema = ? AND table_name = 'fees' AND column_name = 'term_id'",
+                [process.env.DB_NAME || 'garden_tvet']
+            );
+            if (termIdExists[0].count > 0) {
+                await connection.query(`
+                    ALTER TABLE fees 
+                    ADD CONSTRAINT fk_fees_term 
+                    FOREIGN KEY (term_id) REFERENCES academic_terms(id) ON DELETE SET NULL
+                `).catch(e => console.log('FK already exists or academic_terms missing'));
+                console.log('✅ Added FK constraint for fees.term_id');
+            }
+        } catch (e) { console.error('Error adding term columns to fees:', e.message); }
+        
+        // ===== Drop obsolete fee_structures table =====
+        try {
+            await connection.query("DROP TABLE IF EXISTS fee_structures");
+            console.log('✅ Dropped obsolete fee_structures table');
+        } catch (e) { 
+            console.error('Error dropping fee_structures:', e.message); 
+        }
 
         // ===== Add start_time, end_time, lesson to leave_requests =====
         try {
@@ -784,12 +807,8 @@ const initAcademic = async () => {
     }
 };
 
-// Initialize database on module load - handle connection errors gracefully
-initDatabase()
-    .then(() => initAcademic())
-    .catch(err => {
-        console.log('Database will initialize on first API request');
-    });
+// Remove automatic init - called explicitly from server.js after startup
+// DB operations will lazy-connect via pool
 
 // Export pool directly so controllers can use db.query()
 // Also export getDb as a named export for backward compatibility

@@ -49,46 +49,11 @@ router.post('/evidence/upload', verifyToken, (req, res) => {
 // Get all discipline records
 router.get('/', verifyToken, async (req, res) => {
     try {
+        const { term_id, student_id, action_type, status, date_from, date_to } = req.query;
+
         const db = getDb();
-        const { student_id, action_type, status, date_from, date_to } = req.query;
-
-        let query = `
-            SELECT d.*, s.first_name, s.last_name, s.reg_number, s.trade, s.level,
-                   u.first_name as recorded_by_name, u.last_name as recorded_by_last
-            FROM discipline_records d
-            LEFT JOIN students s ON d.student_id = s.id
-            LEFT JOIN users u ON d.recorded_by = u.id
-            WHERE 1=1
-        `;
-        const params = [];
-
-        // Admins, DOD, directors, and teachers can view discipline records
-        const allowedRoles = ['admin', 'dod', 'director_of_discipline', 'director', 'teacher'];
-        if (!allowedRoles.includes(req.user.role)) {
-            return res.status(403).json({ message: 'Access denied' });
-        }
-
-        if (student_id) {
-            query += ' AND d.student_id = ?';
-            params.push(student_id);
-        }
-        if (action_type) {
-            query += ' AND d.action_type = ?';
-            params.push(action_type);
-        }
-        if (date_from) {
-            query += ' AND d.created_at >= ?';
-            params.push(date_from);
-        }
-        if (date_to) {
-            query += ' AND d.created_at <= ?';
-            params.push(date_to);
-        }
-
-        query += ' ORDER BY d.created_at DESC';
-
-        const records = await db.query(query, params);
-        res.json(records);
+        const disciplineController = require('../controllers/disciplineController');
+        res.json(await disciplineController.getDisciplineRecords({ query: req.query }));
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

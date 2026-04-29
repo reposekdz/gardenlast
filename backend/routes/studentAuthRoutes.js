@@ -44,11 +44,8 @@ async function init() {
 }
 
 function computeDefaultPassword(phone, reg) {
-    const p = String(phone || '').replace(/\D/g, '');
-    if (p.length >= 4) return p.slice(-4);
-    const r = String(reg || '').replace(/\D/g, '');
-    if (r.length >= 4) return r.slice(-4);
-    return '0000';
+    // Default password for all students as specified
+    return '123456';
 }
 
 init();

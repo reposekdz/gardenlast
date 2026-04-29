@@ -78,6 +78,9 @@ CREATE TABLE IF NOT EXISTS students (
     current_status ENUM('active', 'sick', 'left', 'suspended', 'graduated', 'expelled') DEFAULT 'active',
     graduation_date DATE,
     notes TEXT,
+    password_hash VARCHAR(255),
+    default_password_hint VARCHAR(20),
+    must_change_password TINYINT(1) DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_reg_number (reg_number),
@@ -396,14 +399,16 @@ const defaultData = async (connection) => {
     `);
 
     // Insert default students
+    const bcrypt = require('bcryptjs');
+    const defaultPasswordHash = bcrypt.hashSync('123456', 10);
     await connection.query(`
-        INSERT IGNORE INTO students (reg_number, first_name, last_name, gender, trade, level, current_status, contact_phone) VALUES
-        ('GTVET2025001', 'Jean', 'Mugisha', 'male', 'Software Development', 'Level 1', 'active', '+250788111111'),
-        ('GTVET2025002', 'Marie', 'Uwase', 'female', 'Automobile Technology', 'Level 1', 'active', '+250788222222'),
-        ('GTVET2025003', 'Pierre', 'Niyonkuru', 'male', 'Building and Construction', 'Level 2', 'active', '+250788333333'),
-        ('GTVET2025004', 'Grace', 'Mukamana', 'female', 'Software Development', 'Level 2', 'active', '+250788444444'),
-        ('GTVET2025005', 'Paul', 'Bizimana', 'male', 'Automobile Technology', 'Level 3', 'active', '+250788555555')
-    `);
+        INSERT IGNORE INTO students (reg_number, first_name, last_name, gender, trade, level, current_status, contact_phone, password_hash, default_password_hint, must_change_password) VALUES
+        ('GTVET2025001', 'Jean', 'Mugisha', 'male', 'Software Development', 'Level 1', 'active', '+250788111111', ?, '123456', 1),
+        ('GTVET2025002', 'Marie', 'Uwase', 'female', 'Automobile Technology', 'Level 1', 'active', '+250788222222', ?, '123456', 1),
+        ('GTVET2025003', 'Pierre', 'Niyonkuru', 'male', 'Building and Construction', 'Level 2', 'active', '+250788333333', ?, '123456', 1),
+        ('GTVET2025004', 'Grace', 'Mukamana', 'female', 'Software Development', 'Level 2', 'active', '+250788444444', ?, '123456', 1),
+        ('GTVET2025005', 'Paul', 'Bizimana', 'male', 'Automobile Technology', 'Level 3', 'active', '+250788555555', ?, '123456', 1)
+    `, [defaultPasswordHash, defaultPasswordHash, defaultPasswordHash, defaultPasswordHash, defaultPasswordHash]);
 
     // Insert default fees
     await connection.query(`

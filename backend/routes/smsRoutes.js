@@ -166,9 +166,9 @@ router.post('/cron-jobs/:id/run', verifyToken, async (req, res) => {
                        s.id as student_id, s.first_name as student_name, s.last_name, s.trade, s.level,
                        SUM(f.amount) as total_fee, COALESCE(SUM(p.amount_paid), 0) as total_paid,
                        (SUM(f.amount) - COALESCE(SUM(p.amount_paid), 0)) as balance
-                FROM fee_structures f
-                JOIN students s ON s.trade = f.trade AND s.level = f.level AND s.current_status = 'active'
-                LEFT JOIN parent_student_links psl ON psl.student_id = s.id AND (psl.status = 'approved' OR (psl.status = 'approved' OR psl.link_status = 'approved'))
+                FROM fees f
+                JOIN students s ON s.trade = f.trade AND s.level = f.level AND f.is_active = 1 AND s.current_status = 'active'
+                LEFT JOIN parent_student_links psl ON psl.student_id = s.id AND (psl.status = 'approved' OR psl.link_status = 'approved')
                 LEFT JOIN users u ON u.id = psl.parent_id AND u.phone IS NOT NULL
                 LEFT JOIN payments p ON p.student_id = s.id
                 GROUP BY u.id, s.id

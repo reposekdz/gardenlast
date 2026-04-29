@@ -61,7 +61,7 @@ const Finance = () => {
 
     // Bulk fee state
     const [bulkFeeData, setBulkFeeData] = useState({
-        term: 'Term 1 2026',
+        term_id: '',
         description: '',
         due_date: '',
         category: 'both', // public, private, or both
@@ -69,10 +69,9 @@ const Finance = () => {
         levels: 'all',
         public_fee_amount: '',
         private_fee_amount: '',
-        both_fee_amount: '',
-        term_start_date: '',
-        term_end_date: ''
+        both_fee_amount: ''
     });
+    const [availableTerms, setAvailableTerms] = useState([]);
     const [bulkFeeLoading, setBulkFeeLoading] = useState(false);
     const [tradesAndLevels, setTradesAndLevels] = useState([]);
 
@@ -192,28 +191,51 @@ const Finance = () => {
     // Fetch trades and levels for bulk fee
     const fetchTradesAndLevels = async () => {
         try {
-            const res = await axios.get(`${API_URL}/api/finance/fees/trades-levels`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            setTradesAndLevels(res.data.trades || []);
+            const [tradesRes, termsRes] = await Promise.all([
+                axios.get(`${API_URL}/api/finance/fees/trades-levels`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                }),
+                axios.get(`${API_URL}/api/finance/terms`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                })
+            ]);
+            setTradesAndLevels(tradesRes.data.trades || []);
+            setAvailableTerms(termsRes.data || []);
         } catch (error) {
-            console.error('Error fetching trades and levels:', error);
+            console.error('Error fetching trades/terms:', error);
         }
     };
 
     // Handle bulk fee creation
     const handleBulkFeeSubmit = async (e) => {
         e.preventDefault();
+        if (!bulkFeeData.term_id) {
+            toast.error('Please select a term');
+            return;
+        }
         setBulkFeeLoading(true);
         try {
-            const res = await axios.post(`${API_URL}/api/finance/fees/bulk`, bulkFeeData, {
+            const payload = {
+                term: bulkFeeData.term || availableTerms.find(t => t.id === parseInt(bulkFeeData.term_id))?.name || 'Term 1',
+                term_id: bulkFeeData.term_id,
+                description: bulkFeeData.description,
+                due_date: bulkFeeData.due_date,
+                category: bulkFeeData.category,
+                trades: bulkFeeData.trades,
+                levels: bulkFeeData.levels,
+                public_fee_amount: bulkFeeData.public_fee_amount || 0,
+                private_fee_amount: bulkFeeData.private_fee_amount || 0,
+                both_fee_amount: bulkFeeData.both_fee_amount || 0
+            };
+            const res = await axios.post(`${API_URL}/api/finance/fees/bulk`, payload, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             toast.success(res.data.message);
             if (res.data.feesCreated > 0) {
                 fetchData();
                 setBulkFeeData({
-                    term: 'Term 1 2026',
+                    term_id: '',
+                    term: '',
                     description: '',
                     due_date: '',
                     category: 'both',
@@ -221,13 +243,11 @@ const Finance = () => {
                     levels: 'all',
                     public_fee_amount: '',
                     private_fee_amount: '',
-                    both_fee_amount: '',
-                    term_start_date: '',
-                    term_end_date: ''
+                    both_fee_amount: ''
                 });
             }
         } catch (error) {
-            toast.error('Failed to create bulk fees');
+            toast.error(error.response?.data?.message || 'Failed to create bulk fees');
         } finally {
             setBulkFeeLoading(false);
         }
@@ -866,11 +886,18 @@ const Finance = () => {
                         {editingFee ? 'Edit Fee Structure' : 'Define Term Fee'}
                     </h3>
                     <form onSubmit={handleFeeSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Term / Year</label>
-                            <input required type="text" placeholder="e.g. Term 1 2026" className="input-field" value={feeData.term}
-                                onChange={e => setFeeData({ ...feeData, term: e.target.value })} />
-                        </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Term / Year</label>
+                                        <select required className="input-field" value={feeData.term}
+                                            onChange={e => setFeeData({ ...feeData, term: e.target.value })}>
+                                            <option value="Term 1 2026">Term 1 2026</option>
+                                            <option value="Term 2 2026">Term 2 2026</option>
+                                            <option value="Term 3 2026">Term 3 2026</option>
+                                            <option value="Term 1 2025">Term 1 2025</option>
+                                            <option value="Term 2 2025">Term 2 2025</option>
+                                            <option value="Term 3 2025">Term 3 2025</option>
+                                        </select>
+                                    </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Student Category *</label>
                             <select required className="input-field" value={feeData.student_category}
@@ -1068,30 +1095,20 @@ const Finance = () => {
                                 <div className="grid md:grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">Term *</label>
-                                        <div className="flex gap-2">
-                                            <select
-                                                className="input-field flex-1"
-                                                value={(bulkFeeData.term.match(/^Term [123]/) || ['Term 1'])[0]}
-                                                onChange={e => {
-                                                    const yr = (bulkFeeData.term.match(/(\d{4})/) || [new Date().getFullYear()])[0];
-                                                    setBulkFeeData({ ...bulkFeeData, term: `${e.target.value} ${yr}` });
-                                                }}
-                                            >
-                                                <option value="Term 1">Term 1</option>
-                                                <option value="Term 2">Term 2</option>
-                                                <option value="Term 3">Term 3</option>
-                                            </select>
-                                            <input
-                                                type="number"
-                                                className="input-field w-24"
-                                                value={(bulkFeeData.term.match(/(\d{4})/) || [new Date().getFullYear()])[0]}
-                                                onChange={e => {
-                                                    const tn = (bulkFeeData.term.match(/^Term [123]/) || ['Term 1'])[0];
-                                                    setBulkFeeData({ ...bulkFeeData, term: `${tn} ${e.target.value}` });
-                                                }}
-                                                placeholder="2026"
-                                            />
-                                        </div>
+                                <div className="flex gap-2">
+                                    <select
+                                        className="input-field flex-1"
+                                        value={bulkFeeData.term_id || ''}
+                                        onChange={e => setBulkFeeData({ ...bulkFeeData, term_id: e.target.value })}
+                                    >
+                                        <option value="">Select Term</option>
+                                        {availableTerms.map(term => (
+                                            <option key={term.id} value={term.id}>
+                                                {term.name} ({term.status})
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">Due Date</label>

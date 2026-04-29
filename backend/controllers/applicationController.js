@@ -496,10 +496,19 @@ const enrollApplicant = async (req, res) => {
             ]
         );
 
+        // Set default password for the student
+        const bcrypt = require('bcryptjs');
+        const defaultPassword = '123456';
+        const passwordHash = bcrypt.hashSync(defaultPassword, 10);
+        await conn.execute(
+            'UPDATE students SET password_hash = ?, default_password_hint = ?, must_change_password = 1 WHERE id = ?',
+            [passwordHash, '123456', studentId]
+        );
+
         await conn.commit();
 
         // SMS confirmation (best-effort, after commit)
-        const smsMessage = `Murakoze ${studentRow.first_name}! Wandikishijwe muri Garden TVET nka ${trade} (${level}). Reg: ${regNumber}.`;
+        const smsMessage = `Murakoze ${studentRow.first_name}! Wandikishijwe muri Garden TVET nka ${trade} (${level}). Reg: ${regNumber}. Ijambobanga yawe ni 123456. Hindura ijambobanga unjira bwa mbere ku portal ya student.`;
         sendSMS(studentRow.contact_phone || app.phone, smsMessage).catch(() => {});
 
         res.status(201).json({
