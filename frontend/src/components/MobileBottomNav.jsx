@@ -4,7 +4,7 @@ import useAuthStore from '../store/authStore';
 import { useTranslation } from 'react-i18next';
 import {
     LayoutDashboard, Users, ShieldAlert, DollarSign, Package,
-    Heart, UserCheck, Menu, X, Home, Settings, Bell, LogOut, Plus
+    Heart, UserCheck, Menu, X, Home, Settings, Bell, LogOut, Plus, BookOpen, Phone
 } from 'lucide-react';
 
 // Reusable Nav Button Component
@@ -50,13 +50,18 @@ const MobileBottomNav = () => {
         location.pathname === '/home' ||
         location.pathname === '/about' ||
         location.pathname === '/services' ||
+        location.pathname === '/kwiga' ||
+        location.pathname === '/driving-rules' ||
+        location.pathname === '/driving-school' ||
+        location.pathname === '/driving-instructor' ||
         location.pathname === '/news' ||
         location.pathname === '/contact' ||
-        location.pathname === '/driving-rules' ||
         location.pathname === '/apply' ||
         location.pathname === '/parent-apply' ||
         location.pathname === '/register' ||
-        location.pathname.startsWith('/trade/');
+        location.pathname.startsWith('/trade/') ||
+        location.pathname.startsWith('/kwiga/') ||
+        location.pathname.startsWith('/news/');
 
     // Show on all mobile pages including public
     if (isPublicPage) {
@@ -66,10 +71,10 @@ const MobileBottomNav = () => {
                 <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] lg:hidden z-[9999] safe-area-pb pb-safe">
                     <div className="flex justify-around items-center h-16 px-1 bg-white">
                         <NavButton to="/home" icon={Home} label="Home" />
-                        <NavButton to="/about" icon={LayoutDashboard} label="About" />
-                        <NavButton to="/driving-rules" icon={ShieldAlert} label="Imodoka" />
+                        <NavButton to="/about" icon={Home} label="About" />
+                        <NavButton to="/driving-rules" icon={BookOpen} label="Imodoka" />
                         <NavButton to="/news" icon={Bell} label="News" />
-                        <NavButton to="/contact" icon={ShieldAlert} label="Contact" />
+                        <NavButton to="/contact" icon={Phone} label="Contact" />
                     </div>
                 </div>
                 <div className="h-20 lg:hidden" />
