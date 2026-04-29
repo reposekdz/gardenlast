@@ -10,9 +10,12 @@ export default defineConfig({
   // In production, the server.js handles proxying to the backend
   server: {
     host: '0.0.0.0',
-    port: 5173,
+    port: 5000,
     strictPort: true,
     allowedHosts: true,
+    hmr: {
+      clientPort: 443,
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:8080',
