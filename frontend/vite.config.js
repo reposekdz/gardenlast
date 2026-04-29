@@ -10,7 +10,7 @@ export default defineConfig({
   // In production, the server.js handles proxying to the backend
   server: {
     host: '0.0.0.0',
-    port: 5000,
+    port: 3000,
     strictPort: true,
     allowedHosts: true,
     hmr: {
