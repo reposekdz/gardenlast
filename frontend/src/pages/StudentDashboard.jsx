@@ -102,7 +102,7 @@ const StudentDashboard = () => {
     const totalFees = (fees || []).reduce((s, f) => s + Number(f.amount || 0), 0);
     const paid = profile.fees_paid || 0;
     const owed = profile.fees_owed || Math.max(0, totalFees - paid);
-    const conductPts = profile.conduct_points ?? 100;
+    const conductPts = profile.conduct_points ?? 40;
 
     const fmtMoney = (n) => Number(n || 0).toLocaleString('en-US') + ' RWF';
     const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-GB') : '—';
@@ -143,7 +143,7 @@ const StudentDashboard = () => {
 
             {/* Stats grid */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <Stat icon={Award} label="Conduct" value={`${conductPts} / 100`} color="emerald" sub={conductPts >= 80 ? 'Wonyine!' : conductPts >= 60 ? 'Komeza' : 'Witondere'} />
+                <Stat icon={Award} label="Conduct" value={`${conductPts} / 40`} color="emerald" sub={conductPts >= 32 ? 'Wonyine!' : conductPts >= 24 ? 'Komeza' : 'Witondere'} />
                 <Stat icon={TrendingUp} label="GPA" value={profile.gpa ? Number(profile.gpa).toFixed(2) : '—'} color="blue" />
                 <Stat icon={Calendar} label="Kwitabira" value={`${presentRate}%`} color="purple" sub={`${attendance.present || 0} / ${totalAttendance || 0}`} />
                 <Stat icon={DollarSign} label="Asigaye" value={fmtMoney(owed)} color={owed > 0 ? 'red' : 'emerald'} sub={fmtMoney(paid) + ' yatanzwe'} />
@@ -326,9 +326,9 @@ const StudentDashboard = () => {
             <Section id="conduct" icon={ShieldAlert} title="Imyitwarire" color="red">
                 <div className="mb-4 flex items-center gap-3">
                     <div className="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
-                        <div className={`h-full ${conductPts >= 80 ? 'bg-emerald-500' : conductPts >= 60 ? 'bg-amber-500' : 'bg-red-500'}`} style={{ width: `${Math.min(100, conductPts)}%` }} />
+                        <div className={`h-full ${conductPts >= 32 ? 'bg-emerald-500' : conductPts >= 24 ? 'bg-amber-500' : 'bg-red-500'}`} style={{ width: `${Math.min(100, (conductPts / 40) * 100)}%` }} />
                     </div>
-                    <span className="font-black text-gray-900">{conductPts} / 100</span>
+                    <span className="font-black text-gray-900">{conductPts} / 40</span>
                 </div>
                 {conduct_records && conduct_records.length > 0 ? (
                     <div className="space-y-2">
