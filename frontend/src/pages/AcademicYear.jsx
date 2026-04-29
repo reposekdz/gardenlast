@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import api from '../utils/api';
 import useAuthStore from '../store/authStore';
 import { toast } from 'react-toastify';
@@ -370,10 +371,10 @@ const AcademicYear = () => {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                         <h1 className="text-2xl font-black flex items-center gap-2">
-                            <Calendar size={26} /> Imyaka y'Amashuri
+                            <Calendar size={26} /> {t('academic_year.title')}
                         </h1>
                         <p className="text-primary-200 text-sm">
-                            Genzura imyaka, terms, promotions n'ibyifuzo by'abana bashya.
+                            {t('academic_year.subtitle')}
                         </p>
                     </div>
                     <div className="flex gap-2">
@@ -381,14 +382,14 @@ const AcademicYear = () => {
                             onClick={loadAll}
                             className="px-3 py-2 bg-white/10 hover:bg-white/20 rounded-xl flex items-center gap-2"
                         >
-                            <RefreshCcw size={16} /> Refresh
+                            <RefreshCcw size={16} /> {t('common_extra.refresh')}
                         </button>
                         {isAdminOrDirector && (
                             <button
                                 onClick={() => setShowCreate(true)}
                                 className="px-4 py-2 bg-white text-primary-700 rounded-xl font-bold flex items-center gap-2 hover:bg-primary-50"
                             >
-                                <Plus size={18} /> Umwaka mushya
+                                <Plus size={18} /> {t('academic_year.new_year')}
                             </button>
                         )}
                     </div>
@@ -397,12 +398,12 @@ const AcademicYear = () => {
 
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-6">
-                <StatCard icon={Calendar} label="Total Years" value={years.length} color="bg-primary-50 text-primary-700" />
-                <StatCard icon={PlayCircle} label="Current Year" value={currentYear?.name || '—'} color="bg-green-50 text-green-700" />
-                <StatCard icon={GraduationCap} label="Graduated (history)"
+                <StatCard icon={Calendar} label={t('academic_year.stats.total_years')} value={years.length} color="bg-primary-50 text-primary-700" />
+                <StatCard icon={PlayCircle} label={t('academic_year.stats.current_year')} value={currentYear?.name || '—'} color="bg-green-50 text-green-700" />
+                <StatCard icon={GraduationCap} label={t('academic_year.stats.graduated')}
                     value={history.filter(h => h.action === 'graduated').length}
                     color="bg-amber-50 text-amber-700" />
-                <StatCard icon={Sparkles} label="Promoted (history)"
+                <StatCard icon={Sparkles} label={t('academic_year.stats.promoted')}
                     value={history.filter(h => h.action === 'promoted').length}
                     color="bg-blue-50 text-blue-700" />
             </div>
@@ -427,7 +428,7 @@ const AcademicYear = () => {
                         </button>
                     ))}
                     {years.length === 0 && (
-                        <p className="text-gray-500 text-sm">Nta myaka yandikishijwe.</p>
+                        <p className="text-gray-500 text-sm">{t('academic_year.no_years')}</p>
                     )}
                 </div>
             </div>
@@ -442,7 +443,7 @@ const AcademicYear = () => {
                     ) : !yearDetail ? (
                         <div className="bg-white rounded-3xl p-12 text-center text-gray-400">
                             <Calendar size={48} className="mx-auto mb-3 opacity-30" />
-                            <p>Tangira ufungure umwaka mushya hejuru.</p>
+                            <p>{t('academic_year.start_open_year')}</p>
                         </div>
                     ) : (
                         <>
@@ -463,7 +464,7 @@ const AcademicYear = () => {
                                         </span>
                                          {yearDetail.is_current ? (
                                              <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-600 text-white">
-                                                 Umwaka w'ubu
+                                                 {t('academic_year.current')}
                                              </span>
                                          ) : yearDetail.status !== 'closed' && isAdminOrDirector && (
                                              <button
@@ -471,7 +472,7 @@ const AcademicYear = () => {
                                                  disabled={busy}
                                                  className="px-3 py-1 rounded-full text-xs font-bold bg-primary-600 text-white hover:bg-primary-700"
                                              >
-                                                 Toranya
+                                                 {t('academic_year.set_current')}
                                              </button>
                                          )}
             {/* Edit / Delete / Reopen actions - only for authorized roles */}

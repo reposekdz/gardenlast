@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import useAuthStore from '../store/authStore';
 import { toast } from 'react-toastify';
@@ -11,6 +12,7 @@ import {
 const API_URL = import.meta.env.VITE_API_URL || '';
 
 const Stock = () => {
+    const { t } = useTranslation();
     const { token, user } = useAuthStore();
     const [items, setItems] = useState([]);
     const [transactions, setTransactions] = useState([]);
@@ -44,7 +46,7 @@ const Stock = () => {
         const file = e.target.files?.[0];
         if (!file) return;
         if (file.size > 5 * 1024 * 1024) {
-            toast.error('Image must be smaller than 5 MB');
+            toast.error(t('stk_full.image_too_large'));
             return;
         }
         setUploadingImage(true);
@@ -58,9 +60,9 @@ const Stock = () => {
                 }
             });
             setFormData(p => ({ ...p, image_url: res.data.url }));
-            toast.success('Image uploaded');
+            toast.success(t('stk_full.image_uploaded'));
         } catch (err) {
-            toast.error(err.response?.data?.message || 'Image upload failed');
+            toast.error(err.response?.data?.message || t('stk_full.image_upload_failed'));
         } finally {
             setUploadingImage(false);
         }
@@ -82,7 +84,7 @@ const Stock = () => {
             });
             setItems(res.data);
         } catch (error) {
-            toast.error('Failed to load inventory');
+            toast.error(t('stk_full.load_failed'));
         } finally {
             setLoading(false);
         }
@@ -114,7 +116,7 @@ const Stock = () => {
         setRefreshing(true);
         await Promise.all([fetchItems(), fetchSummary(), fetchTransactions()]);
         setRefreshing(false);
-        toast.success('Inventory refreshed!');
+        toast.success(t('stk_full.refreshed'));
     };
 
     useEffect(() => {
@@ -138,7 +140,7 @@ const Stock = () => {
             await axios.post(`${API_URL}/api/stock`, stockData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            toast.success('Item added successfully');
+            toast.success(t('stk_full.item_added'));
             setShowForm(false);
             setFormData({
                 item_name: '', category: 'equipment', quantity: 0,
@@ -149,7 +151,7 @@ const Stock = () => {
             fetchSummary();
         } catch (error) {
             console.error('Error adding stock item:', error.response || error);
-            toast.error(error.response?.data?.message || 'Failed to add item');
+            toast.error(error.response?.data?.message || t('stk_full.add_failed'));
         }
     };
 
@@ -165,7 +167,7 @@ const Stock = () => {
             await axios.post(`${API_URL}/api/stock/transactions`, txData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            toast.success('Transaction recorded');
+            toast.success(t('stk_full.transaction_recorded'));
             setShowTransactionForm(false);
             setTransactionData({
                 item_id: '', transaction_type: 'purchase', quantity: 1,
@@ -176,7 +178,7 @@ const Stock = () => {
             fetchSummary();
         } catch (error) {
             console.error('Error recording transaction:', error.response || error);
-            toast.error(error.response?.data?.message || 'Failed to record transaction');
+            toast.error(error.response?.data?.message || t('stk_full.transaction_failed'));
         }
     };
 
@@ -198,22 +200,22 @@ const Stock = () => {
             fetchSummary();
         } catch (error) {
             console.error('Stock update error:', error.response || error);
-            const msg = error.response?.data?.error || error.response?.data?.message || error.message || 'Unknown error';
-            toast.error(`Failed to update stock: ${msg}`);
+            const msg = error.response?.data?.error || error.response?.data?.message || error.message || t('common_extra.unknown_error');
+            toast.error(`${t('stk_full.update_failed')}: ${msg}`);
         }
     };
 
     const deleteItem = async (id) => {
-        if (!window.confirm('Are you sure you want to delete this item?')) return;
+        if (!window.confirm(t('stk_full.confirm_delete'))) return;
         try {
             await axios.delete(`${API_URL}/api/stock/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            toast.success('Item deleted');
+            toast.success(t('stk_full.item_deleted'));
             fetchItems();
             fetchSummary();
         } catch (error) {
-            toast.error('Failed to delete item');
+            toast.error(t('stk_full.delete_failed'));
         }
     };
 
@@ -255,9 +257,9 @@ const Stock = () => {
                     <div>
                         <h2 className="text-2xl font-bold flex items-center gap-3">
                             <Package className="text-amber-300" size={28} />
-                            Inventory Management
+                            {t('stk_full.title')}
                         </h2>
-                        <p className="text-amber-200 text-sm mt-1">Track and manage school equipment and supplies</p>
+                        <p className="text-amber-200 text-sm mt-1">{t('stk_full.subtitle')}</p>
                     </div>
                     <div className="flex gap-3">
                         <button
@@ -265,7 +267,7 @@ const Stock = () => {
                             className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2"
                             disabled={refreshing}
                         >
-                            <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} /> {refreshing ? 'Refreshing...' : 'Refresh'}
+                            <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} /> {refreshing ? t('common_extra.refreshing') : t('common_extra.refresh')}
                         </button>
                         {isStockOrAdmin && (
                             <>
@@ -273,13 +275,13 @@ const Stock = () => {
                                     onClick={() => setShowTransactionForm(true)}
                                     className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2"
                                 >
-                                    <RefreshCw size={16} /> Transaction
+                                    <RefreshCw size={16} /> {t('stk_full.transaction')}
                                 </button>
                                 <button
                                     onClick={() => setShowForm(!showForm)}
                                     className="px-4 py-2 bg-white text-amber-700 hover:bg-amber-50 rounded-xl text-sm font-semibold transition-colors shadow-lg flex items-center gap-2"
                                 >
-                                    <Plus size={16} /> Add Item
+                                    <Plus size={16} /> {t('stk_full.add_item')}
                                 </button>
                             </>
                         )}
@@ -291,25 +293,25 @@ const Stock = () => {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
                         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
                             <div className="flex items-center gap-2 text-amber-200 text-sm">
-                                <Box size={16} /> Total Items
+                                <Box size={16} /> {t('stk_full.summary.total_items')}
                             </div>
                             <p className="text-2xl font-bold mt-1">{summary.total_items}</p>
                         </div>
                         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
                             <div className="flex items-center gap-2 text-amber-200 text-sm">
-                                <TrendingUp size={16} /> Total Quantity
+                                <TrendingUp size={16} /> {t('stk_full.summary.total_qty')}
                             </div>
                             <p className="text-2xl font-bold mt-1">{summary.total_quantity?.toLocaleString()}</p>
                         </div>
                         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
                             <div className="flex items-center gap-2 text-amber-200 text-sm">
-                                <AlertTriangle size={16} /> Low Stock
+                                <AlertTriangle size={16} /> {t('stk_full.summary.low_stock')}
                             </div>
                             <p className="text-2xl font-bold mt-1">{summary.low_stock_count}</p>
                         </div>
                         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
                             <div className="flex items-center gap-2 text-amber-200 text-sm">
-                                <TrendingDown size={16} /> Depleted
+                                <TrendingDown size={16} /> {t('stk_full.summary.depleted')}
                             </div>
                             <p className="text-2xl font-bold mt-1">{summary.depleted_count}</p>
                         </div>
@@ -326,7 +328,7 @@ const Stock = () => {
                         : 'border-transparent text-gray-500 hover:text-gray-700'
                         }`}
                 >
-                    All Items
+                    {t('stk_full.tabs.items')}
                 </button>
                 <button
                     onClick={() => setActiveTab('transactions')}
@@ -335,7 +337,7 @@ const Stock = () => {
                         : 'border-transparent text-gray-500 hover:text-gray-700'
                         }`}
                 >
-                    Transactions
+                    {t('stk_full.tabs.transactions')}
                 </button>
             </div>
 
@@ -343,77 +345,77 @@ const Stock = () => {
             {showForm && isStockOrAdmin && (
                 <div className="bg-white rounded-2xl border border-gray-100 shadow-lg p-6">
                     <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                        <Plus size={20} className="text-amber-600" /> Add New Stock Item
+                        <Plus size={20} className="text-amber-600" /> {t('stk_full.form.add_title')}
                     </h3>
                     <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Item Name *</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('stk_full.form.item_name')} *</label>
                             <input required type="text" className="input-field" value={formData.item_name}
-                                onChange={e => setFormData({ ...formData, item_name: e.target.value })} placeholder="e.g. Dell Monitor" />
+                                onChange={e => setFormData({ ...formData, item_name: e.target.value })} placeholder={t('stk_full.form.item_name_ph')} />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('stk_full.form.category')}</label>
                             <select className="input-field" value={formData.category}
                                 onChange={e => setFormData({ ...formData, category: e.target.value })}>
-                                <option value="equipment">Equipment</option>
-                                <option value="supplies">Supplies</option>
-                                <option value="furniture">Furniture</option>
-                                <option value="electronics">Electronics</option>
-                                <option value="tools">Tools</option>
-                                <option value="stationery">Stationery</option>
-                                <option value="other">Other</option>
+                                <option value="equipment">{t('stk_full.cats.equipment')}</option>
+                                <option value="supplies">{t('stk_full.cats.supplies')}</option>
+                                <option value="furniture">{t('stk_full.cats.furniture')}</option>
+                                <option value="electronics">{t('stk_full.cats.electronics')}</option>
+                                <option value="tools">{t('stk_full.cats.tools')}</option>
+                                <option value="stationery">{t('stk_full.cats.stationery')}</option>
+                                <option value="other">{t('stk_full.cats.other')}</option>
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Quantity *</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('stk_full.form.quantity')} *</label>
                             <input required type="number" min="0" className="input-field" value={formData.quantity}
                                 onChange={e => setFormData({ ...formData, quantity: parseInt(e.target.value) })} />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Unit</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('stk_full.form.unit')}</label>
                             <select className="input-field" value={formData.unit}
                                 onChange={e => setFormData({ ...formData, unit: e.target.value })}>
-                                <option value="pieces">Pieces</option>
-                                <option value="boxes">Boxes</option>
-                                <option value="reams">Reams</option>
-                                <option value="liters">Liters</option>
-                                <option value="kg">Kg</option>
-                                <option value="pairs">Pairs</option>
-                                <option value="sets">Sets</option>
+                                <option value="pieces">{t('stk_full.units.pieces')}</option>
+                                <option value="boxes">{t('stk_full.units.boxes')}</option>
+                                <option value="reams">{t('stk_full.units.reams')}</option>
+                                <option value="liters">{t('stk_full.units.liters')}</option>
+                                <option value="kg">{t('stk_full.units.kg')}</option>
+                                <option value="pairs">{t('stk_full.units.pairs')}</option>
+                                <option value="sets">{t('stk_full.units.sets')}</option>
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Min Quantity (Alert)</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('stk_full.form.min_qty')}</label>
                             <input type="number" min="0" className="input-field" value={formData.min_quantity}
                                 onChange={e => setFormData({ ...formData, min_quantity: parseInt(e.target.value) })} />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('stk_full.form.location')}</label>
                             <input type="text" className="input-field" value={formData.location}
-                                onChange={e => setFormData({ ...formData, location: e.target.value })} placeholder="e.g. Room 101" />
+                                onChange={e => setFormData({ ...formData, location: e.target.value })} placeholder={t('stk_full.form.location_ph')} />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Supplier</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('stk_full.form.supplier')}</label>
                             <input type="text" className="input-field" value={formData.supplier}
                                 onChange={e => setFormData({ ...formData, supplier: e.target.value })} />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Purchase Price</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('stk_full.form.price')}</label>
                             <input type="number" min="0" className="input-field" value={formData.purchase_price}
                                 onChange={e => setFormData({ ...formData, purchase_price: e.target.value })} placeholder="RWF" />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Purchase Date</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('stk_full.form.purchase_date')}</label>
                             <input type="date" className="input-field" value={formData.purchase_date}
                                 onChange={e => setFormData({ ...formData, purchase_date: e.target.value })} />
                         </div>
                         <div className="md:col-span-3">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('stk_full.form.description')}</label>
                             <textarea className="input-field" rows={2} value={formData.description}
                                 onChange={e => setFormData({ ...formData, description: e.target.value })} />
                         </div>
                         <div className="md:col-span-3">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Item Image (optional)</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('stk_full.form.image')}</label>
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                                 <input
                                     type="file" accept="image/*"
@@ -421,7 +423,7 @@ const Stock = () => {
                                     disabled={uploadingImage}
                                     className="block text-sm text-gray-700 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-amber-100 file:text-amber-700 hover:file:bg-amber-200"
                                 />
-                                {uploadingImage && <span className="text-sm text-amber-600 animate-pulse">Uploading...</span>}
+                                {uploadingImage && <span className="text-sm text-amber-600 animate-pulse">{t('stk_full.uploading')}</span>}
                                 {formData.image_url && (
                                     <div className="relative">
                                         <img src={formData.image_url} alt="preview" className="w-20 h-20 object-cover rounded-lg border" />
@@ -432,8 +434,8 @@ const Stock = () => {
                             </div>
                         </div>
                         <div className="md:col-span-3 flex gap-3 justify-end">
-                            <button type="button" onClick={() => setShowForm(false)} className="px-6 py-2 text-gray-600 hover:bg-gray-100 rounded-xl">Cancel</button>
-                            <button type="submit" className="px-6 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-semibold">Save Item</button>
+                            <button type="button" onClick={() => setShowForm(false)} className="px-6 py-2 text-gray-600 hover:bg-gray-100 rounded-xl">{t('common.cancel')}</button>
+                            <button type="submit" className="px-6 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-semibold">{t('stk_full.save_item')}</button>
                         </div>
                     </form>
                 </div>
@@ -443,53 +445,53 @@ const Stock = () => {
             {showTransactionForm && isStockOrAdmin && (
                 <div className="bg-white rounded-2xl border border-gray-100 shadow-lg p-6">
                     <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                        <RefreshCw size={20} className="text-amber-600" /> Record Transaction
+                        <RefreshCw size={20} className="text-amber-600" /> {t('stk_full.tx_form.title')}
                     </h3>
                     <form onSubmit={handleTransactionSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Item *</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('stk_full.tx_form.item')} *</label>
                             <select required className="input-field" value={transactionData.item_id}
                                 onChange={e => setTransactionData({ ...transactionData, item_id: e.target.value })}>
-                                <option value="">Select item...</option>
+                                <option value="">{t('stk_full.tx_form.select_item')}</option>
                                 {items.map(item => (
-                                    <option key={item.id} value={item.id}>{item.item_name} (Current: {item.quantity})</option>
+                                    <option key={item.id} value={item.id}>{item.item_name} ({t('stk_full.tx_form.current')}: {item.quantity})</option>
                                 ))}
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Transaction Type</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('stk_full.tx_form.type')}</label>
                             <select className="input-field" value={transactionData.transaction_type}
                                 onChange={e => setTransactionData({ ...transactionData, transaction_type: e.target.value })}>
-                                <option value="purchase">Purchase (Add)</option>
-                                <option value="usage">Usage (Remove)</option>
-                                <option value="damage">Damage</option>
-                                <option value="disposal">Disposal</option>
-                                <option value="return">Return</option>
+                                <option value="purchase">{t('stk_full.tx_types.purchase')}</option>
+                                <option value="usage">{t('stk_full.tx_types.usage')}</option>
+                                <option value="damage">{t('stk_full.tx_types.damage')}</option>
+                                <option value="disposal">{t('stk_full.tx_types.disposal')}</option>
+                                <option value="return">{t('stk_full.tx_types.return')}</option>
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Quantity *</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('stk_full.form.quantity')} *</label>
                             <input required type="number" min="1" className="input-field" value={transactionData.quantity}
                                 onChange={e => setTransactionData({ ...transactionData, quantity: parseInt(e.target.value) })} />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Unit Price (RWF)</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('stk_full.tx_form.unit_price')}</label>
                             <input type="number" min="0" className="input-field" value={transactionData.unit_price}
                                 onChange={e => setTransactionData({ ...transactionData, unit_price: e.target.value })} />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Reference</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('stk_full.tx_form.reference')}</label>
                             <input type="text" className="input-field" value={transactionData.reference}
-                                onChange={e => setTransactionData({ ...transactionData, reference: e.target.value })} placeholder="Invoice #" />
+                                onChange={e => setTransactionData({ ...transactionData, reference: e.target.value })} placeholder={t('stk_full.tx_form.invoice_ph')} />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('stk_full.tx_form.notes')}</label>
                             <input type="text" className="input-field" value={transactionData.notes}
                                 onChange={e => setTransactionData({ ...transactionData, notes: e.target.value })} />
                         </div>
                         <div className="md:col-span-3 flex gap-3 justify-end">
-                            <button type="button" onClick={() => setShowTransactionForm(false)} className="px-6 py-2 text-gray-600 hover:bg-gray-100 rounded-xl">Cancel</button>
-                            <button type="submit" className="px-6 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-semibold">Record</button>
+                            <button type="button" onClick={() => setShowTransactionForm(false)} className="px-6 py-2 text-gray-600 hover:bg-gray-100 rounded-xl">{t('common.cancel')}</button>
+                            <button type="submit" className="px-6 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-semibold">{t('stk_full.tx_form.record')}</button>
                         </div>
                     </form>
                 </div>
@@ -502,7 +504,7 @@ const Stock = () => {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                         <input
                             type="text"
-                            placeholder="Search items..."
+                            placeholder={t('stk_full.search_ph')}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="input-field pl-10"
@@ -513,9 +515,9 @@ const Stock = () => {
                         onChange={(e) => setCategoryFilter(e.target.value)}
                         className="input-field w-full sm:w-48"
                     >
-                        <option value="all">All Categories</option>
-                        <option value="equipment">Equipment</option>
-                        <option value="food">Food</option>
+                        <option value="all">{t('stk_full.all_categories')}</option>
+                        <option value="equipment">{t('stk_full.cats.equipment')}</option>
+                        <option value="food">{t('stk_full.cats.food')}</option>
                     </select>
                     <button
                         onClick={() => setShowLowStockOnly(!showLowStockOnly)}
@@ -524,7 +526,7 @@ const Stock = () => {
                             : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                             }`}
                     >
-                        <AlertTriangle size={16} /> Low Stock Only
+                        <AlertTriangle size={16} /> {t('stk_full.low_stock_only')}
                     </button>
                 </div>
             )}
@@ -577,7 +579,7 @@ const Stock = () => {
 
                                 <div className="flex items-end justify-between mt-4">
                                     <div>
-                                        <p className="text-xs text-gray-500 uppercase tracking-wide font-semibold">Available</p>
+                                        <p className="text-xs text-gray-500 uppercase tracking-wide font-semibold">{t('common_extra.available')}</p>
                                         <p className="text-3xl font-black text-gray-900">{item.quantity}</p>
                                         <p className="text-xs text-gray-400">{item.unit}</p>
                                     </div>
@@ -616,11 +618,11 @@ const Stock = () => {
                         <table className="w-full text-left">
                             <thead>
                                 <tr className="bg-amber-50/80 text-amber-800 text-xs font-bold uppercase tracking-wider">
-                                    <th className="px-6 py-4">Date</th>
-                                    <th className="px-6 py-4">Item</th>
-                                    <th className="px-6 py-4">Type</th>
-                                    <th className="px-6 py-4 text-right">Qty</th>
-                                    <th className="px-6 py-4">Reference</th>
+                                    <th className="px-6 py-4">{t('common_extra.date')}</th>
+                                    <th className="px-6 py-4">{t('stk_full.tx_form.item')}</th>
+                                    <th className="px-6 py-4">{t('stk_full.tx_form.type')}</th>
+                                    <th className="px-6 py-4 text-right">{t('stk_full.qty_short')}</th>
+                                    <th className="px-6 py-4">{t('stk_full.tx_form.reference')}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
@@ -652,7 +654,7 @@ const Stock = () => {
                     {!loading && transactions.length === 0 && (
                         <div className="text-center py-12 text-gray-500">
                             <RefreshCw size={32} className="mx-auto mb-2 text-gray-300" />
-                            No transactions found
+                            {t('stk_full.no_transactions')}
                         </div>
                     )}
                 </div>
@@ -662,8 +664,8 @@ const Stock = () => {
             {!loading && activeTab === 'items' && items.length === 0 && (
                 <div className="text-center py-16 bg-white rounded-2xl border border-gray-100 shadow-sm">
                     <Package size={64} className="mx-auto text-gray-200 mb-4" />
-                    <p className="text-xl font-bold text-gray-700">Inventory is empty</p>
-                    <p className="text-gray-400 mt-2">Start by adding your first stock item</p>
+                    <p className="text-xl font-bold text-gray-700">{t('stk_full.empty')}</p>
+                    <p className="text-gray-400 mt-2">{t('stk_full.empty_desc')}</p>
                 </div>
             )}
         </div>

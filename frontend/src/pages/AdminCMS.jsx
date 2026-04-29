@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import useAuthStore from '../store/authStore';
 import { toast } from 'react-toastify';
@@ -9,6 +10,7 @@ import GradesManager from '../components/GradesManager';
 import AcademicYear from './AcademicYear';
 
 const AdminCMS = () => {
+    const { t } = useTranslation();
     const { token } = useAuthStore();
     const API_URL = import.meta.env.VITE_API_URL || '';
     const [activeTab, setActiveTab] = useState('news');
@@ -187,8 +189,8 @@ const AdminCMS = () => {
         <div className="space-y-6 animate-fade-in">
             <div className="flex items-center justify-between bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-800">Gucunga Ibiri kuri Site</h2>
-                    <p className="text-sm text-gray-500 mt-1">Manage news, content, and student applications</p>
+                    <h2 className="text-2xl font-bold text-gray-800">{t('admin_cms.title')}</h2>
+                    <p className="text-sm text-gray-500 mt-1">{t('admin_cms.subtitle')}</p>
                 </div>
             </div>
 

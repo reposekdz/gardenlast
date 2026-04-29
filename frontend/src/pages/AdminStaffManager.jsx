@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import useAuthStore from '../store/authStore';
 import { toast } from 'react-toastify';
@@ -31,6 +32,7 @@ const ROLE_LABELS = {
 const emptyForm = { first_name: '', last_name: '', phone: '', username: '', password: '', role: '' };
 
 const AdminStaffManager = () => {
+    const { t } = useTranslation();
     const { token, user: currentUser } = useAuthStore();
     const API_URL = import.meta.env.VITE_API_URL || '';
     const headers = { Authorization: `Bearer ${token}` };

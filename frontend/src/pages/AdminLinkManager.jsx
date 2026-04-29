@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import useAuthStore from '../store/authStore';
 import { toast } from 'react-toastify';
@@ -16,6 +17,7 @@ const API_URL = import.meta.env.VITE_API_URL || '';
 const DEFAULT_LEVELS_FALLBACK = ['Level 3', 'Level 4', 'Level 5'];
 
 const AdminLinkManager = () => {
+    const { t } = useTranslation();
     const { token, user } = useAuthStore();
     const navigate = useNavigate();
     const headers = { Authorization: `Bearer ${token}` };
@@ -298,19 +300,19 @@ const AdminLinkManager = () => {
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
                 <div>
                     <h1 className="text-2xl font-black text-gray-800 flex items-center gap-2">
-                        <Link2 className="text-primary-600" /> Parent-Student Link Manager
+                        <Link2 className="text-primary-600" /> {t('admin_link.title')}
                     </h1>
-                    <p className="text-gray-500">Manage parent linking requests and manual links</p>
+                    <p className="text-gray-500">{t('admin_link.subtitle')}</p>
                 </div>
                 <div className="flex gap-2">
                     <button onClick={() => navigate('/students')} className="btn-secondary flex items-center gap-2 bg-green-600 text-white hover:bg-green-700">
-                        <Users size={18} /> Manage Students
+                        <Users size={18} /> {t('disc_full.manage_students')}
                     </button>
                     <button onClick={fetchData} className="btn-secondary flex items-center gap-2">
-                        <RefreshCw size={18} /> Refresh
+                        <RefreshCw size={18} /> {t('common_extra.refresh')}
                     </button>
                     <button onClick={() => setShowLinkModal(true)} className="btn-primary flex items-center gap-2">
-                        <UserPlus size={18} /> Manual Link
+                        <UserPlus size={18} /> {t('admin_link.manual_link')}
                     </button>
                 </div>
             </div>
@@ -324,7 +326,7 @@ const AdminLinkManager = () => {
                         </div>
                         <div>
                             <p className="text-2xl font-black">{linkRequests.filter(r => r.status === 'pending').length}</p>
-                            <p className="text-xs text-gray-500">Pending Requests</p>
+                            <p className="text-xs text-gray-500">{t('admin_link.stats.pending')}</p>
                         </div>
                     </div>
                 </div>
@@ -335,7 +337,7 @@ const AdminLinkManager = () => {
                         </div>
                         <div>
                             <p className="text-2xl font-black">{linkRequests.filter(r => r.status === 'approved').length}</p>
-                            <p className="text-xs text-gray-500">Approved</p>
+                            <p className="text-xs text-gray-500">{t('admin_link.stats.approved')}</p>
                         </div>
                     </div>
                 </div>
@@ -346,7 +348,7 @@ const AdminLinkManager = () => {
                         </div>
                         <div>
                             <p className="text-2xl font-black">{linkRequests.filter(r => r.status === 'rejected').length}</p>
-                            <p className="text-xs text-gray-500">Rejected</p>
+                            <p className="text-xs text-gray-500">{t('admin_link.stats.rejected')}</p>
                         </div>
                     </div>
                 </div>
@@ -357,7 +359,7 @@ const AdminLinkManager = () => {
                         </div>
                         <div>
                             <p className="text-2xl font-black">{parents.length}</p>
-                            <p className="text-xs text-gray-500">Total Parents</p>
+                            <p className="text-xs text-gray-500">{t('parent_mgmt.total_parents')}</p>
                         </div>
                     </div>
                 </div>
@@ -370,21 +372,21 @@ const AdminLinkManager = () => {
                     className={`px-5 py-2.5 rounded-xl font-bold transition-all ${activeTab === 'requests' ? 'bg-primary-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-100'
                         }`}
                 >
-                    Link Requests ({linkRequests.filter(r => r.status === 'pending').length})
+                    {t('admin_link.tabs.requests')} ({linkRequests.filter(r => r.status === 'pending').length})
                 </button>
                 <button
                     onClick={() => setActiveTab('linked')}
                     className={`px-5 py-2.5 rounded-xl font-bold transition-all ${activeTab === 'linked' ? 'bg-primary-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-100'
                         }`}
                 >
-                    Request History ({linkRequests.filter(r => r.status !== 'pending').length})
+                    {t('admin_link.tabs.history')} ({linkRequests.filter(r => r.status !== 'pending').length})
                 </button>
                 <button
                     onClick={() => setActiveTab('all-linked')}
                     className={`px-5 py-2.5 rounded-xl font-bold transition-all ${activeTab === 'all-linked' ? 'bg-green-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-100'
                         }`}
                 >
-                    All Linked ({linkedStudents.length})
+                    {t('admin_link.tabs.all_linked')} ({linkedStudents.length})
                 </button>
             </div>
 

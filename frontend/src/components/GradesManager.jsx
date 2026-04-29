@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { PlusCircle, Trash2, Edit2, Save, X, Search, Filter, Download, Upload, TrendingUp, Award, BookOpen, History, Eye, EyeOff } from 'lucide-react';
 
 const GradesManager = () => {
+    const { t } = useTranslation();
     const [grades, setGrades] = useState([]);
     const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(true);

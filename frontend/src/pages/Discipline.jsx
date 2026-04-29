@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import useAuthStore from '../store/authStore';
 import { toast } from 'react-toastify';
@@ -22,6 +23,7 @@ const DISCIPLINE_ACTIONS = [
 const LEAVE_TYPES = ['sick', 'personal', 'emergency', 'bereavement', 'academic', 'other'];
 
 const Discipline = () => {
+    const { t } = useTranslation();
     const { token, user } = useAuthStore();
     const navigate = useNavigate();
     const headers = { Authorization: `Bearer ${token}` };
@@ -128,32 +130,32 @@ const Discipline = () => {
 
             const res = await axios.get(`${API_URL}/api/discipline?${params}`, { headers });
             setRecords(res.data);
-        } catch { toast.error('Habaye ikibazo'); }
+        } catch { toast.error(t('common_extra.generic_error')); }
         finally { setLoading(false); }
     };
 
     // Delete discipline record
     const deleteRecord = async (id) => {
-        if (!window.confirm('Wereka guhagarika iri ryampaye?..')) return;
+        if (!window.confirm(t('disc_full.confirm_delete_record'))) return;
         try {
             await axios.delete(`${API_URL}/api/discipline/${id}`, { headers });
-            toast.success('Icyifuzo cyasibwe');
+            toast.success(t('disc_full.toasts.record_deleted'));
             fetchRecords();
-        } catch (err) { toast.error('Habaye ikibazo'); }
+        } catch (err) { toast.error(t('common_extra.generic_error')); }
     };
 
     // Clear conduct records for a student (DOD function)
     const clearStudentConduct = async (studentId, clearType = 'all') => {
-        if (!window.confirm(`Urashaka guhagarika${clearType === 'all' ? '' : ' actives'} ibibazo by'uburebure by'uyu mwana?`)) return;
+        if (!window.confirm(t(clearType === 'all' ? 'disc_full.confirm_clear_all_conduct' : 'disc_full.confirm_clear_active_conduct'))) return;
         try {
             setClearingConduct(studentId);
             await axios.delete(`${API_URL}/api/discipline/clear/${studentId}`,
                 { headers, data: { clear_type: clearType } });
-            toast.success('Ibibazo by uburebure byasibwe');
+            toast.success(t('disc_full.toasts.conduct_cleared'));
             fetchConductSheet();
             fetchRecords();
         } catch (err) {
-            toast.error(err.response?.data?.message || 'Habaye ikibazo');
+            toast.error(err.response?.data?.message || t('common_extra.generic_error'));
         } finally {
             setClearingConduct(null);
         }
@@ -366,19 +368,19 @@ const Discipline = () => {
                 <div>
                     <h1 className="text-2xl font-black text-gray-800 flex items-center gap-2">
                         <Shield className="text-primary-600" />
-                        {isDod ? 'Director of Discipline' : 'Discipline Management'}
+                        {isDod ? t('disc_full.title_dod') : t('disc_full.title_general')}
                     </h1>
                     <p className="text-gray-500">
-                        {isDod ? 'Manage discipline, leaves, and parent communications' : 'Track student behavior records'}
+                        {isDod ? t('disc_full.subtitle_dod') : t('disc_full.subtitle_general')}
                     </p>
                 </div>
                 <div className="flex gap-2">
                     <button onClick={fetchRecords} className="btn-secondary flex items-center gap-2">
-                        <RefreshCw size={18} /> Refresh
+                        <RefreshCw size={18} /> {t('common_extra.refresh')}
                     </button>
                     {!isTeacher && (
                         <button onClick={() => setShowRecordModal(true)} className="btn-primary flex items-center gap-2">
-                            <Plus size={18} /> Add Record
+                            <Plus size={18} /> {t('disc_full.add_record')}
                         </button>
                     )}
                 </div>
@@ -393,7 +395,7 @@ const Discipline = () => {
                         </div>
                         <div>
                             <p className="text-2xl font-black">{stats?.total_records || 0}</p>
-                            <p className="text-xs text-gray-500">Total Records</p>
+                            <p className="text-xs text-gray-500">{t('disc_full.stats.total_records')}</p>
                         </div>
                     </div>
                 </div>
@@ -404,7 +406,7 @@ const Discipline = () => {
                         </div>
                         <div>
                             <p className="text-2xl font-black">{stats?.last_30_days || 0}</p>
-                            <p className="text-xs text-gray-500">Last 30 Days</p>
+                            <p className="text-xs text-gray-500">{t('disc_full.stats.last_30')}</p>
                         </div>
                     </div>
                 </div>
@@ -415,7 +417,7 @@ const Discipline = () => {
                         </div>
                         <div>
                             <p className="text-2xl font-black">{pendingAppeals.length}</p>
-                            <p className="text-xs text-gray-500">Pending Appeals</p>
+                            <p className="text-xs text-gray-500">{t('disc_full.stats.pending_appeals')}</p>
                         </div>
                     </div>
                 </div>
@@ -426,7 +428,7 @@ const Discipline = () => {
                         </div>
                         <div>
                             <p className="text-2xl font-black">{pendingLeaves.length}</p>
-                            <p className="text-xs text-gray-500">Leave Requests</p>
+                            <p className="text-xs text-gray-500">{t('disc_full.tabs.leaves')}</p>
                         </div>
                     </div>
                 </div>
@@ -438,9 +440,9 @@ const Discipline = () => {
                             </div>
                             <div>
                                 <button onClick={() => setShowSMSModal(true)} className="text-sm font-bold text-primary-600 hover:underline">
-                                    Send SMS
+                                    {t('disc_full.modals.send_sms')}
                                 </button>
-                                <p className="text-xs text-gray-500">Contact Parents</p>
+                                <p className="text-xs text-gray-500">{t('disc_full.contact_parents')}</p>
                             </div>
                         </div>
                     </div>
@@ -454,14 +456,14 @@ const Discipline = () => {
                     className="px-5 py-2.5 rounded-xl font-bold whitespace-nowrap transition-all flex items-center gap-2 bg-green-600 text-white hover:bg-green-700 shadow-lg"
                 >
                     <Users size={16} />
-                    Manage Students
+                    {t('disc_full.manage_students')}
                 </button>
                 {[
-                    { id: 'records', label: 'Discipline Records', count: records.length },
+                    { id: 'records', label: t('disc_full.tabs.records'), count: records.length },
                     ...(isDod ? [
-                        { id: 'conduct', label: 'Conduct Sheet', icon: FileText },
-                        { id: 'leaves', label: 'Leave Requests', count: pendingLeaves.length },
-                        { id: 'appeals', label: 'Appeals', count: pendingAppeals.length }
+                        { id: 'conduct', label: t('disc_full.tabs.conduct'), icon: FileText },
+                        { id: 'leaves', label: t('disc_full.tabs.leaves'), count: pendingLeaves.length },
+                        { id: 'appeals', label: t('disc_full.tabs.appeals'), count: pendingAppeals.length }
                     ] : [])
                 ].map(tab => (
                     <button

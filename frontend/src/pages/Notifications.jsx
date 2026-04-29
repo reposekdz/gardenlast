@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import useAuthStore from '../store/authStore';
 import api from '../utils/api';
 import {
@@ -10,6 +11,7 @@ import {
 } from 'lucide-react';
 
 const Notifications = () => {
+    const { t } = useTranslation();
     const { user } = useAuthStore();
     const navigate = useNavigate();
     const [notifications, setNotifications] = useState([]);
@@ -129,12 +131,12 @@ const Notifications = () => {
                 level_filter: smsForm.recipients === 'trade' ? smsForm.level : null
             });
 
-            alert(`SMS sent successfully! ${response.data.sent} messages delivered.`);
+            alert(t('notif_full.sms_modal.success', { count: response.data.sent }));
             setShowSMSModal(false);
             setSmsForm({ message: '', recipients: 'all', trade: '', level: '' });
             fetchSMSHistory();
         } catch (error) {
-            alert('Failed to send SMS: ' + (error.response?.data?.message || error.message));
+            alert(t('notif_full.sms_modal.failed') + ': ' + (error.response?.data?.message || error.message));
         } finally {
             setSending(false);
         }
@@ -200,20 +202,20 @@ const Notifications = () => {
         const now = new Date();
         const diff = now - date;
 
-        if (diff < 60000) return 'Just now';
-        if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
-        if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
-        if (diff < 604800000) return `${Math.floor(diff / 86400000)}d ago`;
+        if (diff < 60000) return t('notif_full.time.just_now');
+        if (diff < 3600000) return t('notif_full.time.minutes_ago', { n: Math.floor(diff / 60000) });
+        if (diff < 86400000) return t('notif_full.time.hours_ago', { n: Math.floor(diff / 3600000) });
+        if (diff < 604800000) return t('notif_full.time.days_ago', { n: Math.floor(diff / 86400000) });
 
         return date.toLocaleDateString();
     };
 
     const tabs = [
-        { id: 'all', label: 'All', icon: Bell, count: stats?.total || 0 },
-        { id: 'unread', label: 'Unread', icon: Mail, count: stats?.unread_count || 0 },
-        { id: 'urgent', label: 'Urgent', icon: AlertTriangle, count: stats?.unread_urgent || 0 },
-        { id: 'grades', label: 'Grades', icon: GraduationCap, count: stats?.by_type?.find(t => t.notification_type === 'grade_added')?.count || 0 },
-        { id: 'payments', label: 'Payments', icon: DollarSign, count: stats?.by_type?.find(t => t.notification_type?.includes('payment'))?.count || 0 },
+        { id: 'all', label: t('notif_full.tabs.all'), icon: Bell, count: stats?.total || 0 },
+        { id: 'unread', label: t('notif_full.tabs.unread'), icon: Mail, count: stats?.unread_count || 0 },
+        { id: 'urgent', label: t('notif_full.filters.urgent'), icon: AlertTriangle, count: stats?.unread_urgent || 0 },
+        { id: 'grades', label: t('common_extra.records'), icon: GraduationCap, count: stats?.by_type?.find(x => x.notification_type === 'grade_added')?.count || 0 },
+        { id: 'payments', label: t('common_extra.payments'), icon: DollarSign, count: stats?.by_type?.find(x => x.notification_type?.includes('payment'))?.count || 0 },
     ];
 
     const filteredNotifications = notifications.filter(n => {
@@ -231,11 +233,11 @@ const Notifications = () => {
                 <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-4">
                     <div>
                         <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                            Notifications Center
+                            {t('notif_full.title')}
                         </h1>
                         <p className="text-gray-600 mt-1 flex items-center gap-2">
                             <Clock className="w-4 h-4" />
-                            Last updated: {new Date().toLocaleTimeString()}
+                            {t('common_extra.updated_at')}: {new Date().toLocaleTimeString()}
                         </p>
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -245,7 +247,7 @@ const Notifications = () => {
                             className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all shadow-sm"
                         >
                             <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-                            Refresh
+                            {t('common_extra.refresh')}
                         </button>
                         {['admin', 'accountant', 'dod'].includes(user?.role) && (
                             <button
@@ -253,7 +255,7 @@ const Notifications = () => {
                                 className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md"
                             >
                                 <Send className="w-4 h-4" />
-                                Send SMS
+                                {t('notif_full.send_sms')}
                             </button>
                         )}
                     </div>
@@ -265,7 +267,7 @@ const Notifications = () => {
                         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-5 shadow-lg border border-white/50">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm text-gray-500 font-medium">Total</p>
+                                    <p className="text-sm text-gray-500 font-medium">{t('notif_full.stats.total')}</p>
                                     <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
                                 </div>
                                 <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
@@ -276,7 +278,7 @@ const Notifications = () => {
                         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-5 shadow-lg border border-white/50">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm text-gray-500 font-medium">Unread</p>
+                                    <p className="text-sm text-gray-500 font-medium">{t('notif_full.stats.unread')}</p>
                                     <p className="text-3xl font-bold text-blue-600">{stats.unread_count}</p>
                                 </div>
                                 <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
@@ -287,7 +289,7 @@ const Notifications = () => {
                         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-5 shadow-lg border border-white/50">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm text-gray-500 font-medium">Urgent</p>
+                                    <p className="text-sm text-gray-500 font-medium">{t('notif_full.stats.urgent')}</p>
                                     <p className="text-3xl font-bold text-red-600">{stats.unread_urgent}</p>
                                 </div>
                                 <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
@@ -298,7 +300,7 @@ const Notifications = () => {
                         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-5 shadow-lg border border-white/50">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm text-gray-500 font-medium">Categories</p>
+                                    <p className="text-sm text-gray-500 font-medium">{t('common_extra.category')}</p>
                                     <p className="text-3xl font-bold text-indigo-600">{stats.by_type?.length || 0}</p>
                                 </div>
                                 <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
@@ -316,7 +318,7 @@ const Notifications = () => {
                         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/50 p-4">
                             <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
                                 <Filter className="w-4 h-4" />
-                                Categories
+                                {t('common_extra.category')}
                             </h3>
                             <div className="space-y-2">
                                 {tabs.map(tab => (
@@ -343,21 +345,21 @@ const Notifications = () => {
 
                         {/* Quick Actions */}
                         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/50 p-4">
-                            <h3 className="font-semibold text-gray-800 mb-3">Quick Actions</h3>
+                            <h3 className="font-semibold text-gray-800 mb-3">{t('dash_main.sections.quick_actions')}</h3>
                             <div className="space-y-2">
                                 <button
                                     onClick={markAllAsRead}
                                     className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-50 text-gray-700 transition-all"
                                 >
                                     <CheckCheck className="w-5 h-5 text-green-600" />
-                                    Mark All Read
+                                    {t('notif_full.mark_all_read')}
                                 </button>
                                 <button
                                     onClick={() => navigate('/parents')}
                                     className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 text-gray-700 transition-all"
                                 >
                                     <Users className="w-5 h-5 text-blue-600" />
-                                    Manage Parents
+                                    {t('pnt_full.title')}
                                 </button>
                             </div>
                         </div>
@@ -366,7 +368,7 @@ const Notifications = () => {
                         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/50 p-4">
                             <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
                                 <MessageSquare className="w-4 h-4" />
-                                Recent SMS
+                                {t('pnt_full.tabs.sms_history')}
                             </h3>
                             <div className="space-y-2 max-h-48 overflow-y-auto">
                                 {smsHistory.slice(0, 5).map((sms, idx) => (
@@ -376,7 +378,7 @@ const Notifications = () => {
                                     </div>
                                 ))}
                                 {smsHistory.length === 0 && (
-                                    <p className="text-gray-500 text-sm text-center py-4">No SMS history</p>
+                                    <p className="text-gray-500 text-sm text-center py-4">{t('notif_full.sms_history.empty')}</p>
                                 )}
                             </div>
                         </div>
@@ -392,34 +394,34 @@ const Notifications = () => {
                                     onChange={(e) => setFilter({ ...filter, type: e.target.value })}
                                     className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500"
                                 >
-                                    <option value="">All Types</option>
-                                    <option value="student_created">Student Created</option>
-                                    <option value="student_updated">Student Updated</option>
-                                    <option value="grade_added">Grade Added</option>
-                                    <option value="payment_received">Payment Received</option>
-                                    <option value="link_approved">Link Approved</option>
-                                    <option value="discipline_warning">Discipline</option>
-                                    <option value="announcement">Announcement</option>
+                                    <option value="">{t('notif_full.filters.all_types')}</option>
+                                    <option value="student_created">{t('notif_full.types.student_created')}</option>
+                                    <option value="student_updated">{t('notif_full.types.student_updated')}</option>
+                                    <option value="grade_added">{t('notif_full.types.grade_added')}</option>
+                                    <option value="payment_received">{t('notif_full.types.payment_received')}</option>
+                                    <option value="link_approved">{t('notif_full.types.link_approved')}</option>
+                                    <option value="discipline_warning">{t('notif_full.types.discipline_warning')}</option>
+                                    <option value="announcement">{t('notif_full.types.announcement')}</option>
                                 </select>
                                 <select
                                     value={filter.priority}
                                     onChange={(e) => setFilter({ ...filter, priority: e.target.value })}
                                     className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500"
                                 >
-                                    <option value="">All Priorities</option>
-                                    <option value="urgent">Urgent</option>
-                                    <option value="high">High</option>
-                                    <option value="normal">Normal</option>
-                                    <option value="low">Low</option>
+                                    <option value="">{t('notif_full.filters.all_priorities')}</option>
+                                    <option value="urgent">{t('notif_full.filters.urgent')}</option>
+                                    <option value="high">{t('notif_full.filters.high')}</option>
+                                    <option value="normal">{t('notif_full.filters.normal')}</option>
+                                    <option value="low">{t('notif_full.filters.low')}</option>
                                 </select>
                                 <select
                                     value={filter.is_read}
                                     onChange={(e) => setFilter({ ...filter, is_read: e.target.value })}
                                     className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500"
                                 >
-                                    <option value="">All Status</option>
-                                    <option value="false">Unread</option>
-                                    <option value="true">Read</option>
+                                    <option value="">{t('common_extra.status')}</option>
+                                    <option value="false">{t('notif_full.tabs.unread')}</option>
+                                    <option value="true">{t('notif_full.tabs.read')}</option>
                                 </select>
                             </div>
                         </div>
@@ -429,13 +431,13 @@ const Notifications = () => {
                             {loading ? (
                                 <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-12 text-center shadow-lg border border-white/50">
                                     <div className="animate-spin w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full mx-auto"></div>
-                                    <p className="mt-3 text-gray-500">Loading notifications...</p>
+                                    <p className="mt-3 text-gray-500">{t('common_extra.loading_data')}</p>
                                 </div>
                             ) : filteredNotifications.length === 0 ? (
                                 <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-12 text-center shadow-lg border border-white/50">
                                     <div className="text-6xl mb-4">🔔</div>
-                                    <h3 className="text-xl font-semibold text-gray-900 mb-2">All caught up!</h3>
-                                    <p className="text-gray-500">No notifications to display</p>
+                                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('notif_full.empty')}</h3>
+                                    <p className="text-gray-500">{t('notif_full.empty_desc')}</p>
                                 </div>
                             ) : (
                                 filteredNotifications.map((notification) => (
@@ -455,11 +457,11 @@ const Notifications = () => {
                                                         {notification.notification_type?.replace(/_/g, ' ')}
                                                     </span>
                                                     {!notification.is_read && (
-                                                        <span className="px-2 py-0.5 bg-blue-600 text-white text-xs rounded-full font-medium">New</span>
+                                                        <span className="px-2 py-0.5 bg-blue-600 text-white text-xs rounded-full font-medium">{t('common_extra.add_new')}</span>
                                                     )}
                                                     {notification.priority === 'urgent' && (
                                                         <span className="px-2 py-0.5 bg-red-600 text-white text-xs rounded-full font-medium flex items-center gap-1">
-                                                            <AlertTriangle className="w-3 h-3" /> Urgent
+                                                            <AlertTriangle className="w-3 h-3" /> {t('notif_full.filters.urgent')}
                                                         </span>
                                                     )}
                                                 </div>
@@ -474,7 +476,7 @@ const Notifications = () => {
                                                             onClick={() => navigate(notification.action_url)}
                                                             className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
                                                         >
-                                                            {notification.action_label || 'View'} <ArrowRight className="w-3 h-3" />
+                                                            {notification.action_label || t('common_extra.view')} <ArrowRight className="w-3 h-3" />
                                                         </button>
                                                     )}
                                                 </div>
@@ -484,7 +486,7 @@ const Notifications = () => {
                                                     <button
                                                         onClick={() => markAsRead(notification.id)}
                                                         className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                                                        title="Mark as read"
+                                                        title={t('notif_full.mark_read')}
                                                     >
                                                         <Check className="w-5 h-5" />
                                                     </button>
@@ -492,7 +494,7 @@ const Notifications = () => {
                                                 <button
                                                     onClick={() => deleteNotification(notification.id)}
                                                     className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                    title="Delete"
+                                                    title={t('notif_full.delete')}
                                                 >
                                                     <Trash2 className="w-5 h-5" />
                                                 </button>
@@ -511,17 +513,17 @@ const Notifications = () => {
                                     disabled={pagination.page === 1}
                                     className="px-4 py-2 bg-white border border-gray-200 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
                                 >
-                                    Previous
+                                    {t('common_extra.previous')}
                                 </button>
                                 <span className="px-4 py-2 text-gray-600 font-medium">
-                                    Page {pagination.page} of {pagination.totalPages}
+                                    {t('common_extra.page')} {pagination.page} {t('common_extra.of_total')} {pagination.totalPages}
                                 </span>
                                 <button
                                     onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
                                     disabled={pagination.page === pagination.totalPages}
                                     className="px-4 py-2 bg-white border border-gray-200 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
                                 >
-                                    Next
+                                    {t('common_extra.next')}
                                 </button>
                             </div>
                         )}
@@ -537,7 +539,7 @@ const Notifications = () => {
                             <div className="flex justify-between items-center">
                                 <h2 className="text-2xl font-bold flex items-center gap-2">
                                     <Send className="w-6 h-6" />
-                                    Send Bulk SMS
+                                    {t('notif_full.sms_modal.title')}
                                 </h2>
                                 <button
                                     onClick={() => setShowSMSModal(false)}
@@ -546,12 +548,12 @@ const Notifications = () => {
                                     <X className="w-6 h-6" />
                                 </button>
                             </div>
-                            <p className="text-blue-100 mt-1">Send SMS to parents of students</p>
+                            <p className="text-blue-100 mt-1">{t('notif_full.subtitle')}</p>
                         </div>
 
                         <div className="p-6 space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Recipients</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">{t('notif_full.sms_modal.recipients')}</label>
                                 <div className="grid grid-cols-3 gap-2">
                                     {['all', 'trade', 'level'].map(opt => (
                                         <button
@@ -562,7 +564,7 @@ const Notifications = () => {
                                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                                 }`}
                                         >
-                                            {opt === 'all' ? 'All Parents' : opt === 'trade' ? 'By Trade' : 'By Level'}
+                                            {opt === 'all' ? t('notif_full.sms_modal.all_parents') : opt === 'trade' ? t('notif_full.sms_modal.by_trade') : t('notif_full.sms_modal.level')}
                                         </button>
                                     ))}
                                 </div>
@@ -570,13 +572,13 @@ const Notifications = () => {
 
                             {smsForm.recipients === 'trade' && (
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Select Trade</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('notif_full.sms_modal.trade')}</label>
                                     <select
                                         value={smsForm.trade}
                                         onChange={(e) => setSmsForm({ ...smsForm, trade: e.target.value })}
                                         className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500"
                                     >
-                                        <option value="">All Trades</option>
+                                        <option value="">{t('stu_full.filters.all_trades')}</option>
                                         <option value="Software Development">Software Development</option>
                                         <option value="Automobile Technology">Automobile Technology</option>
                                         <option value="Building and Construction">Building and Construction</option>
@@ -586,13 +588,13 @@ const Notifications = () => {
 
                             {smsForm.recipients === 'level' && (
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Select Level</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('notif_full.sms_modal.level')}</label>
                                     <select
                                         value={smsForm.level}
                                         onChange={(e) => setSmsForm({ ...smsForm, level: e.target.value })}
                                         className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500"
                                     >
-                                        <option value="">All Levels</option>
+                                        <option value="">{t('stu_full.filters.all_levels')}</option>
                                         <option value="Level 1">Level 1</option>
                                         <option value="Level 2">Level 2</option>
                                         <option value="Level 3">Level 3</option>
@@ -601,11 +603,11 @@ const Notifications = () => {
                             )}
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">{t('notif_full.sms_modal.message')}</label>
                                 <textarea
                                     value={smsForm.message}
                                     onChange={(e) => setSmsForm({ ...smsForm, message: e.target.value })}
-                                    placeholder="Enter your message..."
+                                    placeholder={t('common_extra.message_placeholder')}
                                     rows={4}
                                     className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 resize-none"
                                 />
@@ -620,12 +622,12 @@ const Notifications = () => {
                                 {sending ? (
                                     <>
                                         <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                        Sending...
+                                        {t('notif_full.sms_modal.sending')}
                                     </>
                                 ) : (
                                     <>
                                         <Send className="w-5 h-5" />
-                                        Send SMS
+                                        {t('notif_full.sms_modal.send')}
                                     </>
                                 )}
                             </button>

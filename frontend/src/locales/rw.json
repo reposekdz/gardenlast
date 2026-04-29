@@ -89,7 +89,10 @@
     "continue": "Komeza",
     "finish": "Rangiza",
     "processing": "Birashyirwa mu bikorwa...",
-    "please_wait": "Mwihangane gato..."
+    "please_wait": "Mwihangane gato...",
+    "approved": "Yemejwe",
+    "rejected": "Yangiwe",
+    "pending": "Itegerejwe"
   },
   "login": {
     "title": "Injira muri Garden TVET School",
@@ -1640,6 +1643,1915 @@
         "title_required": "Izina risabwa",
         "image_required": "Ifoto irasabwa"
       }
+    }
+  },
+  "common_extra": {
+    "refresh": "Vugurura",
+    "refreshing": "Iravugurura...",
+    "export": "Sohora",
+    "exporting": "Irasohora...",
+    "print": "Sohora kuri papier",
+    "view_all": "Reba byose",
+    "view_more": "Reba byinshi",
+    "load_more": "Pakira ibindi",
+    "loading_data": "Ipakira amakuru...",
+    "no_data_yet": "Nta makuru aboneka",
+    "not_available": "Nta",
+    "total_count": "Yose",
+    "this_month_short": "Uku kwezi",
+    "action": "Igikorwa",
+    "actions": "Ibikorwa",
+    "operations": "Ibikorwa",
+    "reason": "Impamvu",
+    "notes": "Ibisobanuro",
+    "message": "Ubutumwa",
+    "message_placeholder": "Andika ubutumwa bwawe...",
+    "send_sms": "Ohereza SMS",
+    "sms_sent": "SMS yoherejwe neza",
+    "sms_failed": "Kohereza SMS byanze",
+    "generic_error": "Hari ikibazo cyabaye. Ongera ugerageze.",
+    "saved": "Byabitswe neza",
+    "deleted": "Byasibwe neza",
+    "updated": "Byavuguruwe neza",
+    "created": "Byaremwe neza",
+    "confirm_delete": "Uremeza ko ushaka gusiba ibi?",
+    "confirm_action": "Uremeza?",
+    "no_permission": "Nta burenganzira ufite bwo gukora iki gikorwa",
+    "copy": "Gukoporora",
+    "copied": "Byakoporowe!",
+    "operational": "Bikora",
+    "system_status": "Imiterere ya sisitemu",
+    "system_version": "Sisitemu y'imicungire ya Garden TVET v2.0",
+    "male": "Umugabo",
+    "female": "Umugore",
+    "both": "Byombi",
+    "gender": "Igitsina",
+    "first_name": "Izina ribanza",
+    "last_name": "Izina rikurikira",
+    "full_name": "Amazina yose",
+    "phone": "Numero ya telefoni",
+    "email": "Imeyili",
+    "address": "Aderesi",
+    "province": "Intara",
+    "district": "Akarere",
+    "sector": "Umurenge",
+    "cell": "Akagari",
+    "village": "Umudugudu",
+    "date_of_birth": "Itariki y'amavuko",
+    "national_id": "Indangamuntu",
+    "relationship": "Isano",
+    "records": "Ibyanditswe",
+    "record": "Icyanditswe",
+    "students": "Abanyeshuri",
+    "parents": "Ababyeyi",
+    "teachers": "Abarimu",
+    "payments": "Amafaranga",
+    "fees": "Amafaranga y'ishuri",
+    "currency_rwf": "Frw",
+    "total_label": "Yose:",
+    "balance": "Asigaye",
+    "paid": "Yariishyuwe",
+    "unpaid": "Ntiyariishyuwe",
+    "partially_paid": "Yariishyuwe igice",
+    "pending": "Ategerejwe",
+    "approved": "Yemejwe",
+    "rejected": "Yangiwe",
+    "cancelled": "Yahagaritswe",
+    "done": "Byakozwe",
+    "add": "Ongeraho",
+    "add_new": "Ongeraho gishya",
+    "edit": "Hindura",
+    "remove": "Kuraho",
+    "back": "Garuka",
+    "view": "Reba",
+    "details": "Ibisobanuro",
+    "filters": "Akayungurura",
+    "reset_filters": "Sukura akayungurura",
+    "apply_filters": "Shyiraho akayungurura",
+    "search_placeholder": "Shakisha...",
+    "no_results": "Nta gisubizo",
+    "page": "Urupapuro",
+    "of_total": "kuri",
+    "items_per_page": "Ibintu kuri buri rupapuro",
+    "previous": "Ibanjirije",
+    "next": "Ibikurikira",
+    "yes": "Yego",
+    "no": "Oya",
+    "open": "Fungura",
+    "close": "Funga",
+    "type": "Ubwoko",
+    "category": "Icyiciro",
+    "status": "Imiterere",
+    "date": "Itariki",
+    "time": "Isaha",
+    "from_date": "Kuva",
+    "to_date": "Kugeza",
+    "created_at": "Byaremwe ku",
+    "updated_at": "Byahinduriwe ku",
+    "available": "Birahari",
+    "unknown_error": "Ikosa ritazwi",
+    "access_denied": "Nta Burenganzira",
+    "clear": "Siba"
+  },
+  "dash_main": {
+    "welcome_user": "Murakaza neza, {{name}}! 👋",
+    "tagline": "Sisitemu y'imicungire ya Garden TVET — kurikirana abanyeshuri, gucunga amafaranga no kugenzura ibikorwa by'ishuri ahantu hamwe.",
+    "refresh_tooltip": "Vugurura ikibaho",
+    "refresh_success": "Ikibaho cyaravuguruwe!",
+    "pending_link_requests": "Ababyeyi {{count}} bashya basaba",
+    "role_titles": {
+      "admin": "Umuyobozi Mukuru",
+      "dod": "Ushinzwe Imyitwarire",
+      "accountant": "Ushinzwe Imari",
+      "stock_manager": "Ushinzwe Ububiko",
+      "parent": "Umubyeyi"
+    },
+    "cards": {
+      "total_students": "Abanyeshuri Bose",
+      "active_cases": "Ibibazo Bikora",
+      "total_collected": "Yinjijwe Yose",
+      "low_stock": "Ububiko Buri Munsi",
+      "parents": "Ababyeyi",
+      "pending_links": "Bisaba Kwemezwa",
+      "applications": "Inyandiko z'Ubusabe",
+      "on_leave": "Bafite Ikiruhuko",
+      "sms_balance": "Asigaye kuri SMS"
+    },
+    "sub_values": {
+      "plus_this_month": "+{{count}} uku kwezi",
+      "resolved_this_month": "{{count}} byakemuwe uku kwezi",
+      "items_need_attention": "Ibintu bisaba kwitabwaho",
+      "registered": "Bariyandikishije",
+      "requests_waiting": "Ibisaba bitegereje",
+      "pending_review": "Bitegereje gusuzumwa",
+      "students": "Abanyeshuri",
+      "airtime": "Airtime",
+      "collection_rate_label": "Igipimo cy'ubwishyu {{rate}}%"
+    },
+    "sections": {
+      "revenue_trend": "Inzira y'Amafaranga Yinjira",
+      "last_6_months": "Amezi 6 ashize",
+      "gender_distribution": "Igendero ry'Ibitsina",
+      "collection_rate": "Igipimo cy'Ubwishyu",
+      "todays_activity": "Ibikorwa by'Uyu Munsi",
+      "top_trades": "Imyuga Ikomeye",
+      "quick_actions": "Ibikorwa Byihuse",
+      "recent_payments": "Ubwishyu Buheruka",
+      "no_recent_payments": "Nta bwishyu buheruka",
+      "payments_label": "Ubwishyu",
+      "transactions_label": "Ibikorwa",
+      "male": "Abahungu",
+      "female": "Abakobwa",
+      "collection_rate_caption": "Igipimo cy'Ubwishyu"
+    },
+    "quick": {
+      "add_student": "Andika Umunyeshuri",
+      "review_parent_requests": "Suzuma Ibisaba by'Ababyeyi",
+      "add_staff": "Ongeraho Umukozi Mushya",
+      "post_news": "Tangaza Amakuru",
+      "manage_students": "Cunga Abanyeshuri",
+      "manage_discipline": "Cunga Imyitwarire",
+      "review_applications": "Suzuma Inyandiko z'Ubusabe",
+      "parent_links": "Ihuza ry'Ababyeyi",
+      "manage_finances": "Cunga Amafaranga",
+      "view_students": "Reba Abanyeshuri",
+      "applications": "Inyandiko z'Ubusabe",
+      "stock": "Ububiko",
+      "parents": "Ababyeyi",
+      "manage_inventory": "Cunga Ububiko",
+      "view_my_children": "Reba Abana Banjye"
+    }
+  },
+  "stu_full": {
+    "title": "Abanyeshuri",
+    "subtitle": "Cunga amakuru y'abanyeshuri bose",
+    "add_student_btn": "Andika Umunyeshuri",
+    "tabs": {
+      "students": "Abanyeshuri",
+      "attendance": "Kuza ku ishuri",
+      "grades": "Amanota",
+      "payments": "Imisanzu",
+      "messages": "Ubutumwa"
+    },
+    "stats": {
+      "total": "Bose",
+      "active": "Bakora",
+      "suspended": "Bahagaritswe",
+      "left": "Bavuye",
+      "expelled": "Birukanwe"
+    },
+    "search_placeholder": "Shakisha mu mazina, numero y'iyandikwa cyangwa telefoni...",
+    "filters": {
+      "all_statuses": "Imiterere yose",
+      "all_trades": "Imyuga yose",
+      "all_levels": "Ibyiciro byose",
+      "active": "Akora",
+      "suspended": "Yahagaritswe",
+      "left": "Yavuye",
+      "expelled": "Yirukanwe",
+      "sick": "Mu ndwara"
+    },
+    "table": {
+      "reg": "Numero",
+      "name": "Amazina",
+      "gender": "Igitsina",
+      "trade": "Umwuga",
+      "level": "Icyiciro",
+      "phone": "Telefoni",
+      "guardian": "Umurezi",
+      "status": "Imiterere",
+      "actions": "Ibikorwa",
+      "conduct": "Imyitwarire"
+    },
+    "modal": {
+      "add_title": "Andika Umunyeshuri Mushya",
+      "edit_title": "Hindura Umunyeshuri",
+      "details_title": "Ibisobanuro by'Umunyeshuri",
+      "change_status_title": "Hindura Imiterere",
+      "record_conduct": "Andika Ikibazo cy'Imyitwarire",
+      "request_leave": "Saba Ikiruhuko",
+      "link_parent": "Huza n'Umubyeyi",
+      "reinstate": "Garura Umunyeshuri",
+      "add_grade": "Ongeraho Amanota",
+      "record_payment": "Andika Ubwishyu",
+      "send_message": "Ohereza Ubutumwa"
+    },
+    "form": {
+      "reg_number": "Numero y'Iyandikwa (ntabwo arikenewe)",
+      "first_name": "Izina ribanza",
+      "last_name": "Izina rikurikira",
+      "gender": "Igitsina",
+      "male": "Umuhungu",
+      "female": "Umukobwa",
+      "dob": "Itariki y'Amavuko",
+      "trade": "Umwuga",
+      "level": "Icyiciro",
+      "select_trade": "-- Hitamo Umwuga --",
+      "select_level": "-- Hitamo Icyiciro --",
+      "phone": "Telefoni",
+      "email": "Imeyili",
+      "province": "Intara",
+      "district": "Akarere",
+      "sector": "Umurenge",
+      "guardian_name": "Izina ry'Umurezi",
+      "guardian_phone": "Telefoni y'Umurezi",
+      "guardian_relation": "Isano",
+      "student_type": "Ubwoko bw'Umunyeshuri",
+      "student_type_private": "Wigishijwe ku giti cye",
+      "student_type_public": "Wa Leta",
+      "academic_year": "Umwaka w'Amasomo",
+      "status": "Imiterere",
+      "enrollment_date": "Itariki yo Kwiyandikisha",
+      "save": "Bika Umunyeshuri",
+      "update": "Vugurura Umunyeshuri"
+    },
+    "attendance": {
+      "title": "Kuza ku Ishuri (Buri Munsi)",
+      "subtitle": "Andika abahari kandi umenyeshe ababyeyi muri SMS",
+      "date": "Itariki",
+      "trade": "Umwuga",
+      "level": "Icyiciro",
+      "choose_trade": "-- Hitamo Umwuga --",
+      "choose_level": "-- Hitamo Icyiciro --",
+      "load_class": "Pakira Ishuri",
+      "save_attendance": "Bika Ukuza",
+      "no_class_loaded": "Hitamo umwuga n'icyiciro kugira ngo ubonye abanyeshuri",
+      "present": "Yahari",
+      "absent": "Ntiyahari",
+      "late": "Yatinze",
+      "excused": "Asabye",
+      "notes": "Ibisobanuro",
+      "student": "Umunyeshuri",
+      "recorded_success": "Ukuza kwabitswe na SMS yoherejwe ababyeyi!",
+      "recorded_failed": "Kubika ukuza byanze"
+    },
+    "toasts": {
+      "no_perm": "Nta burenganzira ufite bwo gukoresha uru rupapuro",
+      "added": "Umunyeshuri yariyandikishije — Numero {{reg}}",
+      "updated": "Umunyeshuri yavuguruwe neza",
+      "deleted": "Umunyeshuri yasibwe",
+      "status_changed": "Imiterere yarahinduwe",
+      "load_failed": "Gushaka abanyeshuri byanze",
+      "load_no_perm": "Nta burenganzira ufite bwo kureba abanyeshuri"
+    },
+    "details": {
+      "personal_info": "Amakuru bwite",
+      "academic_info": "Amakuru y'Amasomo",
+      "contact_info": "Aderesi",
+      "guardian_info": "Amakuru y'Umurezi",
+      "grades": "Amanota",
+      "payments": "Ubwishyu",
+      "discipline": "Imyitwarire",
+      "linked_parents": "Ababyeyi Bahujwe",
+      "no_grades": "Ntabwo afite amanota",
+      "no_payments": "Nta bwishyu yarakora",
+      "no_discipline": "Nta byanditswe by'imyitwarire",
+      "no_linked_parents": "Ntabwo ahujwe n'ababyeyi"
+    },
+    "actions": {
+      "view": "Reba",
+      "edit": "Hindura",
+      "change_status": "Hindura Imiterere",
+      "record_conduct": "Andika Imyitwarire",
+      "request_leave": "Saba Ikiruhuko",
+      "link_parent": "Huza n'Umubyeyi",
+      "send_message": "Ohereza Ubutumwa",
+      "delete": "Siba"
+    },
+    "empty": "Nta munyeshuri wabonetse"
+  },
+  "disc_full": {
+    "title_dod": "Ushinzwe Imyitwarire",
+    "title_general": "Imicungire y'Imyitwarire",
+    "subtitle_dod": "Cunga imyitwarire, ibiruhuko n'itumanaho n'ababyeyi",
+    "subtitle_general": "Kurikirana imyitwarire y'abanyeshuri",
+    "add_record": "Ongeraho Icyanditswe",
+    "refresh": "Vugurura",
+    "tabs": {
+      "records": "Ibyanditswe",
+      "leaves": "Ibiruhuko",
+      "appeals": "Ibyifuzo byo Kujurira",
+      "conduct": "Urutonde rw'Imyitwarire",
+      "sms": "Ibyo Kohereza SMS"
+    },
+    "stats": {
+      "total_records": "Ibyanditswe Byose",
+      "pending_leaves": "Ibiruhuko Bitegerejwe",
+      "pending_appeals": "Ibyifuzo Bitegerejwe",
+      "active_today": "Bikora Uyu Munsi",
+      "warnings": "Imburizi",
+      "last_30": "Iminsi 30 ishize"
+    },
+    "search_placeholder": "Shakisha mu mazina cyangwa numero y'umunyeshuri...",
+    "filters": {
+      "all_types": "Ubwoko bwose",
+      "all_statuses": "Imiterere yose"
+    },
+    "table": {
+      "student": "Umunyeshuri",
+      "action_type": "Igikorwa",
+      "description": "Ibisobanuro",
+      "points": "Amanota",
+      "date": "Itariki",
+      "recorded_by": "Wanditse",
+      "status": "Imiterere",
+      "actions": "Ibikorwa"
+    },
+    "modals": {
+      "add_record": "Andika Imyitwarire",
+      "request_leave": "Saba Ikiruhuko",
+      "review_appeal": "Suzuma Icyifuzo",
+      "send_sms": "Ohereza SMS"
+    },
+    "form": {
+      "choose_class": "Banza uhitemo ishuri",
+      "select_trade": "-- Hitamo Umwuga --",
+      "select_level": "-- Hitamo Icyiciro --",
+      "student": "Umunyeshuri",
+      "select_student": "-- Hitamo Umunyeshuri --",
+      "select_all_in_class": "Hitamo abanyeshuri bose b'iri shuri",
+      "action_type": "Ubwoko bw'Igikorwa",
+      "select_action": "-- Hitamo Igikorwa --",
+      "description": "Sobanura",
+      "description_placeholder": "Sobanura ibyabaye...",
+      "points_deducted": "Amanota yo Gukura",
+      "incident_date": "Itariki Byabereyeho",
+      "evidence": "Ibimenyetso (ntabwo arikenewe)",
+      "upload_evidence": "Pakira ibimenyetso (amafoto, inyandiko)",
+      "submit": "Ohereza",
+      "leave_type": "Ubwoko bw'Ikiruhuko",
+      "select_leave_type": "-- Hitamo --",
+      "start_date": "Itariki yo Gutangira",
+      "end_date": "Itariki yo Kurangiza",
+      "reason": "Impamvu",
+      "start_time": "Isaha yo Gutangira",
+      "end_time": "Isaha yo Kurangiza",
+      "lesson": "Isomo"
+    },
+    "action_types": {
+      "warning": "Iburizi",
+      "suspended": "Guhagarikwa",
+      "expelled": "Kwirukanwa",
+      "detention": "Igihano cyo Gufungwa Igihe",
+      "community_service": "Umusanzu",
+      "counseling": "Inama",
+      "parent_meeting": "Inama n'Ababyeyi",
+      "suspension": "Guhagarikwa",
+      "behavioral_contract": "Amasezerano y'Imyitwarire"
+    },
+    "leave_types": {
+      "sick": "Indwara",
+      "personal": "Ibibazo bya Ngombwa",
+      "emergency": "Byihutirwa",
+      "bereavement": "Inyamaswa",
+      "academic": "By'amasomo",
+      "other": "Ibindi"
+    },
+    "conduct": {
+      "title": "Urutonde rw'Imyitwarire",
+      "student": "Umunyeshuri",
+      "trade": "Umwuga",
+      "level": "Icyiciro",
+      "total_points": "Amanota Yose",
+      "active_records": "Ibyanditswe Bikora",
+      "last_incident": "Ikibazo Cyaheruka",
+      "clear_all": "Siba Byose",
+      "clear_active": "Siba Bikora",
+      "empty": "Nta byanditswe by'imyitwarire"
+    },
+    "sms": {
+      "single": "Umuntu Umwe",
+      "broadcast": "Bwite (Bose)",
+      "choose_parent": "Hitamo Umubyeyi",
+      "search_parent": "Shakisha umubyeyi mu mazina cyangwa telefoni",
+      "recipient_type": "Ubwoko bw'Uwakira",
+      "message": "Ubutumwa",
+      "message_placeholder": "Andika ubutumwa kuri ababyeyi...",
+      "send": "Ohereza SMS",
+      "sending": "Iroherezwa...",
+      "sent_count": "SMS yoherejwe abantu {{count}}",
+      "empty": "Nta babyeyi babonetse"
+    },
+    "appeals": {
+      "title": "Ibyifuzo byo Kujurira",
+      "student": "Umunyeshuri",
+      "appealed_record": "Icyanditswe cy'Umwimerere",
+      "reason": "Impamvu",
+      "decision_notes": "Ibisobanuro by'icyemezo",
+      "accept": "Emera Ikirego",
+      "reject": "Hakana Ikirego",
+      "empty": "Nta byifuzo byo kujurira"
+    },
+    "leaves": {
+      "title": "Ibiruhuko",
+      "student": "Umunyeshuri",
+      "type": "Ubwoko",
+      "period": "Igihe",
+      "reason": "Impamvu",
+      "approve": "Emeza",
+      "reject": "Hakana",
+      "mark_returned": "Andika ko Yagarutse",
+      "return_note_prompt": "Ibisobanuro byo kugaruka (urugero: 'yagarutse igihe, nta kibazo'):",
+      "marked_returned": "Yanditswe nk'uwagarutse n'ababyeyi bamenyeshejwe",
+      "empty": "Nta biruhuko"
+    },
+    "toasts": {
+      "select_student": "Hitamo umunyeshuri",
+      "record_saved": "Icyanditswe cyabitswe ku banyeshuri {{count}}",
+      "record_deleted": "Icyanditswe cyasibwe",
+      "record_delete_confirm": "Siba iki cyanditswe?",
+      "leave_submitted": "Ikiruhuko cyatumijwe",
+      "leave_approved": "Ikiruhuko cyemejwe",
+      "leave_rejected": "Ikiruhuko cyahakanwe",
+      "appeal_accepted": "Icyifuzo cyemejwe",
+      "appeal_rejected": "Icyifuzo cyahakanwe",
+      "sms_sent": "SMS yoherejwe!",
+      "sms_failed": "SMS yanze",
+      "clear_confirm": "Siba ibyanditswe by'iyi myitwarire?",
+      "cleared": "Ibyanditswe by'imyitwarire byasibwe",
+      "generic_error": "Hari ikibazo cyabaye",
+      "conduct_cleared": "Inyandiko z'imyitwarire zavanyweho"
+    },
+    "confirm_delete_record": "Wemeza ko ushaka gusiba iyi nyandiko y'imyitwarire?",
+    "confirm_clear_all_conduct": "Wemeza ko ushaka kuvanaho ZOSE inyandiko z'imyitwarire z'uyu munyeshuri?",
+    "confirm_clear_active_conduct": "Wemeza ko ushaka kuvanaho inyandiko z'imyitwarire zikora z'uyu munyeshuri?",
+    "contact_parents": "Vugisha Ababyeyi",
+    "manage_students": "Cunga Abanyeshuri"
+  },
+  "fin_full": {
+    "title": "Imari",
+    "subtitle": "Kurikirana ubwishyu, amafaranga y'ishuri na raporo z'imari",
+    "add_payment": "Andika Ubwishyu",
+    "add_fee": "Ongeraho Amafaranga",
+    "bulk_fees": "Amafaranga Menshi",
+    "view_debtors": "Reba Abafite Ideni",
+    "check_sms_balance": "Reba Asigaye kuri SMS",
+    "refresh": "Vugurura",
+    "export": "Sohora",
+    "tabs": {
+      "payments": "Ubwishyu",
+      "fees": "Amafaranga y'Ishuri",
+      "receipts": "Inyemezabwishyu",
+      "reports": "Raporo"
+    },
+    "stats": {
+      "total_collected": "Yinjijwe Yose",
+      "outstanding": "Asigaye Kwishyura",
+      "this_month": "Uku Kwezi",
+      "receipts": "Inyemezabwishyu",
+      "debtors": "Abafite Ideni",
+      "collection_rate": "Igipimo cy'Ubwishyu"
+    },
+    "search_placeholder": "Shakisha mu mazina, numero cyangwa inyemezabwishyu...",
+    "filters": {
+      "all_methods": "Uburyo bwose",
+      "cash": "Amafaranga",
+      "bank": "Banki",
+      "mobile_money": "Mobile Money",
+      "all_terms": "Ibihembwe byose"
+    },
+    "table": {
+      "receipt": "Inyemezabwishyu",
+      "student": "Umunyeshuri",
+      "term": "Igihembwe",
+      "amount": "Amafaranga",
+      "method": "Uburyo",
+      "date": "Itariki",
+      "recorded_by": "Wanditse",
+      "status": "Imiterere",
+      "actions": "Ibikorwa",
+      "balance": "Asigaye",
+      "fee": "Amafaranga",
+      "category": "Icyiciro"
+    },
+    "methods": {
+      "cash": "Amafaranga ku ntoki",
+      "bank": "Kohereza muri Banki",
+      "momo": "Mobile Money",
+      "cheque": "Sheki"
+    },
+    "form": {
+      "student": "Umunyeshuri",
+      "select_student": "-- Hitamo Umunyeshuri --",
+      "trade": "Umwuga",
+      "level": "Icyiciro",
+      "all": "Byose",
+      "fee": "Amafaranga y'Ishuri",
+      "select_fee": "-- Hitamo Amafaranga --",
+      "amount_paid": "Amafaranga Yatanzwe",
+      "payment_method": "Uburyo bw'Ubwishyu",
+      "notes": "Ibisobanuro",
+      "send_sms": "Ohereza inyemezabwishyu kuri ababyeyi binyuze SMS",
+      "save": "Andika Ubwishyu",
+      "term": "Igihembwe",
+      "description": "Ibisobanuro",
+      "due_date": "Itariki yo Kurangiza",
+      "student_category": "Icyiciro cy'Umunyeshuri",
+      "public": "Wa Leta",
+      "private": "Wigishijwe ku giti cye",
+      "both": "Byombi",
+      "amount": "Amafaranga (Frw)",
+      "bulk_intro": "Shyiraho amafaranga ku myuga myinshi n'ibyiciro icyarimwe",
+      "select_trades": "Hitamo Imyuga",
+      "select_levels": "Hitamo Ibyiciro",
+      "public_amount": "Amafaranga abasilikare ba Leta",
+      "private_amount": "Amafaranga ba bishyura ku giti cyabo",
+      "both_amount": "Amafaranga rusange",
+      "save_bulk": "Kora Amafaranga"
+    },
+    "debtors": {
+      "title": "Abafite Ideni",
+      "min_balance": "Ideni rito (Frw)",
+      "max_balance": "Ideni rikomeye (Frw)",
+      "trade": "Umwuga",
+      "level": "Icyiciro",
+      "gender": "Igitsina",
+      "apply": "Shyiraho",
+      "student": "Umunyeshuri",
+      "balance_due": "Ideni",
+      "send_reminder": "Ohereza Urwibutso",
+      "send_to_selected": "Ohereza ku batoranyijwe",
+      "select_all": "Hitamo bose",
+      "empty": "Nta bafite ideni babonetse"
+    },
+    "receipt": {
+      "view_receipt": "Reba Inyemezabwishyu",
+      "download": "Pakurura",
+      "print": "Sohora kuri papier",
+      "receipt_number": "Numero",
+      "issued_to": "Yatanzwe ku",
+      "amount": "Amafaranga",
+      "method": "Uburyo",
+      "cashier": "Wakirije",
+      "date": "Itariki",
+      "signature": "Umukono",
+      "thank_you": "Murakoze ku bwishyu"
+    },
+    "sms_balance": {
+      "title": "Asigaye kuri SMS",
+      "balance": "Asigaye",
+      "refresh": "Vugurura"
+    },
+    "toasts": {
+      "payment_recorded": "Ubwishyu bwabitswe neza!",
+      "payment_failed": "Kwandika ubwishyu byanze",
+      "fee_added": "Amafaranga yongereweho",
+      "fee_updated": "Amafaranga yahinduwe",
+      "fee_deleted": "Amafaranga yasibwe",
+      "bulk_created": "Amafaranga menshi yashyizweho",
+      "reminder_sent": "Urwibutso rwoherejwe",
+      "reminders_sent": "Urwibutso {{count}} rwoherejwe",
+      "debtors_failed": "Gushaka abafite ideni byanze",
+      "sms_balance_failed": "Gushaka asigaye kuri SMS byanze",
+      "data_refreshed": "Amakuru yaravuguruwe!"
+    }
+  },
+  "stk_full": {
+    "title": "Ububiko",
+    "subtitle": "Kurikirana ibikoresho n'ibintu by'ishuri",
+    "add_item": "Ongeraho Ikintu",
+    "tabs": {
+      "items": "Ibintu",
+      "movements": "Ibikorwa",
+      "reports": "Raporo",
+      "transactions": "Ibikorwa"
+    },
+    "stats": {
+      "total_items": "Ibintu Byose",
+      "total_value": "Agaciro Kose",
+      "low_stock": "Buke",
+      "out_of_stock": "Burangiye"
+    },
+    "search_placeholder": "Shakisha ibintu...",
+    "filters": {
+      "all_categories": "Ibyiciro byose",
+      "in_stock": "Bihari",
+      "low_stock": "Buke",
+      "out_of_stock": "Burangiye"
+    },
+    "table": {
+      "item": "Ikintu",
+      "code": "Kode",
+      "category": "Icyiciro",
+      "quantity": "Umubare",
+      "unit": "Igipimo",
+      "unit_price": "Igiciro cy'Igipimo",
+      "total_value": "Agaciro Kose",
+      "location": "Aho Bibitse",
+      "status": "Imiterere",
+      "actions": "Ibikorwa"
+    },
+    "form": {
+      "name": "Izina ry'Ikintu",
+      "code": "Kode",
+      "category": "Icyiciro",
+      "quantity": "Umubare",
+      "unit": "Igipimo",
+      "unit_price": "Igiciro cy'Igipimo (Frw)",
+      "min_quantity": "Umubare Muto",
+      "location": "Aho Bibitse",
+      "supplier": "Ushobora Gutanga",
+      "description": "Ibisobanuro",
+      "save": "Bika Ikintu",
+      "update": "Vugurura",
+      "add_title": "Ongeraho Ikintu Gishya",
+      "item_name": "Izina ry'Ikintu",
+      "item_name_ph": "urugero: Mudasobwa Dell",
+      "min_qty": "Ingano Ntoya (Iburira)",
+      "location_ph": "urugero: Icyumba 101",
+      "price": "Igiciro Cyaguzwe",
+      "purchase_date": "Itariki Yaguzweho",
+      "image": "Ifoto y'Ikintu (si itegeko)"
+    },
+    "movement": {
+      "title": "Andika Ikorwa",
+      "type": "Ubwoko",
+      "in": "Bigeze",
+      "out": "Bisohoye",
+      "adjustment": "Guhindura",
+      "quantity": "Umubare",
+      "reference": "Reference",
+      "notes": "Ibisobanuro",
+      "save": "Bika"
+    },
+    "categories": {
+      "equipment": "Ibikoresho",
+      "consumables": "Bikoreshwa",
+      "tools": "Ibikoresho byo gukoresha",
+      "materials": "Ibikoresho",
+      "office": "Iby'Ibiro",
+      "other": "Ibindi"
+    },
+    "toasts": {
+      "added": "Ikintu cyongereweho",
+      "updated": "Ikintu cyahinduwe",
+      "deleted": "Ikintu cyasibwe",
+      "movement_saved": "Ikorwa ryabitswe",
+      "load_failed": "Gushaka ububiko byanze"
+    },
+    "transaction": "Igikorwa",
+    "image_too_large": "Ifoto igomba kuba munsi ya 5 MB",
+    "image_uploaded": "Ifoto yoherejwe",
+    "image_upload_failed": "Kohereza ifoto byanze",
+    "load_failed": "Gutangiza ububiko byanze",
+    "refreshed": "Ububiko bwavuguruwe!",
+    "item_added": "Ikintu cyongewe neza",
+    "add_failed": "Kongera ikintu byanze",
+    "transaction_recorded": "Igikorwa cyanditswe",
+    "transaction_failed": "Kwandika igikorwa byanze",
+    "update_failed": "Kuvugurura ububiko byanze",
+    "confirm_delete": "Wemeza ko ushaka gusiba iki kintu?",
+    "item_deleted": "Ikintu cyasibwe",
+    "delete_failed": "Gusiba byanze",
+    "save_item": "Bika Ikintu",
+    "uploading": "Birimo kohereza...",
+    "search_ph": "Shaka ibintu...",
+    "all_categories": "Ibyiciro Byose",
+    "low_stock_only": "Ibikiri Bike Gusa",
+    "qty_short": "Ingano",
+    "no_transactions": "Nta gikorwa cyabonetse",
+    "empty": "Ububiko ni ubusa",
+    "empty_desc": "Tangira wongereho ikintu cya mbere",
+    "summary": {
+      "total_items": "Ibintu Byose",
+      "total_qty": "Ingano Yose",
+      "low_stock": "Bike Cyane",
+      "depleted": "Byashize"
+    },
+    "cats": {
+      "equipment": "Ibikoresho",
+      "supplies": "Ibikoresho Bikoreshwa",
+      "furniture": "Ibikoresho byo mu nzu",
+      "electronics": "Elegitoroniki",
+      "tools": "Ibikoresho byo gukora",
+      "stationery": "Ibikoresho byo kwandika",
+      "other": "Ibindi",
+      "food": "Ibiribwa"
+    },
+    "units": {
+      "pieces": "Ibice",
+      "boxes": "Amasanduku",
+      "reams": "Amapaki y'impapuro",
+      "liters": "Litiro",
+      "kg": "Kg",
+      "pairs": "Pari",
+      "sets": "Sete"
+    },
+    "tx_form": {
+      "title": "Andika Igikorwa",
+      "item": "Ikintu",
+      "select_item": "Hitamo ikintu...",
+      "current": "Bigezweho",
+      "type": "Ubwoko bw'Igikorwa",
+      "unit_price": "Igiciro cy'Igipimo (RWF)",
+      "reference": "Inomero y'Inyandiko",
+      "invoice_ph": "Inomero y'Ifaktire",
+      "notes": "Inyandiko",
+      "record": "Andika"
+    },
+    "tx_types": {
+      "purchase": "Kugura (Kongera)",
+      "usage": "Ikoreshwa (Gukuramo)",
+      "damage": "Byangiritse",
+      "disposal": "Byajugunywe",
+      "return": "Bisubijwe"
+    }
+  },
+  "pnt_full": {
+    "title": "Ababyeyi",
+    "subtitle": "Cunga ababyeyi n'abana bahujijwe",
+    "add_parent": "Ongeraho Umubyeyi",
+    "send_bulk_sms": "Ohereza SMS Bose",
+    "tabs": {
+      "parents": "Ababyeyi",
+      "link_requests": "Ibisaba Kwemezwa",
+      "sms_history": "Amateka ya SMS"
+    },
+    "stats": {
+      "total_parents": "Ababyeyi Bose",
+      "verified": "Bemejwe",
+      "pending_link": "Bitegereje",
+      "with_children": "Bafite Abana"
+    },
+    "search_placeholder": "Shakisha umubyeyi mu mazina cyangwa telefoni...",
+    "table": {
+      "name": "Amazina",
+      "phone": "Telefoni",
+      "email": "Imeyili",
+      "children_count": "Abana",
+      "status": "Imiterere",
+      "joined": "Yiyandikishije",
+      "actions": "Ibikorwa"
+    },
+    "modal": {
+      "add_title": "Andika Umubyeyi",
+      "edit_title": "Hindura Umubyeyi",
+      "details_title": "Ibisobanuro by'Umubyeyi",
+      "link_child": "Huza n'Umwana",
+      "view_children": "Abana Bahujijwe",
+      "send_sms": "Ohereza SMS",
+      "approve_link": "Emeza Ihuza",
+      "reject_link": "Hakana Ihuza"
+    },
+    "form": {
+      "first_name": "Izina ribanza",
+      "last_name": "Izina rikurikira",
+      "phone": "Telefoni",
+      "email": "Imeyili (ntabwo arikenewe)",
+      "relationship": "Isano",
+      "father": "Papa",
+      "mother": "Mama",
+      "guardian": "Umurezi",
+      "other": "Indi sano",
+      "address": "Aderesi",
+      "save": "Bika Umubyeyi",
+      "update": "Vugurura",
+      "password": "Ijambo ry'Ibanga",
+      "password_optional": "Ijambo ry'Ibanga (ntabwo arikenewe — bizakora imibare 4 yanyuma ya telefoni)"
+    },
+    "links": {
+      "title": "Ibisaba bya Umubyeyi-Umunyeshuri",
+      "student": "Umunyeshuri",
+      "parent": "Umubyeyi",
+      "relationship": "Isano",
+      "requested": "Yasabye",
+      "approve": "Emeza",
+      "reject": "Hakana",
+      "empty": "Nta bisaba bitegerejwe"
+    },
+    "sms_modal": {
+      "title": "Ohereza SMS ku Mubyeyi",
+      "message": "Ubutumwa",
+      "send": "Ohereza",
+      "sending": "Iroherezwa..."
+    },
+    "toasts": {
+      "added": "Umubyeyi yariyandikishije",
+      "updated": "Umubyeyi yavuguruwe",
+      "deleted": "Umubyeyi yasibwe",
+      "linked": "Umwana yahujwe",
+      "unlinked": "Ihuza ryasibwe",
+      "approved": "Ihuza ryemejwe",
+      "rejected": "Ihuza ryahakanwe",
+      "sms_sent": "SMS yoherejwe",
+      "load_failed": "Gushaka ababyeyi byanze"
+    }
+  },
+  "parent_mgmt": {
+    "title": "Imicungire y'Ababyeyi",
+    "subtitle": "Emeza iyandikwa ry'ababyeyi kandi ucunge ihuza",
+    "tabs": {
+      "pending": "Bitegerejwe",
+      "approved": "Byemejwe",
+      "all": "Ababyeyi Bose"
+    },
+    "pending_label": "Bitegereje Kwemezwa",
+    "approve": "Emeza",
+    "reject": "Hakana",
+    "view": "Reba Ibisobanuro",
+    "empty_pending": "Nta babyeyi bashya bitegereje",
+    "reject_confirm": "Hakana iri yandikwa?",
+    "approved_msg": "Umubyeyi yemejwe na SMS yoherejwe",
+    "rejected_msg": "Umubyeyi yahakanwe",
+    "load_failed": "Gushaka ababyeyi byanze",
+    "total_parents": "Ababyeyi Bose",
+    "col_name": "Izina",
+    "no_children": "Nta bana barahuzwe",
+    "send_message_title": "Ohereza Ubutumwa",
+    "to_label": "Ku:",
+    "send": "Ohereza",
+    "children_of": "Abana ba {{name}}"
+  },
+  "parent_portal": {
+    "portal_title": "Urubuga rw'Ababyeyi",
+    "welcome": "Murakaza neza, {{name}}",
+    "tabs": {
+      "overview": "Incamake",
+      "children": "Abana Banjye",
+      "payments": "Ubwishyu",
+      "grades": "Amanota",
+      "attendance": "Kuza ku Ishuri",
+      "discipline": "Imyitwarire",
+      "messages": "Ubutumwa",
+      "notifications": "Imenyesha",
+      "settings": "Igenamiterere"
+    },
+    "child": {
+      "select_child": "Hitamo umwana",
+      "no_children": "Ntabwo ufite abana bahujijwe. Koresha 'Huza Umwana'.",
+      "link_child": "Huza Umwana",
+      "link_child_subtitle": "Andika numero y'iyandikwa y'umwana wawe",
+      "reg_number": "Numero y'Iyandikwa (urugero 2026/SOF/001)",
+      "relationship": "Isano Yawe",
+      "request_link": "Saba Ihuza",
+      "link_requested": "Icyifuzo cy'ihuza cyoherejwe. Tegereza kwemezwa.",
+      "link_failed": "Gusaba ihuza byanze"
+    },
+    "stats": {
+      "total_paid": "Yose Yatanzwe",
+      "outstanding": "Asigaye",
+      "avg_grade": "Amanota Hagati",
+      "attendance_rate": "Igipimo cyo Kuza"
+    },
+    "payments": {
+      "pay_now": "Ishyura Nonaha",
+      "pay_amount": "Amafaranga yo Kwishyura",
+      "pay_method": "Uburyo bw'Ubwishyu",
+      "pay_phone": "Telefoni ya MoMo",
+      "confirm_pay": "Emeza Ubwishyu",
+      "payment_history": "Amateka y'Ubwishyu",
+      "no_payments": "Nta bwishyu",
+      "receipt": "Inyemezabwishyu"
+    },
+    "grades": {
+      "course": "Isomo",
+      "score": "Amanota",
+      "max": "Hejuru",
+      "grade": "Inyota",
+      "comments": "Ibisobanuro",
+      "no_grades": "Nta manota yandikwa"
+    },
+    "attendance": {
+      "date": "Itariki",
+      "status": "Imiterere",
+      "notes": "Ibisobanuro",
+      "present": "Yahari",
+      "absent": "Ntiyahari",
+      "late": "Yatinze",
+      "excused": "Yasabye",
+      "no_attendance": "Nta byanditswe byo kuza"
+    },
+    "messages": {
+      "title": "Ubutumwa Buvuye ku Ishuri",
+      "no_messages": "Nta butumwa"
+    },
+    "logout": "Sohoka",
+    "title": "Urubuga rw'Ababyeyi",
+    "parent_label": "Umubyeyi",
+    "last_refresh": "Bwa nyuma byavuguruwe",
+    "average": "Impuzandengo",
+    "toast_new_reply": "Igisubizo gishya kuva ku ishuri!",
+    "greeting": "Muraho {{name}}",
+    "link_subtitle": "Huza umwana wawe kuri konti yawe",
+    "link_title": "Saba guhuzwa n'umwana wawe",
+    "link_help": "Tanga amakuru y'umwana wawe ari mu ishuri kandi ubuyobozi buzakwemerera.",
+    "reg_number": "Nimero ya Munyeshuri",
+    "reg_number_ph": "urugero: GTV/2025/001",
+    "child_name": "Amazina yuzuye y'umwana",
+    "child_name_ph": "urugero: UWASE Aline",
+    "relationship": "Isano",
+    "rel_father": "Papa",
+    "rel_mother": "Mama",
+    "rel_guardian": "Umurezi",
+    "rel_other": "Indi",
+    "notes_label": "Ibisobanuro (si itegeko)",
+    "notes_ph": "Ibindi byasanga byafasha ubuyobozi...",
+    "send_request": "Ohereza Icyifuzo",
+    "your_requests": "Ibyifuzo Byanyu",
+    "no_requests": "Nta cyifuzo cyari cyoherejwe."
+  },
+  "wait_confirm": {
+    "title": "Tegereza Kwemezwa",
+    "subtitle": "Iyandikwa ryawe ryagezweho",
+    "info": "Itsinda ryacu rirasuzuma iyandikwa ryawe. Uzakira SMS igihe konti yawe yemejwe.",
+    "check_status": "Reba Imiterere",
+    "not_approved_yet": "Iyandikwa ryawe rikiri ku ngingo. Tegereza SMS yo kwemeza.",
+    "approved": "Iyandikwa ryawe ryemejwe! Ushobora kwinjira.",
+    "go_login": "Jya Kwinjira",
+    "back_home": "Garuka ku Rugo"
+  },
+  "academic_year": {
+    "title": "Imyaka y'Amasomo",
+    "subtitle": "Cunga imyaka n'ibihembwe by'amasomo",
+    "add_year": "Ongeraho Umwaka",
+    "add_term": "Ongeraho Igihembwe",
+    "add_promotion": "Zamura Abanyeshuri",
+    "current_year": "Umwaka Ukomeje",
+    "tabs": {
+      "years": "Imyaka",
+      "terms": "Ibihembwe",
+      "promotions": "Kuzamura"
+    },
+    "table": {
+      "name": "Izina",
+      "start_date": "Itariki yo Gutangira",
+      "end_date": "Itariki yo Kurangiza",
+      "is_current": "Ukomeje",
+      "status": "Imiterere",
+      "actions": "Ibikorwa",
+      "term_name": "Izina ry'Igihembwe",
+      "academic_year": "Umwaka w'Amasomo",
+      "from_level": "Kuva ku Cyiciro",
+      "to_level": "Kugeza ku Cyiciro",
+      "students_count": "Abanyeshuri",
+      "promoted_at": "Bazamuwe ku",
+      "promoted_by": "Bazamuwe na"
+    },
+    "form": {
+      "name": "Izina ry'Umwaka (urugero 2026)",
+      "start_date": "Itariki yo Gutangira",
+      "end_date": "Itariki yo Kurangiza",
+      "is_current": "Shyiraho nk'ukomeje",
+      "save": "Bika",
+      "update": "Vugurura",
+      "term_name": "Izina ry'Igihembwe (urugero Igihembwe 1)",
+      "academic_year": "Umwaka w'Amasomo",
+      "select_year": "-- Hitamo Umwaka --",
+      "from_trade": "Umwuga",
+      "from_level": "Kuva ku Cyiciro",
+      "to_level": "Kugeza ku Cyiciro",
+      "select_trade": "-- Hitamo Umwuga --",
+      "select_level": "-- Hitamo Icyiciro --",
+      "promote": "Zamura Abanyeshuri"
+    },
+    "toasts": {
+      "year_added": "Umwaka w'amasomo wongereweho",
+      "year_updated": "Umwaka w'amasomo wahinduwe",
+      "year_deleted": "Umwaka wasibwe",
+      "term_added": "Igihembwe cyongereweho",
+      "promoted": "Abanyeshuri {{count}} bazamuwe",
+      "load_failed": "Gushaka amakuru byanze"
+    },
+    "new_year": "Umwaka mushya",
+    "no_years": "Nta myaka yandikishijwe.",
+    "start_open_year": "Tangira ufungure umwaka mushya hejuru.",
+    "current": "Umwaka w'ubu",
+    "set_current": "Toranya",
+    "stats": {
+      "total_years": "Imyaka Yose",
+      "current_year": "Umwaka w'ubu",
+      "graduated": "Bararangije (amateka)",
+      "promoted": "Bazamuwe (amateka)"
+    }
+  },
+  "grad_full": {
+    "title": "Abasoje",
+    "subtitle": "Kurikirana abasoje n'akazi kabo",
+    "add_graduate": "Andika Uwasoje",
+    "generate_certificate": "Sohora Impamyabumenyi",
+    "tabs": {
+      "all": "Abasoje Bose",
+      "employed": "Bafite Akazi",
+      "unemployed": "Nta Kazi",
+      "further_studies": "Bakomeje Amasomo"
+    },
+    "stats": {
+      "total_graduates": "Abasoje Bose",
+      "employed": "Bafite Akazi",
+      "employment_rate": "Igipimo cy'Akazi",
+      "further_studies": "Bakomeje Amasomo",
+      "years": "Imyaka",
+      "trades": "Amashuri",
+      "diplomas": "Impamyabumenyi"
+    },
+    "search_placeholder": "Shakisha mu mazina, numero cyangwa umwuga...",
+    "table": {
+      "name": "Amazina",
+      "reg": "Numero",
+      "trade": "Umwuga",
+      "graduation_year": "Umwaka yarangijemo",
+      "certificate": "Impamyabumenyi",
+      "employment_status": "Imiterere",
+      "employer": "Aho akorera",
+      "actions": "Ibikorwa"
+    },
+    "employment": {
+      "employed": "Afite akazi",
+      "unemployed": "Nta kazi",
+      "further_studies": "Akomeje amasomo",
+      "self_employed": "Yikorera"
+    },
+    "form": {
+      "student": "Umunyeshuri",
+      "select_student": "-- Hitamo Umunyeshuri --",
+      "graduation_year": "Umwaka yarangijemo",
+      "certificate_no": "Numero y'Impamyabumenyi",
+      "employment_status": "Imiterere y'Akazi",
+      "employer": "Aho akorera",
+      "position": "Umwanya",
+      "save": "Bika"
+    },
+    "toasts": {
+      "added": "Uwasoje yariyandikishije",
+      "updated": "Yavuguruwe",
+      "deleted": "Yasibwe",
+      "cert_generated": "Impamyabumenyi yasohotse",
+      "load_failed": "Gushaka abasoje byanze"
+    },
+    "subtitle_yearbook": "Urutonde rw'abana barangije bahuzwa ku mwaka na trade — shaka umuntu, fungura cohort, cyangwa cape PDF.",
+    "send_to_employers": "Ohereza ku Bakoresha",
+    "print_pdf": "Cape PDF",
+    "all_years": "Imyaka yose",
+    "all_trades": "Trades zose",
+    "empty_title": "Nta basoje bahari.",
+    "empty_hint": "Iyo umwaka ufunzwe ku ipaji y'Umwaka, abanyeshuri ba Level 5/5b bagaragara hano.",
+    "n_graduates": "abasoje {{count}}"
+  },
+  "emp_full": {
+    "title": "Aho Bakorera",
+    "subtitle": "Sosiyete zifata abasoje bacu",
+    "add_employer": "Ongeraho",
+    "stats": {
+      "total_employers": "Sosiyete Zose",
+      "graduates_employed": "Abasoje Bahawe Akazi",
+      "active_partnerships": "Ubufatanye Bukomeje",
+      "with_email": "Bafite Imeli",
+      "total_outreach": "Itumanaho Ryose"
+    },
+    "search_placeholder": "Shakisha sosiyete...",
+    "table": {
+      "name": "Izina rya Sosiyete",
+      "sector": "Urwego",
+      "contact_person": "Umuntu wo Kuvugisha",
+      "phone": "Telefoni",
+      "email": "Imeyili",
+      "graduates": "Abasoje",
+      "actions": "Ibikorwa",
+      "company": "Sosiyete",
+      "contact": "Uwo guhamagara",
+      "sector_trades": "Urwego / Amashuri",
+      "status": "Imimerere",
+      "last_sent": "Iherezo Ryoherejwe"
+    },
+    "form": {
+      "name": "Izina rya Sosiyete",
+      "sector": "Urwego",
+      "contact_person": "Umuntu wo Kuvugisha",
+      "phone": "Telefoni",
+      "email": "Imeyili",
+      "address": "Aderesi",
+      "website": "Urubuga",
+      "notes": "Ibisobanuro",
+      "save": "Bika"
+    },
+    "toasts": {
+      "added": "Sosiyete yongereweho",
+      "updated": "Yavuguruwe",
+      "deleted": "Yasibwe",
+      "load_failed": "Gushaka byanze"
+    },
+    "subtitle_full": "Sosiyete zifata abasoje. Kanda <strong>Ohereza Urutonde</strong> ngo wohereze PDF ku bakoresha wahisemo.",
+    "outreach_log": "Amateka y'Itumanaho",
+    "send_roster": "Ohereza Urutonde",
+    "all_sectors": "Inzego zose",
+    "all_statuses": "Imimerere yose",
+    "empty_title": "Nta ukoresha yongewe.",
+    "empty_hint": "Kanda \"Ongera Ukoresha\" ushyireho uwa mbere.",
+    "email_not_set_title": "Imeli ntiyatunganijwe.",
+    "email_not_set_body": "Kugira ngo wohereze urutonde, admin agomba gushyiraho SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS na SMTP_FROM mu mibare y'ibanze hanyuma asubukure seriveri.",
+    "status": {
+      "active": "Bikora",
+      "inactive": "Ntibikora",
+      "archived": "Byabitswe"
+    }
+  },
+  "notif_full": {
+    "title": "Imenyesha",
+    "subtitle": "Komeza ubonye amakuru y'ibibera ku ishuri",
+    "mark_all_read": "Andika ko byasomwe byose",
+    "send_sms": "Ohereza SMS Bose",
+    "refresh": "Vugurura",
+    "tabs": {
+      "all": "Byose",
+      "unread": "Bitarasomwe",
+      "read": "Byasomwe",
+      "sms_history": "Amateka ya SMS"
+    },
+    "stats": {
+      "total": "Byose",
+      "unread": "Bitarasomwe",
+      "urgent": "Byihutirwa",
+      "today": "Uyu Munsi"
+    },
+    "filters": {
+      "all_types": "Ubwoko bwose",
+      "all_priorities": "Urwego rwose",
+      "urgent": "Byihutirwa",
+      "high": "Bikomeye",
+      "normal": "Bisanzwe",
+      "low": "Bito"
+    },
+    "empty": "Nta menyesha",
+    "empty_desc": "Imenyesha yawe yose izaboneka hano",
+    "mark_read": "Andika ko byasomwe",
+    "delete": "Siba",
+    "sms_modal": {
+      "title": "Ohereza SMS Bose",
+      "message": "Ubutumwa",
+      "recipients": "Abakirizo",
+      "all_parents": "Ababyeyi Bose",
+      "by_trade": "Hashingiwe ku Mwuga",
+      "trade": "Umwuga",
+      "level": "Icyiciro",
+      "send": "Ohereza SMS",
+      "sending": "Iroherezwa...",
+      "success": "SMS yoherejwe neza! Ubutumwa {{count}} bwagezweyo.",
+      "failed": "Kohereza SMS byanze"
+    },
+    "sms_history": {
+      "title": "Amateka ya SMS",
+      "message": "Ubutumwa",
+      "recipients": "Abakirizo",
+      "sent_count": "Yagezeyo",
+      "failed_count": "Yanze",
+      "sent_at": "Yoherejwe ku",
+      "sent_by": "Yoherejwe na",
+      "empty": "Nta mateka ya SMS"
+    },
+    "time": {
+      "just_now": "Akanya",
+      "minutes_ago": "Mu minota {{n}}",
+      "hours_ago": "Mu masaha {{n}}",
+      "days_ago": "Mu minsi {{n}}",
+      "weeks_ago": "Mu byumweru {{n}}"
+    },
+    "types": {
+      "sms_sent": "SMS Yoherejwe",
+      "student_created": "Umunyeshuri Mushya",
+      "student_updated": "Umunyeshuri Yavuguruwe",
+      "student_deleted": "Umunyeshuri Yasibwe",
+      "student_status": "Imiterere Yahindutse",
+      "grade_added": "Amanota Yongereweho",
+      "grade_updated": "Amanota Yahinduwe",
+      "payment_received": "Ubwishyu Bwakiriwe",
+      "payment_reminder": "Urwibutso rw'Ubwishyu",
+      "link_approved": "Ihuza Ryemejwe",
+      "link_rejected": "Ihuza Ryahakanwe",
+      "discipline_warning": "Iburizi y'Imyitwarire",
+      "discipline_suspension": "Guhagarikwa",
+      "application_received": "Inyandiko y'Ubusabe Yakiriwe",
+      "application_approved": "Inyandiko y'Ubusabe Yemejwe",
+      "application_rejected": "Inyandiko y'Ubusabe Yahakanwe",
+      "staff_created": "Umukozi Mushya",
+      "staff_deleted": "Umukozi Yasibwe",
+      "system": "Sisitemu",
+      "announcement": "Itangazo",
+      "general": "Rusange"
+    }
+  },
+  "admin_cms": {
+    "title": "Cunga Urubuga",
+    "subtitle": "Hindura ibikubiye ku rubuga, amakuru, amafoto n'ibindi",
+    "tabs": {
+      "hero_slides": "Amafoto Manini",
+      "news": "Amakuru",
+      "gallery": "Galeri",
+      "leadership": "Ubuyobozi",
+      "faq": "Ibibazo Bikunze Kubazwa",
+      "testimonials": "Ubuhamya",
+      "contact": "Aho Kuvugisha",
+      "social": "Imbuga Nkoranyambaga",
+      "about": "Iby'Ishuri"
+    },
+    "add": "Ongeraho",
+    "edit": "Hindura",
+    "delete": "Siba",
+    "save": "Bika",
+    "cancel": "Hagarika",
+    "news": {
+      "title": "Amakuru",
+      "add_btn": "Andika Inkuru",
+      "form": {
+        "title": "Umutwe",
+        "excerpt": "Incamake ngufi",
+        "content": "Inyandiko yose",
+        "category": "Icyiciro",
+        "author": "Wanditse",
+        "published": "Yatangajwe",
+        "featured": "Yagaragajwe",
+        "image": "Ifoto Nyamukuru",
+        "gallery_images": "Amafoto y'Inyongera",
+        "video_url": "URL ya Video",
+        "tags": "Tags",
+        "save": "Bika"
+      },
+      "empty": "Nta nkuru"
+    },
+    "gallery": {
+      "title": "Galeri y'Ishuri",
+      "add_btn": "Ongeraho Ifoto",
+      "form": {
+        "caption": "Incamake",
+        "image": "Ifoto",
+        "save": "Bika"
+      },
+      "empty": "Nta mafoto"
+    },
+    "leadership": {
+      "title": "Itsinda ry'Ubuyobozi",
+      "add_btn": "Ongeraho Umuyobozi",
+      "form": {
+        "name": "Amazina yose",
+        "role": "Umurimo",
+        "bio": "Ubuzima bugufi",
+        "photo": "Ifoto",
+        "email": "Imeyili",
+        "phone": "Telefoni",
+        "linkedin": "LinkedIn",
+        "order": "Urutonde",
+        "save": "Bika"
+      },
+      "empty": "Nta bayobozi"
+    },
+    "faq": {
+      "title": "Ibibazo Bikunze Kubazwa",
+      "add_btn": "Ongeraho",
+      "form": {
+        "question": "Ikibazo",
+        "answer": "Igisubizo",
+        "category": "Icyiciro",
+        "order": "Urutonde",
+        "save": "Bika"
+      },
+      "empty": "Nta bibazo"
+    },
+    "testimonials": {
+      "title": "Ubuhamya",
+      "add_btn": "Ongeraho",
+      "form": {
+        "name": "Amazina",
+        "role": "Umurimo / Umwuga",
+        "quote": "Ubuhamya",
+        "photo": "Ifoto",
+        "rating": "Igipimo (1-5)",
+        "save": "Bika"
+      },
+      "empty": "Nta buhamya"
+    },
+    "contact": {
+      "title": "Aho Kuvugisha",
+      "location": "Aho biherereye",
+      "phone": "Telefoni",
+      "email": "Imeyili",
+      "hours": "Amasaha y'Akazi",
+      "save": "Bika"
+    },
+    "social": {
+      "title": "Imbuga Nkoranyambaga",
+      "facebook": "Facebook",
+      "twitter": "Twitter",
+      "instagram": "Instagram",
+      "youtube": "YouTube",
+      "linkedin": "LinkedIn",
+      "whatsapp": "WhatsApp",
+      "save": "Bika"
+    },
+    "about": {
+      "title": "Iby'Ishuri",
+      "mission": "Inshingano",
+      "vision": "Icyerekezo",
+      "history": "Amateka",
+      "values": "Indangagaciro",
+      "save": "Bika"
+    },
+    "hero": {
+      "title": "Amafoto Manini",
+      "add_btn": "Ongeraho Ifoto",
+      "form": {
+        "title": "Umutwe",
+        "subtitle": "Umutwe wungirije",
+        "cta_text": "Ijambo rya Buto",
+        "cta_link": "URL",
+        "image": "Ifoto Nyuma",
+        "order": "Urutonde",
+        "active": "Ikora",
+        "save": "Bika"
+      },
+      "empty": "Nta mafoto"
+    },
+    "toasts": {
+      "saved": "Byabitswe neza",
+      "deleted": "Byasibwe",
+      "updated": "Byavuguruwe",
+      "error": "Hari ikibazo cyabaye"
+    }
+  },
+  "admin_link": {
+    "title": "Ibisaba by'Ababyeyi",
+    "subtitle": "Suzuma kandi wemeze ihuza ry'umubyeyi-umwana",
+    "tabs": {
+      "pending": "Bitegerejwe",
+      "approved": "Byemejwe",
+      "rejected": "Byahakanwe",
+      "all": "Ihuza Ryose",
+      "requests": "Ibyifuzo byo guhuzwa",
+      "history": "Amateka y'ibyifuzo",
+      "all_linked": "Bose Bahuzwa"
+    },
+    "stats": {
+      "pending": "Bitegerejwe",
+      "approved_today": "Byemejwe Uyu Munsi",
+      "total_links": "Ihuza Ryose",
+      "rejected": "Byahakanwe",
+      "approved": "Byemejwe"
+    },
+    "search_placeholder": "Shakisha mu mazina y'umubyeyi cyangwa umunyeshuri...",
+    "table": {
+      "parent": "Umubyeyi",
+      "parent_phone": "Telefoni",
+      "student": "Umunyeshuri",
+      "student_reg": "Numero",
+      "relationship": "Isano",
+      "requested_at": "Yasabye",
+      "status": "Imiterere",
+      "actions": "Ibikorwa",
+      "reviewed_by": "Wasuzumye",
+      "reviewed_at": "Yasuzumiwe ku"
+    },
+    "actions": {
+      "approve": "Emeza",
+      "reject": "Hakana",
+      "view": "Reba"
+    },
+    "modal": {
+      "approve_title": "Emeza Ihuza",
+      "reject_title": "Hakana Ihuza",
+      "notes": "Ibisobanuro (ntabwo arikenewe)",
+      "confirm_approve": "Emeza iri huza?",
+      "confirm_reject": "Hakana iki cyifuzo?",
+      "approve": "Emeza",
+      "reject": "Hakana"
+    },
+    "empty": "Nta bisaba",
+    "toasts": {
+      "approved": "Ihuza ryemejwe — umubyeyi yamenyeshejwe na SMS",
+      "rejected": "Ihuza ryahakanwe — umubyeyi yamenyeshejwe",
+      "load_failed": "Gushaka ibisaba byanze"
+    },
+    "manual_link": "Huza Wenyine"
+  },
+  "admin_staff": {
+    "title": "Imicungire y'Abakozi",
+    "subtitle": "Cunga konti n'inshingano z'abakozi",
+    "add_staff": "Ongeraho Umukozi",
+    "tabs": {
+      "all": "Bose",
+      "admins": "Abayobozi",
+      "teachers": "Abarimu",
+      "accounting": "Imari",
+      "discipline": "Imyitwarire",
+      "stock": "Ububiko"
+    },
+    "stats": {
+      "total": "Abakozi Bose",
+      "active": "Bakora",
+      "teachers": "Abarimu",
+      "admins": "Abayobozi"
+    },
+    "search_placeholder": "Shakisha mu mazina, imeyili cyangwa inshingano...",
+    "table": {
+      "name": "Amazina",
+      "email": "Imeyili",
+      "phone": "Telefoni",
+      "role": "Inshingano",
+      "status": "Imiterere",
+      "last_login": "Yinjiye",
+      "actions": "Ibikorwa",
+      "username": "Izina ryo Kwinjira"
+    },
+    "form": {
+      "first_name": "Izina ribanza",
+      "last_name": "Izina rikurikira",
+      "username": "Izina ryo Kwinjira",
+      "email": "Imeyili",
+      "phone": "Telefoni",
+      "role": "Inshingano",
+      "select_role": "-- Hitamo Inshingano --",
+      "password": "Ijambo ry'Ibanga",
+      "confirm_password": "Emeza Ijambo ry'Ibanga",
+      "is_active": "Akora",
+      "save": "Bika",
+      "update": "Vugurura",
+      "password_hint": "Sigazaho ubusa kugira ngo igumane (igihe uvugurura)"
+    },
+    "modal": {
+      "add_title": "Ongeraho Umukozi",
+      "edit_title": "Hindura Umukozi",
+      "details_title": "Ibisobanuro",
+      "reset_password": "Hindura Ijambo ry'Ibanga",
+      "deactivate": "Hagarika",
+      "activate": "Subiramo"
+    },
+    "toasts": {
+      "added": "Umukozi yongereweho — amabwiriza yoherejwe",
+      "updated": "Umukozi yahinduwe",
+      "deleted": "Umukozi yasibwe",
+      "password_reset": "Ijambo ry'ibanga ryahinduwe kandi ryoherejwe",
+      "deactivated": "Umukozi yahagaritswe",
+      "activated": "Umukozi yasubijwe",
+      "load_failed": "Gushaka abakozi byanze",
+      "delete_confirm": "Siba uyu mukozi?"
+    }
+  },
+  "student_dash": {
+    "portal_title": "Urubuga rw'Umunyeshuri",
+    "welcome": "Murakaza neza, {{name}}",
+    "tabs": {
+      "overview": "Incamake",
+      "grades": "Amanota",
+      "fees": "Amafaranga",
+      "attendance": "Kuza ku Ishuri",
+      "conduct": "Imyitwarire",
+      "notes": "Inyandiko z'Amasomo",
+      "messages": "Ubutumwa",
+      "settings": "Igenamiterere"
+    },
+    "stats": {
+      "avg_grade": "Amanota Hagati",
+      "attendance_rate": "Igipimo cyo Kuza",
+      "outstanding_fees": "Amafaranga Asigaye",
+      "conduct_points": "Amanota y'Imyitwarire"
+    },
+    "grades": {
+      "title": "Amanota Yanjye",
+      "course": "Isomo",
+      "score": "Amanota",
+      "max": "Hejuru",
+      "grade": "Inyota",
+      "date": "Itariki",
+      "teacher": "Umwarimu",
+      "empty": "Nta manota"
+    },
+    "fees": {
+      "title": "Amafaranga Yanjye",
+      "term": "Igihembwe",
+      "amount": "Amafaranga",
+      "paid": "Yatanzwe",
+      "balance": "Asigaye",
+      "due_date": "Itariki",
+      "status": "Imiterere",
+      "empty": "Nta mafaranga",
+      "history_title": "Amateka y'Ubwishyu",
+      "no_payments": "Nta bwishyu"
+    },
+    "attendance": {
+      "title": "Kuza Kwanjye",
+      "date": "Itariki",
+      "status": "Imiterere",
+      "notes": "Ibisobanuro",
+      "empty": "Nta byanditswe",
+      "present": "Yahari",
+      "absent": "Ntiyahari",
+      "late": "Yatinze",
+      "excused": "Yasabye"
+    },
+    "conduct": {
+      "title": "Ibyanditswe by'Imyitwarire",
+      "date": "Itariki",
+      "action": "Igikorwa",
+      "description": "Ibisobanuro",
+      "points": "Amanota",
+      "empty": "Imyitwarire myiza — nta kibazo"
+    },
+    "notes": {
+      "title": "Inyandiko z'Amasomo",
+      "course": "Isomo",
+      "teacher": "Umwarimu",
+      "date": "Itariki",
+      "download": "Pakurura",
+      "empty": "Nta nyandiko"
+    },
+    "messages": {
+      "title": "Ubutumwa",
+      "from": "Bwavuye kwa",
+      "date": "Itariki",
+      "empty": "Nta butumwa"
+    },
+    "change_password": "Hindura Ijambo ry'Ibanga",
+    "logout": "Sohoka",
+    "conduct_excellent": "Wonyine!",
+    "conduct_keep_up": "Komeza",
+    "conduct_warning": "Witondere",
+    "gpa": "Impuzandengo",
+    "balance": "Asigaye",
+    "paid_lower": "yatanzwe",
+    "my_grades": "Amanota yanjye",
+    "no_grades": "Nta manota arabonetse.",
+    "subject": "Isomo",
+    "term_year": "Igihembwe / Umwaka",
+    "type": "Ubwoko",
+    "marks": "Amanota",
+    "letter": "Inyuguti",
+    "fees_title": "Amafaranga y'ishuri",
+    "total": "Yose",
+    "paid": "Yatanzwe"
+  },
+  "teach_pages": {
+    "overview": {
+      "title": "Incamake y'Umwarimu",
+      "welcome": "Murakaza neza, {{name}}",
+      "my_classes": "Amashuri Yanjye",
+      "my_notes": "Inyandiko Zanjye",
+      "pending_questions": "Ibibazo Bitegerejwe",
+      "recent_activity": "Ibikorwa Biheruka",
+      "quick_actions": "Ibikorwa Byihuse",
+      "upload_note": "Ohereza Inyandiko",
+      "answer_questions": "Subiza Ibibazo",
+      "view_students": "Reba Abanyeshuri",
+      "send_message": "Ohereza Ubutumwa",
+      "empty_activity": "Nta bikorwa biheruka",
+      "stats": {
+        "notes": "Inyandiko",
+        "students": "Abanyeshuri",
+        "questions": "Ibibazo",
+        "comments": "Ibitekerezo",
+        "likes": "Ibyemewe",
+        "hands_raised": "Bazamuye Intoki"
+      }
+    },
+    "notes": {
+      "title": "Inyandiko Zanjye",
+      "upload_note": "Ohereza Inyandiko",
+      "search_placeholder": "Shakisha inyandiko...",
+      "filters": {
+        "all_trades": "Imyuga yose",
+        "all_levels": "Ibyiciro byose",
+        "published": "Yatangajwe",
+        "drafts": "Bitarasohoka"
+      },
+      "table": {
+        "title": "Umutwe",
+        "trade": "Umwuga",
+        "level": "Icyiciro",
+        "published": "Yatangajwe",
+        "views": "Yarebwe",
+        "downloads": "Yapakurujwe",
+        "actions": "Ibikorwa"
+      },
+      "form": {
+        "title": "Umutwe w'Inyandiko",
+        "description": "Ibisobanuro",
+        "trade": "Umwuga",
+        "level": "Icyiciro",
+        "select_trade": "-- Hitamo Umwuga --",
+        "select_level": "-- Hitamo Icyiciro --",
+        "pdf": "Dosiye PDF",
+        "published": "Tangaza ku banyeshuri",
+        "save": "Bika Inyandiko",
+        "update": "Vugurura"
+      },
+      "empty": "Nta nyandiko",
+      "toasts": {
+        "uploaded": "Inyandiko yoherejwe",
+        "updated": "Yavuguruwe",
+        "deleted": "Yasibwe",
+        "delete_confirm": "Siba iyi nyandiko?",
+        "load_failed": "Gushaka inyandiko byanze"
+      }
+    },
+    "questions": {
+      "title": "Ibibazo by'Abanyeshuri",
+      "subtitle": "Subiza ibibazo by'abanyeshuri ku nyandiko zawe",
+      "filters": {
+        "all": "Byose",
+        "pending": "Bitarasubizwa",
+        "answered": "Byasubijwe"
+      },
+      "table": {
+        "student": "Umunyeshuri",
+        "note": "Inyandiko",
+        "question": "Ikibazo",
+        "asked": "Yabajijwe",
+        "status": "Imiterere"
+      },
+      "answer": "Subiza",
+      "view_thread": "Reba Ikiganiro",
+      "empty": "Nta bibazo"
+    },
+    "students": {
+      "title": "Abanyeshuri (Reba gusa)",
+      "subtitle": "Reba abanyeshuri wigisha",
+      "search_placeholder": "Shakisha abanyeshuri...",
+      "table": {
+        "name": "Amazina",
+        "reg": "Numero",
+        "trade": "Umwuga",
+        "level": "Icyiciro",
+        "phone": "Telefoni"
+      },
+      "empty": "Nta banyeshuri"
+    },
+    "conduct": {
+      "title": "Imyitwarire y'Abanyeshuri",
+      "subtitle": "Tanga raporo z'imyitwarire",
+      "report_btn": "Tanga Raporo y'Imyitwarire",
+      "form": {
+        "student": "Umunyeshuri",
+        "select_student": "-- Hitamo Umunyeshuri --",
+        "action_type": "Ubwoko bw'Igikorwa",
+        "description": "Ibisobanuro",
+        "incident_date": "Itariki",
+        "submit": "Ohereza"
+      },
+      "recent": "Raporo Zanjye Ziheruka",
+      "empty": "Nta raporo",
+      "toasts": {
+        "submitted": "Raporo yoherejwe",
+        "load_failed": "Gushaka raporo byanze"
+      }
+    },
+    "messages": {
+      "title": "Ohereza Ubutumwa kwa Ababyeyi",
+      "subtitle": "Ohereza SMS kwa ababyeyi b'abanyeshuri bawe",
+      "form": {
+        "target": "Aho boherereza",
+        "single": "Umubyeyi Umwe",
+        "class": "Ishuri Ryose",
+        "trade": "Umwuga",
+        "level": "Icyiciro",
+        "parent": "Umubyeyi",
+        "select_parent": "-- Hitamo Umubyeyi --",
+        "message": "Ubutumwa",
+        "send": "Ohereza",
+        "sending": "Iroherezwa..."
+      },
+      "history": "Ubutumwa Bwoherejwe",
+      "empty": "Nta butumwa",
+      "toasts": {
+        "sent": "Ubutumwa bwoherejwe",
+        "failed": "Kohereza byanze"
+      }
+    },
+    "engagement": {
+      "title": "Ibyumvikanyweho",
+      "subtitle": "Ibyemewe, ibitekerezo n'intoki ku nyandiko zawe",
+      "tabs": {
+        "likes": "Ibyemewe",
+        "comments": "Ibitekerezo",
+        "hands": "Intoki"
+      },
+      "table": {
+        "note": "Inyandiko",
+        "student": "Umunyeshuri",
+        "comment": "Igitekerezo",
+        "posted": "Yashyizweho"
+      },
+      "empty": "Nta bikorwa"
+    }
+  },
+  "components": {
+    "mobile_nav": {
+      "home": "Ahabanza",
+      "kwiga": "Kwiga",
+      "services": "Serivisi",
+      "news": "Amakuru",
+      "more": "Ibindi"
+    },
+    "ask_teacher": {
+      "title": "Baza Umwarimu Ikibazo",
+      "subtitle": "Umwarimu wawe azakira ikibazo cyawe akagisubize.",
+      "question": "Ikibazo Cyawe",
+      "question_placeholder": "Andika ikibazo neza...",
+      "attach_image": "Ongeraho ifoto (ntabwo arikenewe)",
+      "send": "Ohereza Ikibazo",
+      "sending": "Iroherezwa...",
+      "success": "Ikibazo cyoherejwe — umwarimu yamenyeshejwe.",
+      "failed": "Kohereza ikibazo byanze."
+    },
+    "grades_manager": {
+      "title": "Imicungire y'Amanota",
+      "add_grade": "Ongeraho Amanota",
+      "bulk_grade": "Andika Amanota Menshi",
+      "student": "Umunyeshuri",
+      "course": "Isomo",
+      "score": "Amanota",
+      "max_score": "Amanota Hejuru",
+      "grade_letter": "Inyota",
+      "comments": "Ibisobanuro",
+      "date": "Itariki",
+      "save": "Bika",
+      "update": "Vugurura",
+      "delete_confirm": "Siba aya manota?",
+      "empty": "Nta manota"
+    },
+    "note_card": {
+      "published": "Yatangajwe",
+      "draft": "Bitarasohoka",
+      "views": "Yarebwe {{count}}",
+      "downloads": "Yapakurujwe {{count}}",
+      "comments": "Ibitekerezo {{count}}",
+      "likes": "Ibyemewe {{count}}",
+      "edit": "Hindura",
+      "delete": "Siba",
+      "view": "Reba",
+      "open_pdf": "Fungura PDF",
+      "download_pdf": "Pakurura PDF"
+    },
+    "note_comments": {
+      "title": "Ibitekerezo",
+      "write_placeholder": "Andika igitekerezo...",
+      "post": "Tanga",
+      "posting": "Iratangwa...",
+      "delete_confirm": "Siba iki gitekerezo?",
+      "no_comments": "Nta bitekerezo — ba uwa mbere.",
+      "anonymous": "Hatazwi"
+    },
+    "payment_reminders": {
+      "title": "Urwibutso rw'Ubwishyu",
+      "subtitle": "Ohereza urwibutso ku babyeyi b'abafite ideni",
+      "send_to_all": "Ohereza ku bose",
+      "custom_message": "Ubutumwa bwihariye (ntabwo arikenewe)",
+      "message_placeholder": "Niba siyiri ubusa, hazakoreshwa ubutumwa busanzwe...",
+      "filters": {
+        "trade": "Umwuga",
+        "level": "Icyiciro",
+        "min_balance": "Ideni rito",
+        "max_balance": "Ideni rikomeye",
+        "all": "Byose"
+      },
+      "select_all": "Hitamo bose",
+      "deselect_all": "Hagarika bose",
+      "send_selected": "Ohereza ku batoranyijwe ({{count}})",
+      "send_one": "Ohereza",
+      "sending": "Iroherezwa...",
+      "sent_summary": "Urwibutso rwoherejwe: {{success}} byagenze, {{failed}} byanze",
+      "history_title": "Amateka y'Urwibutso",
+      "no_debtors": "Nta bafite ideni",
+      "no_history": "Nta rwibutso",
+      "table": {
+        "student": "Umunyeshuri",
+        "parent": "Umubyeyi",
+        "phone": "Telefoni",
+        "balance": "Ideni",
+        "last_reminder": "Urwibutso Ruheruka",
+        "reminders_sent": "Urwibutso",
+        "actions": "Ibikorwa"
+      },
+      "toasts": {
+        "sent": "Urwibutso rwoherejwe",
+        "failed": "Kohereza byanze",
+        "select_recipients": "Hitamo nibura umuntu umwe",
+        "load_failed": "Gushaka byanze"
+      }
+    },
+    "pdf_reader": {
+      "loading": "Iyoherezwa...",
+      "page_of": "Urupapuro {{page}} kuri {{total}}",
+      "zoom_in": "Ongera",
+      "zoom_out": "Gabanya",
+      "rotate": "Hindura",
+      "download": "Pakurura",
+      "print": "Sohora",
+      "close": "Funga",
+      "load_error": "Gufungura PDF byanze"
+    },
+    "question_thread": {
+      "title": "Ikiganiro",
+      "original_question": "Ikibazo cy'umwimerere",
+      "reply_placeholder": "Andika igisubizo...",
+      "send_reply": "Ohereza",
+      "sending": "Iroherezwa...",
+      "no_replies": "Nta bisubizo",
+      "teacher_label": "Umwarimu",
+      "student_label": "Umunyeshuri",
+      "attached_image": "Ifoto yongerewe"
+    },
+    "realtime_bell": {
+      "title": "Imenyesha",
+      "no_notifications": "Nta menyesha",
+      "mark_all_read": "Andika ko byasomwe",
+      "view_all": "Reba imenyesha yose"
+    },
+    "sms_templates": {
+      "title": "Inyandiko za SMS",
+      "subtitle": "Kora kandi ucunge inyandiko za SMS zikoreshwa kenshi",
+      "add_template": "Ongeraho",
+      "form": {
+        "name": "Izina",
+        "category": "Icyiciro",
+        "message": "Ubutumwa",
+        "placeholders_hint": "Koresha {{name}}, {{amount}}, {{date}}",
+        "save": "Bika"
+      },
+      "table": {
+        "name": "Izina",
+        "category": "Icyiciro",
+        "message": "Ubutumwa",
+        "actions": "Ibikorwa"
+      },
+      "categories": {
+        "payment": "Ubwishyu",
+        "attendance": "Kuza",
+        "discipline": "Imyitwarire",
+        "general": "Rusange",
+        "announcement": "Itangazo"
+      },
+      "delete_confirm": "Siba iyi nyandiko?",
+      "empty": "Nta nyandiko"
+    },
+    "send_roster": {
+      "title": "Ohereza Urutonde rw'Ishuri",
+      "subtitle": "Ohereza urutonde rw'ishuri kwa ababyeyi binyuze SMS",
+      "trade": "Umwuga",
+      "level": "Icyiciro",
+      "message": "Ubutumwa",
+      "send": "Ohereza",
+      "sending": "Iroherezwa...",
+      "sent": "Urutonde rwoherejwe ababyeyi {{count}}",
+      "failed": "Kohereza byanze"
+    },
+    "student_questions": {
+      "title": "Ibibazo by'Abanyeshuri",
+      "empty": "Nta bibazo",
+      "view_thread": "Reba ikiganiro",
+      "answered_by": "Cyasubijwe na {{name}}",
+      "unanswered": "Ntikirasubizwa"
+    },
+    "hero_slides": {
+      "title": "Amafoto Manini",
+      "add": "Ongeraho",
+      "form": {
+        "slide_title": "Umutwe",
+        "subtitle": "Umutwe wungirije",
+        "cta_text": "Ijambo rya Buto",
+        "cta_link": "URL",
+        "image": "Ifoto",
+        "order": "Urutonde",
+        "active": "Ikora",
+        "save": "Bika"
+      },
+      "delete_confirm": "Siba iyi foto?",
+      "empty": "Nta mafoto"
     }
   }
 }

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { X, Send, Loader2, MessageCircleQuestion, User, GraduationCap, Phone } from 'lucide-react';
 
 const AskTeacherModal = ({ open, onClose, tradeCode, tradeName, level, levels = [], apiUrl = '' }) => {
+    const { t } = useTranslation();
     const [form, setForm] = useState({
         student_name: '',
         trade_code: tradeCode || '',

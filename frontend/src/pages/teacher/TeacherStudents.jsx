@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import useAuthStore from '../../store/authStore';
@@ -22,6 +23,7 @@ const STATUS_OPTIONS = [
 ];
 
 const TeacherStudents = () => {
+    const { t } = useTranslation();
     const { token } = useAuthStore();
     const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(true);

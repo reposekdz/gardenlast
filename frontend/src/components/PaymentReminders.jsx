@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import {
@@ -9,6 +10,7 @@ import {
 } from 'lucide-react';
 
 const PaymentReminders = ({ token }) => {
+    const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState('debtors');
     const [loading, setLoading] = useState(false);
     const [debtors, setDebtors] = useState([]);

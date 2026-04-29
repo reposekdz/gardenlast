@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import api from '../utils/api';
 import useAuthStore from '../store/authStore';
 import { toast } from 'react-toastify';
@@ -17,6 +18,7 @@ const TRADE_BADGE = {
 const tradeColor = (t) => TRADE_BADGE[t] || 'bg-gray-100 text-gray-700 border-gray-200';
 
 const fmtDate = (s) => {
+    const { t } = useTranslation();
     if (!s) return '—';
     try {
         const d = new Date(s);
@@ -120,24 +122,24 @@ const Graduates = () => {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                         <h1 className="text-2xl font-black flex items-center gap-2">
-                            <GraduationCap size={26} /> Abasoje (Graduates Yearbook)
+                            <GraduationCap size={26} /> {t('grad_full.title')}
                         </h1>
                         <p className="text-amber-100 text-sm">
-                            Urutonde rw'abana barangije bahuzwa ku mwaka & ku trade — usanga umuntu, ufungure umutwe wa cohort, cyangwa ucape PDF.
+                            {t('grad_full.subtitle_yearbook')}
                         </p>
                     </div>
                     <div className="flex flex-wrap gap-2">
                         <button onClick={load}
                             className="px-3 py-2 bg-white/10 hover:bg-white/20 rounded-xl flex items-center gap-2 text-sm">
-                            <RefreshCcw size={16} /> Refresh
+                            <RefreshCcw size={16} /> {t('common_extra.refresh')}
                         </button>
                         <button onClick={() => setSendOpen(true)}
                             className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-white rounded-xl font-bold flex items-center gap-2 shadow-lg">
-                            <Send size={18} /> Send to Employers
+                            <Send size={18} /> {t('grad_full.send_to_employers')}
                         </button>
                         <button onClick={printRoster}
                             className="px-4 py-2 bg-white text-amber-700 rounded-xl font-bold flex items-center gap-2 hover:bg-amber-50">
-                            <Printer size={18} /> Cap PDF Roster
+                            <Printer size={18} /> {t('grad_full.print_pdf')}
                         </button>
                     </div>
                 </div>
@@ -145,10 +147,10 @@ const Graduates = () => {
 
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-6">
-                <StatCard icon={GraduationCap} label="Total Abasoje" value={totals.students} color="bg-amber-50 text-amber-700" />
-                <StatCard icon={Calendar}      label="Imyaka"        value={totals.years}    color="bg-blue-50  text-blue-700" />
-                <StatCard icon={BookOpen}      label="Trades"        value={totals.trades}   color="bg-emerald-50 text-emerald-700" />
-                <StatCard icon={Award}         label="Diplomas"       value={totals.students} color="bg-rose-50  text-rose-700" />
+                <StatCard icon={GraduationCap} label={t('grad_full.stats.total_graduates')} value={totals.students} color="bg-amber-50 text-amber-700" />
+                <StatCard icon={Calendar}      label={t('grad_full.stats.years')}        value={totals.years}    color="bg-blue-50  text-blue-700" />
+                <StatCard icon={BookOpen}      label={t('grad_full.stats.trades')}        value={totals.trades}   color="bg-emerald-50 text-emerald-700" />
+                <StatCard icon={Award}         label={t('grad_full.stats.diplomas')}       value={totals.students} color="bg-rose-50  text-rose-700" />
             </div>
 
             {/* Filters */}
@@ -160,7 +162,7 @@ const Graduates = () => {
                             <input
                                 value={search}
                                 onChange={e => setSearch(e.target.value)}
-                                placeholder="Shakisha (izina, reg number...)"
+                                placeholder={t('grad_full.search_placeholder')}
                                 className="w-full pl-9 pr-3 py-2 rounded-xl border border-gray-200 text-sm focus:border-amber-300 focus:ring-amber-200"
                             />
                         </div>
@@ -171,7 +173,7 @@ const Graduates = () => {
                                 onChange={e => setYearId(e.target.value)}
                                 className="px-3 py-2 rounded-xl border border-gray-200 text-sm bg-white"
                             >
-                                <option value="">Imyaka yose</option>
+                                <option value="">{t('grad_full.all_years')}</option>
                                 {(data.filters?.years || []).map(y => (
                                     <option key={y.id} value={y.id}>{y.name}</option>
                                 ))}
@@ -181,9 +183,9 @@ const Graduates = () => {
                                 onChange={e => setTrade(e.target.value)}
                                 className="px-3 py-2 rounded-xl border border-gray-200 text-sm bg-white"
                             >
-                                <option value="">Trades zose</option>
-                                {(data.filters?.trades || []).map(t => (
-                                    <option key={t} value={t}>{t}</option>
+                                <option value="">{t('grad_full.all_trades')}</option>
+                                {(data.filters?.trades || []).map(tr => (
+                                    <option key={tr} value={tr}>{tr}</option>
                                 ))}
                             </select>
                             {(yearId || trade || search) && (
@@ -191,7 +193,7 @@ const Graduates = () => {
                                     onClick={() => { setYearId(''); setTrade(''); setSearch(''); }}
                                     className="px-3 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-xs font-bold text-gray-700 flex items-center gap-1"
                                 >
-                                    <X size={14} /> Siba
+                                    <X size={14} /> {t('common_extra.clear')}
                                 </button>
                             )}
                         </div>
@@ -208,8 +210,8 @@ const Graduates = () => {
                 ) : !data.groups?.length ? (
                     <div className="bg-white rounded-3xl p-16 text-center text-gray-400">
                         <GraduationCap size={56} className="mx-auto mb-3 opacity-30" />
-                        <p className="font-bold text-gray-600">Nta basoje bahari.</p>
-                        <p className="text-xs">Iyo umwaka ufunzwe ku Academic Year page, abana ba Level 5/5b bagaragara hano.</p>
+                        <p className="font-bold text-gray-600">{t('grad_full.empty_title')}</p>
+                        <p className="text-xs">{t('grad_full.empty_hint')}</p>
                     </div>
                 ) : (
                     <div className="space-y-8">
@@ -232,7 +234,7 @@ const Graduates = () => {
                                                 <p className="text-xs text-gray-500">
                                                     {fmtDate(group.start_date)} → {fmtDate(group.end_date)}
                                                     <span className="ml-2 text-gray-400">·</span>
-                                                    <span className="ml-2 font-bold text-amber-700">{group.total} abasoje</span>
+                                                    <span className="ml-2 font-bold text-amber-700">{t('grad_full.n_graduates', { count: group.total })}</span>
                                                 </p>
                                             </div>
                                         </div>
@@ -248,7 +250,7 @@ const Graduates = () => {
                                                             <span className={`px-3 py-1 rounded-full text-xs font-bold border ${tradeColor(t.trade)}`}>
                                                                 {t.trade}
                                                             </span>
-                                                            <span className="text-xs text-gray-500">{t.count} abasoje</span>
+                                                            <span className="text-xs text-gray-500">{t('grad_full.n_graduates', { count: t.count })}</span>
                                                         </div>
                                                     </div>
 

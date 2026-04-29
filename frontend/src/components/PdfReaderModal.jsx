@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     X, Download, Maximize2, Minimize2, ChevronLeft, ChevronRight,
     ZoomIn, ZoomOut, RotateCw, Loader2, FileText, MessageSquare, BookOpen
@@ -11,6 +12,7 @@ import NoteCommentsPanel from './NoteCommentsPanel';
 pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
 
 const PdfReaderModal = ({ note, onClose, apiUrl = '', token = null, currentUser = null }) => {
+    const { t } = useTranslation();
     const [view, setView] = useState('pdf'); // 'pdf' | 'discuss'
     const containerRef = useRef(null);
     const canvasRef = useRef(null);

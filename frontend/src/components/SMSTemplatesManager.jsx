@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Edit, Trash2, Plus, X, Save, MessageSquare, Send, Eye, EyeOff } from 'lucide-react';
@@ -6,6 +7,7 @@ import { Edit, Trash2, Plus, X, Save, MessageSquare, Send, Eye, EyeOff } from 'l
 const API_URL = import.meta.env.VITE_API_URL || '';
 
 const SMSTemplatesManager = () => {
+    const { t } = useTranslation();
     const [templates, setTemplates] = useState([]);
     const [loading, setLoading] = useState(true);
     const [editingTemplate, setEditingTemplate] = useState(null);

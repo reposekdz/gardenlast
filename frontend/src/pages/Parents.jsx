@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import useAuthStore from '../store/authStore';
 import { toast } from 'react-toastify';
@@ -23,6 +24,7 @@ const LEVELS = {
 };
 
 const Parents = () => {
+    const { t } = useTranslation();
     const { token, user, logout } = useAuthStore();
     const headers = { Authorization: `Bearer ${token}` };
     const isParent = user.role === 'parent';
@@ -450,7 +452,7 @@ const Parents = () => {
                             <Menu size={24} />
                         </button>
                         <div>
-                            <h1 className="font-bold">Urubuga rw'Ababyeyi</h1>
+                            <h1 className="font-bold">{t('parent_portal.title')}</h1>
                             <p className="text-xs text-primary-200">{user.first_name} {user.last_name}</p>
                         </div>
                     </div>
@@ -483,7 +485,7 @@ const Parents = () => {
                         {user.first_name?.charAt(0)}
                     </div>
                     <div>
-                        <h1 className="font-bold text-gray-800">Urubuga rw'Ababyeyi</h1>
+                        <h1 className="font-bold text-gray-800">{t('parent_portal.title')}</h1>
                         <p className="text-sm text-gray-500">{user.first_name} {user.last_name} • {user.phone}</p>
                     </div>
                 </div>
@@ -511,14 +513,14 @@ const Parents = () => {
                             <div className="absolute right-0 mt-2 w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50 animate-fade-in">
                                 <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-primary-500 to-primary-600 text-white">
                                     <h3 className="font-bold flex items-center gap-2">
-                                        <BellRing size={18} /> Amatangazo
+                                        <BellRing size={18} /> {t('notif_full.title')}
                                     </h3>
                                     {unreadCount > 0 && (
                                         <button
                                             onClick={markAllAsRead}
                                             className="text-xs bg-white/20 px-3 py-1 rounded-full hover:bg-white/30 transition-colors"
                                         >
-                                            Byose bonge
+                                            {t('notif_full.mark_all_read')}
                                         </button>
                                     )}
                                 </div>
@@ -526,7 +528,7 @@ const Parents = () => {
                                     {notifications.length === 0 ? (
                                         <div className="p-8 text-center text-gray-500">
                                             <Bell size={40} className="mx-auto mb-2 text-gray-300" />
-                                            <p>Nta matangazo</p>
+                                            <p>{t('notif_full.empty')}</p>
                                         </div>
                                     ) : (
                                         notifications.slice(0, 10).map(notif => (

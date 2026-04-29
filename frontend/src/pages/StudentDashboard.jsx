@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useLocation } from 'react-router-dom';
@@ -35,6 +36,7 @@ const Section = ({ id, icon: Icon, title, children, color = 'emerald' }) => (
 );
 
 const StudentDashboard = () => {
+    const { t } = useTranslation();
     const { user, token, login } = useAuthStore();
     const API_URL = import.meta.env.VITE_API_URL || '';
     const [data, setData] = useState(null);
@@ -143,27 +145,27 @@ const StudentDashboard = () => {
 
             {/* Stats grid */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <Stat icon={Award} label="Conduct" value={`${conductPts} / 40`} color="emerald" sub={conductPts >= 32 ? 'Wonyine!' : conductPts >= 24 ? 'Komeza' : 'Witondere'} />
-                <Stat icon={TrendingUp} label="GPA" value={profile.gpa ? Number(profile.gpa).toFixed(2) : '—'} color="blue" />
-                <Stat icon={Calendar} label="Kwitabira" value={`${presentRate}%`} color="purple" sub={`${attendance.present || 0} / ${totalAttendance || 0}`} />
-                <Stat icon={DollarSign} label="Asigaye" value={fmtMoney(owed)} color={owed > 0 ? 'red' : 'emerald'} sub={fmtMoney(paid) + ' yatanzwe'} />
+                <Stat icon={Award} label={t('student_dash.conduct')} value={`${conductPts} / 40`} color="emerald" sub={conductPts >= 32 ? t('student_dash.conduct_excellent') : conductPts >= 24 ? t('student_dash.conduct_keep_up') : t('student_dash.conduct_warning')} />
+                <Stat icon={TrendingUp} label={t('student_dash.gpa')} value={profile.gpa ? Number(profile.gpa).toFixed(2) : '—'} color="blue" />
+                <Stat icon={Calendar} label={t('student_dash.attendance')} value={`${presentRate}%`} color="purple" sub={`${attendance.present || 0} / ${totalAttendance || 0}`} />
+                <Stat icon={DollarSign} label={t('student_dash.balance')} value={fmtMoney(owed)} color={owed > 0 ? 'red' : 'emerald'} sub={fmtMoney(paid) + ' ' + t('student_dash.paid_lower')} />
             </div>
 
             {/* Grades */}
-            <Section id="grades" icon={BookOpen} title="Amanota yanjye" color="blue">
+            <Section id="grades" icon={BookOpen} title={t('student_dash.my_grades')} color="blue">
                 {(grades?.length === 0 && exam_results?.length === 0) ? (
-                    <p className="text-center text-gray-500 py-8">Nta manota arabonetse.</p>
+                    <p className="text-center text-gray-500 py-8">{t('student_dash.no_grades')}</p>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                             <thead>
                                 <tr className="bg-gray-50 text-xs font-bold text-gray-500 uppercase">
-                                    <th className="px-3 py-2 text-left">Isomo</th>
-                                    <th className="px-3 py-2 text-left">Trimester / Year</th>
-                                    <th className="px-3 py-2 text-left">Ubwoko</th>
-                                    <th className="px-3 py-2 text-right">Amanota</th>
+                                    <th className="px-3 py-2 text-left">{t('student_dash.subject')}</th>
+                                    <th className="px-3 py-2 text-left">{t('student_dash.term_year')}</th>
+                                    <th className="px-3 py-2 text-left">{t('student_dash.type')}</th>
+                                    <th className="px-3 py-2 text-right">{t('student_dash.marks')}</th>
                                     <th className="px-3 py-2 text-right">%</th>
-                                    <th className="px-3 py-2 text-center">Inyuguti</th>
+                                    <th className="px-3 py-2 text-center">{t('student_dash.letter')}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
@@ -196,18 +198,18 @@ const StudentDashboard = () => {
             </Section>
 
             {/* Fees */}
-            <Section id="fees" icon={DollarSign} title="Amafaranga (school fees)" color="emerald">
+            <Section id="fees" icon={DollarSign} title={t('student_dash.fees_title')} color="emerald">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
                     <div className="rounded-xl bg-emerald-50 p-4">
-                        <p className="text-xs font-bold text-emerald-700 uppercase">Yose</p>
+                        <p className="text-xs font-bold text-emerald-700 uppercase">{t('student_dash.total')}</p>
                         <p className="text-xl font-black text-emerald-900">{fmtMoney(totalFees)}</p>
                     </div>
                     <div className="rounded-xl bg-blue-50 p-4">
-                        <p className="text-xs font-bold text-blue-700 uppercase">Yatanzwe</p>
+                        <p className="text-xs font-bold text-blue-700 uppercase">{t('student_dash.paid')}</p>
                         <p className="text-xl font-black text-blue-900">{fmtMoney(paid)}</p>
                     </div>
                     <div className={`rounded-xl ${owed > 0 ? 'bg-red-50' : 'bg-emerald-50'} p-4`}>
-                        <p className={`text-xs font-bold uppercase ${owed > 0 ? 'text-red-700' : 'text-emerald-700'}`}>Asigaye</p>
+                        <p className={`text-xs font-bold uppercase ${owed > 0 ? 'text-red-700' : 'text-emerald-700'}`}>{t('student_dash.balance')}</p>
                         <p className={`text-xl font-black ${owed > 0 ? 'text-red-900' : 'text-emerald-900'}`}>{fmtMoney(owed)}</p>
                     </div>
                 </div>

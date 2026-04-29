@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { Bell, MessageSquare, X, Check } from 'lucide-react';
 
@@ -7,6 +8,7 @@ import { Bell, MessageSquare, X, Check } from 'lucide-react';
 // Triggers browser notifications + toast pulse for new replies.
 
 const RealtimeBell = ({ apiUrl, token, onOpenThread, onAnyEvent }) => {
+    const { t } = useTranslation();
     const [open, setOpen] = useState(false);
     const [feed, setFeed] = useState([]);
     const [counts, setCounts] = useState({ unread_messages: 0, unread_notifications: 0, total_unread: 0 });

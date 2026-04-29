@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import useAuthStore from '../../store/authStore';
@@ -8,6 +9,7 @@ import {
 } from 'lucide-react';
 
 const TeacherEngagement = () => {
+    const { t } = useTranslation();
     const { token } = useAuthStore();
     const API_URL = import.meta.env.VITE_API_URL || '';
     const headers = { Authorization: `Bearer ${token}` };

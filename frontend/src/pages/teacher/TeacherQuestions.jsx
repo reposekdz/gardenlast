@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import useAuthStore from '../../store/authStore';
 import StudentQuestionsPanel from '../../components/StudentQuestionsPanel';
 
 const TeacherQuestions = () => {
+    const { t } = useTranslation();
     const { token } = useAuthStore();
     const API_URL = import.meta.env.VITE_API_URL || '';
     const [trades, setTrades] = useState([]);

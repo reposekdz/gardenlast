@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import useAuthStore from '../store/authStore';
 import { toast } from 'react-toastify';
@@ -27,6 +28,7 @@ const FINANCE_ROLES = ['admin', 'accountant'];
 const DOD_ROLES = ['admin', 'dod', 'director_of_discipline'];
 
 const Students = () => {
+    const { t } = useTranslation();
     const { token, user } = useAuthStore();
     const navigate = useNavigate();
 
@@ -44,7 +46,7 @@ const Students = () => {
 
     useEffect(() => {
         if (isInitialized && !hasAccess && user) {
-            toast.error('You do not have permission to access this page');
+            toast.error(t('common_extra.no_permission'));
             navigate('/dashboard');
         }
     }, [isInitialized, hasAccess, user, navigate]);
@@ -127,11 +129,11 @@ const Students = () => {
     };
     const ALL_LEVELS = ['Level 3', 'Level 4', 'Level 5', 'Level 4a', 'Level 4b', 'Level 5a', 'Level 5b'];
     const STATUS_OPTIONS = [
-        { value: 'active', label: 'Active', color: 'bg-green-100 text-green-800' },
-        { value: 'suspended', label: 'Suspended', color: 'bg-yellow-100 text-yellow-800' },
-        { value: 'left', label: 'Left', color: 'bg-gray-100 text-gray-800' },
-        { value: 'expelled', label: 'Expelled', color: 'bg-red-100 text-red-800' },
-        { value: 'sick', label: 'Sick', color: 'bg-orange-100 text-orange-800' }
+        { value: 'active', label: t('stu_full.filters.active'), color: 'bg-green-100 text-green-800' },
+        { value: 'suspended', label: t('stu_full.filters.suspended'), color: 'bg-yellow-100 text-yellow-800' },
+        { value: 'left', label: t('stu_full.filters.left'), color: 'bg-gray-100 text-gray-800' },
+        { value: 'expelled', label: t('stu_full.filters.expelled'), color: 'bg-red-100 text-red-800' },
+        { value: 'sick', label: t('stu_full.filters.sick'), color: 'bg-orange-100 text-orange-800' }
     ];
 
     const fetchStudents = useCallback(async () => {
@@ -145,9 +147,9 @@ const Students = () => {
         } catch (err) {
             console.error('Error fetching students:', err.response || err);
             if (err.response?.status === 403) {
-                toast.error('You do not have permission to view students');
+                toast.error(t('common_extra.no_permission'));
             } else {
-                toast.error(err.response?.data?.message || 'Failed to load students');
+                toast.error(err.response?.data?.message || t('stu_full.toasts.load_failed'));
             }
             setStudents([]);
         }
@@ -643,8 +645,8 @@ const getGradeColor = (score, maxScore) => {
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
                     <Shield className="w-16 h-16 text-red-400 mx-auto mb-4" />
-                    <h2 className="text-xl font-bold text-gray-800 mb-2">Access Denied</h2>
-                    <p className="text-gray-600">You do not have permission to view this page.</p>
+                    <h2 className="text-xl font-bold text-gray-800 mb-2">{t('common_extra.access_denied')}</h2>
+                    <p className="text-gray-600">{t('common_extra.no_permission')}</p>
                 </div>
             </div>
         );
@@ -658,16 +660,16 @@ const getGradeColor = (score, maxScore) => {
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                         <div>
                             <h1 className="text-2xl font-black text-gray-800 flex items-center gap-2">
-                                <Users className="text-primary-600" /> Students Management
+                                <Users className="text-primary-600" /> {t('stu_full.title')}
                             </h1>
-                            <p className="text-sm text-gray-500">Manage all students, grades, payments and communications</p>
+                            <p className="text-sm text-gray-500">{t('stu_full.subtitle')}</p>
                         </div>
                         <div className="flex gap-2">
                             <button onClick={() => { fetchStudents(); fetchStudentStats(); }} className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                                <RefreshCw size={18} /> Refresh
+                                <RefreshCw size={18} /> {t('common_extra.refresh')}
                             </button>
                             <button onClick={() => setShowAddModal(true)} className="flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600">
-                                <Plus size={18} /> Add Student
+                                <Plus size={18} /> {t('stu_full.add_student_btn')}
                             </button>
                         </div>
                     </div>
@@ -675,21 +677,21 @@ const getGradeColor = (score, maxScore) => {
                     {/* Tabs */}
                     <div className="flex gap-1 mt-4 border-b overflow-x-auto">
                         <button onClick={() => setActiveTab('students')} className={`px-4 py-2 font-medium text-sm rounded-t-lg transition-colors whitespace-nowrap ${activeTab === 'students' ? 'bg-primary-500 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>
-                            <Users size={16} className="inline mr-2" /> Students
+                            <Users size={16} className="inline mr-2" /> {t('stu_full.tabs.students')}
                         </button>
                         <button onClick={() => setActiveTab('grades')} className={`px-4 py-2 font-medium text-sm rounded-t-lg transition-colors whitespace-nowrap ${activeTab === 'grades' ? 'bg-primary-500 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>
-                            <GradeIcon size={16} className="inline mr-2" /> Grades
+                            <GradeIcon size={16} className="inline mr-2" /> {t('stu_full.tabs.grades')}
                         </button>
                         {canManageFinance && (
                             <button onClick={() => setActiveTab('payments')} className={`px-4 py-2 font-medium text-sm rounded-t-lg transition-colors whitespace-nowrap ${activeTab === 'payments' ? 'bg-primary-500 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>
-                                <Receipt size={16} className="inline mr-2" /> Payments
+                                <Receipt size={16} className="inline mr-2" /> {t('stu_full.tabs.payments')}
                             </button>
                         )}
                         <button onClick={() => setActiveTab('messages')} className={`px-4 py-2 font-medium text-sm rounded-t-lg transition-colors whitespace-nowrap ${activeTab === 'messages' ? 'bg-primary-500 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>
-                            <MessageIcon size={16} className="inline mr-2" /> Messages
+                            <MessageIcon size={16} className="inline mr-2" /> {t('stu_full.tabs.messages')}
                         </button>
                         <button onClick={() => setActiveTab('attendance')} className={`px-4 py-2 font-medium text-sm rounded-t-lg transition-colors whitespace-nowrap ${activeTab === 'attendance' ? 'bg-primary-500 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>
-                            <ClipboardList size={16} className="inline mr-2" /> Attendance
+                            <ClipboardList size={16} className="inline mr-2" /> {t('stu_full.tabs.attendance')}
                         </button>
                     </div>
                 </div>
@@ -708,7 +710,7 @@ const getGradeColor = (score, maxScore) => {
                                     </div>
                                     <div>
                                         <p className="text-2xl font-black text-gray-800">{studentStats.total}</p>
-                                        <p className="text-xs text-gray-500">Total</p>
+                                        <p className="text-xs text-gray-500">{t('stu_full.stats.total')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -719,7 +721,7 @@ const getGradeColor = (score, maxScore) => {
                                     </div>
                                     <div>
                                         <p className="text-2xl font-black text-gray-800">{studentStats.active}</p>
-                                        <p className="text-xs text-gray-500">Active</p>
+                                        <p className="text-xs text-gray-500">{t('stu_full.stats.active')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -730,7 +732,7 @@ const getGradeColor = (score, maxScore) => {
                                     </div>
                                     <div>
                                         <p className="text-2xl font-black text-gray-800">{studentStats.suspended}</p>
-                                        <p className="text-xs text-gray-500">Suspended</p>
+                                        <p className="text-xs text-gray-500">{t('stu_full.stats.suspended')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -741,7 +743,7 @@ const getGradeColor = (score, maxScore) => {
                                     </div>
                                     <div>
                                         <p className="text-2xl font-black text-gray-800">{studentStats.left}</p>
-                                        <p className="text-xs text-gray-500">Left</p>
+                                        <p className="text-xs text-gray-500">{t('stu_full.stats.left')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -752,7 +754,7 @@ const getGradeColor = (score, maxScore) => {
                                     </div>
                                     <div>
                                         <p className="text-2xl font-black text-gray-800">{studentStats.expelled}</p>
-                                        <p className="text-xs text-gray-500">Expelled</p>
+                                        <p className="text-xs text-gray-500">{t('stu_full.stats.expelled')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -765,20 +767,20 @@ const getGradeColor = (score, maxScore) => {
                             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                                 <div className="relative">
                                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-                                    <input type="text" placeholder="Search students..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
+                                    <input type="text" placeholder={t('stu_full.search_placeholder')} value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
                                         className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500" />
                                 </div>
                                 <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="px-4 py-2 border rounded-lg">
-                                    <option value="all">All Status</option>
+                                    <option value="all">{t('stu_full.filters.all_statuses')}</option>
                                     {STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                                 </select>
                                 <select value={filterTrade} onChange={e => setFilterTrade(e.target.value)} className="px-4 py-2 border rounded-lg">
-                                    <option value="all">All Trades</option>
-                                    {tradesList.length > 0 ? tradesList.map(t => <option key={t} value={t}>{t}</option>) :
-                                        TRADES.map(t => <option key={t} value={t}>{t}</option>)}
+                                    <option value="all">{t('stu_full.filters.all_trades')}</option>
+                                    {tradesList.length > 0 ? tradesList.map(tr => <option key={tr} value={tr}>{tr}</option>) :
+                                        TRADES.map(tr => <option key={tr} value={tr}>{tr}</option>)}
                                 </select>
                                 <select value={filterLevel} onChange={e => setFilterLevel(e.target.value)} className="px-4 py-2 border rounded-lg">
-                                    <option value="all">All Levels</option>
+                                    <option value="all">{t('stu_full.filters.all_levels')}</option>
                                     {levelsList.length > 0 ? levelsList.map(l => <option key={l} value={l}>{l}</option>) :
                                         ALL_LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
                                 </select>
@@ -794,25 +796,25 @@ const getGradeColor = (score, maxScore) => {
                                     <thead className="bg-gray-50 border-b">
                                         <tr>
                                             <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase cursor-pointer" onClick={() => handleSort('reg_number')}>
-                                                Reg # {sortField === 'reg_number' && (sortOrder === 'asc' ? '↑' : '↓')}
+                                                {t('stu_full.table.reg')} {sortField === 'reg_number' && (sortOrder === 'asc' ? '↑' : '↓')}
                                             </th>
                                             <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase cursor-pointer" onClick={() => handleSort('first_name')}>
-                                                Name {sortField === 'first_name' && (sortOrder === 'asc' ? '↑' : '↓')}
+                                                {t('stu_full.table.name')} {sortField === 'first_name' && (sortOrder === 'asc' ? '↑' : '↓')}
                                             </th>
-                                            <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">Trade</th>
-                                            <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">Level</th>
-                                            <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">Status</th>
-                                            <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">Conduct</th>
-                                            <th className="px-4 py-3 text-right text-xs font-bold text-gray-500 uppercase">Actions</th>
+                                            <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">{t('stu_full.table.trade')}</th>
+                                            <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">{t('stu_full.table.level')}</th>
+                                            <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">{t('stu_full.table.status')}</th>
+                                            <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">{t('stu_full.table.conduct')}</th>
+                                            <th className="px-4 py-3 text-right text-xs font-bold text-gray-500 uppercase">{t('stu_full.table.actions')}</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y">
                                         {loading ? (
                                             <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-500">
-                                                <div className="flex items-center justify-center gap-2"><RefreshCw className="animate-spin" /> Loading...</div>
+                                                <div className="flex items-center justify-center gap-2"><RefreshCw className="animate-spin" /> {t('common.loading')}</div>
                                             </td></tr>
                                         ) : paginatedStudents.length === 0 ? (
-                                            <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-500">No students found</td></tr>
+                                            <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-500">{t('stu_full.empty')}</td></tr>
                                         ) : paginatedStudents.map(s => (
                                             <tr key={s.id} className="hover:bg-gray-50">
 <td className="px-4 py-3 font-mono text-sm">{formatRegNumber(s.reg_number)}</td>

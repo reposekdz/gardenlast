@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import useAuthStore from '../store/authStore';
 import { toast } from 'react-toastify';
@@ -11,6 +12,7 @@ import {
 const API_URL = import.meta.env.VITE_API_URL || '';
 
 const ParentManagement = () => {
+    const { t } = useTranslation();
     const { token, user } = useAuthStore();
     const [parents, setParents] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -103,20 +105,20 @@ const ParentManagement = () => {
                     <div className="flex items-center gap-3">
                         <Users size={32} />
                         <div>
-                            <h1 className="text-2xl font-bold">Kug管理 Ababyeyi</h1>
-                            <p className="text-blue-200">Manage Parents</p>
+                            <h1 className="text-2xl font-bold">{t('parent_mgmt.title')}</h1>
+                            <p className="text-blue-200">{t('parent_mgmt.subtitle')}</p>
                         </div>
                     </div>
                     <div className="mt-4 flex items-center gap-4">
                         <div className="bg-white/10 rounded-xl px-4 py-2">
                             <span className="text-2xl font-bold">{parents.length}</span>
-                            <span className="text-blue-200 ml-2">Total Ababyeyi</span>
+                            <span className="text-blue-200 ml-2">{t('parent_mgmt.total_parents')}</span>
                         </div>
                         <button
                             onClick={fetchParents}
                             className="ml-auto bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl flex items-center gap-2"
                         >
-                            <RefreshCw size={18} /> Reba
+                            <RefreshCw size={18} /> {t('common_extra.refresh')}
                         </button>
                     </div>
                 </div>
@@ -127,7 +129,7 @@ const ParentManagement = () => {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                         <input
                             type="text"
-                            placeholder="Shakisha ababyeyi..."
+                            placeholder={t('pnt_full.search_placeholder')}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -140,22 +142,22 @@ const ParentManagement = () => {
                     {loading ? (
                         <div className="p-8 text-center">
                             <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto"></div>
-                            <p className="text-gray-500 mt-2">Loading...</p>
+                            <p className="text-gray-500 mt-2">{t('common.loading')}</p>
                         </div>
                     ) : filteredParents.length === 0 ? (
                         <div className="p-12 text-center">
                             <Users size={48} className="text-gray-300 mx-auto mb-4" />
-                            <p className="text-gray-500">Ntababyeyi baragaragara</p>
+                            <p className="text-gray-500">{t('parent_mgmt.empty_pending')}</p>
                         </div>
                     ) : (
                         <table className="w-full">
                             <thead className="bg-gray-50">
                                 <tr>
-                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">Umwana</th>
-                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">Telefoni</th>
-                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">Email</th>
-                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">Itariki</th>
-                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">Ibikorwa</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">{t('parent_mgmt.col_name')}</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">{t('common_extra.phone')}</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">{t('common_extra.email')}</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">{t('common_extra.date')}</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">{t('common_extra.actions')}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
@@ -235,7 +237,7 @@ const ParentManagement = () => {
                     <div className="bg-white rounded-2xl w-full max-w-lg">
                         <div className="p-6 border-b border-gray-100 flex items-center justify-between">
                             <h3 className="text-xl font-bold">
-                                Abana ba {selectedParent.first_name} {selectedParent.last_name}
+                                {t('parent_mgmt.children_of', { name: `${selectedParent.first_name} ${selectedParent.last_name}` })}
                             </h3>
                             <button onClick={() => setSelectedParent(null)} className="p-2 hover:bg-gray-100 rounded-lg">
                                 <X size={20} />
@@ -245,7 +247,7 @@ const ParentManagement = () => {
                             {linkedStudents.length === 0 ? (
                                 <div className="text-center py-8">
                                     <Users size={48} className="text-gray-300 mx-auto mb-4" />
-                                    <p className="text-gray-500">Ntabana baragaragara</p>
+                                    <p className="text-gray-500">{t('parent_mgmt.no_children')}</p>
                                 </div>
                             ) : (
                                 <div className="space-y-4">
@@ -275,25 +277,25 @@ const ParentManagement = () => {
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
                     <div className="bg-white rounded-2xl w-full max-w-lg">
                         <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-                            <h3 className="text-xl font-bold">Ohereza ubutumwa</h3>
+                            <h3 className="text-xl font-bold">{t('parent_mgmt.send_message_title')}</h3>
                             <button onClick={() => setShowMessageModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
                                 <X size={20} />
                             </button>
                         </div>
                         <div className="p-6 space-y-4">
                             <div className="bg-gray-50 rounded-xl p-4">
-                                <p className="text-sm text-gray-500">Kuri:</p>
+                                <p className="text-sm text-gray-500">{t('parent_mgmt.to_label')}</p>
                                 <p className="font-bold">{selectedParent.first_name} {selectedParent.last_name}</p>
                                 <p className="text-sm text-gray-500">{selectedParent.phone}</p>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Ubutumwa</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">{t('common_extra.message')}</label>
                                 <textarea
                                     value={messageText}
                                     onChange={(e) => setMessageText(e.target.value)}
                                     rows={4}
                                     className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="Andika ubutumwa wawe..."
+                                    placeholder={t('common_extra.message_placeholder')}
                                 />
                             </div>
                             <button
@@ -305,7 +307,7 @@ const ParentManagement = () => {
                                     <>...</>
                                 ) : (
                                     <>
-                                        <Send size={18} /> Ohereza
+                                        <Send size={18} /> {t('parent_mgmt.send')}
                                     </>
                                 )}
                             </button>

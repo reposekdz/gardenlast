@@ -29,10 +29,20 @@
    - [6.8 Konti y'umubyeyi (Parent)](#68-konti-yumubyeyi-parent)
    - [6.9 Ishuri ry'amategeko y'umuhanda](#69-ishuri-ryamategeko-yumuhanda)
    - [6.10 Kwiga — Inyandiko z'amasomo](#610-kwiga--inyandiko-zamasomo)
-7. [Endpoints zose za API](#7-endpoints-zose-za-api)
-8. [Database — imbonerahamwe nyamukuru](#8-database--imbonerahamwe-nyamukuru)
-9. [Umutekano](#9-umutekano)
-10. [Ibyumba bishyaho](#10-ibyumba-bishyaho-deployment)
+7. [Akamaro ka sisitemu kuri buri rwego rw'abayikoresha](#7-akamaro-ka-sisitemu-kuri-buri-rwego-rwabayikoresha)
+   - [7.1 Ababyeyi](#71-ababyeyi--peace-of-mind-burimunsi)
+   - [7.2 Abanyeshuri](#72-abanyeshuri--ubumenyi-mu-biganza-byabo)
+   - [7.3 Abarimu](#73-abarimu--igihe-cyiza-cyo-kwigisha)
+   - [7.4 Ubuyobozi (admin/director)](#74-ubuyobozi-admindirector--kugenzura-byose-ku-gicaniro-kimwe)
+   - [7.5 Abiga amategeko y'umuhanda](#75-abiga-amategeko-yumuhanda)
+   - [7.6 Leta n'inzego z'uburezi](#76-leta-ninzego-zuburezi)
+   - [7.7 Ayandi mashuri yifuza kubikoresha](#77-ayandi-mashuri-yifuza-kubikoresha)
+8. [Inyungu z'imari](#8-inyungu-zimari)
+9. [Indimi (i18n) — Kinyarwanda, Icyongereza, Igifaransa](#9-indimi-i18n)
+10. [Endpoints zose za API](#10-endpoints-zose-za-api)
+11. [Database — imbonerahamwe nyamukuru](#11-database--imbonerahamwe-nyamukuru)
+12. [Umutekano](#12-umutekano)
+13. [Ibyumba bishyaho (Deployment)](#13-ibyumba-bishyaho-deployment)
 
 ---
 
@@ -362,7 +372,251 @@ URL: **`/kwiga`** (rusange — ntabwo bisaba kwinjira)
 
 ---
 
-## 7. Endpoints zose za API
+## 7. Akamaro ka sisitemu kuri buri rwego rw'abayikoresha
+
+Iyi sisitemu ntabwo ari ibikoresho gusa — ni umuhuza w'umuryango wose w'ishuri.
+Hano dusobanuye uko buri muntu cyangwa urwego rubona inyungu mu kuyikoresha.
+
+---
+
+### 7.1 Ababyeyi — *peace of mind* burimunsi
+
+Mbere yo kugira sisitemu nk'iyi, umubyeyi yari atunzwe no kwizera:
+yatangaga amafaranga kandi ntiyamenya neza icyabaye ku mwana, atari uko
+yumvise inkuru. Ubu rero, **buri mubyeyi afite konti ye bwite** ahuje
+n'umwana cyangwa abana be benshi.
+
+**Akamaro ku mubyeyi:**
+- **Areba amanota igihe icyo aricyo cyose** — atarinze gutegereza
+  raporo y'igihembwe.
+- **Areba uko yitabira** ishuri (attendance) — niba umwana
+  yari muri kilasi cyangwa atari mo, n'icyabitumye.
+- **Areba ideni ry'amafaranga** ahari ku mwana, n'inyemezabwishyu
+  z'amafaranga yatanze. Ntakimuhitamo, ntashidikanya.
+- **Yakira SMS na notification ako kanya** iyo hari icyabaye:
+  - Ihohoterwa ryanditseho.
+  - Ifaranga ryashyikirijwe ryakiriwe.
+  - Inkuru rusange y'ishuri (urugendo, ifunga, …).
+- **Ashobora gusubiza** ku byifuzo by'akazi by'umwana (leave requests),
+  no kohereza **appeal** iyo arwanya icyemezo cyafashwe.
+- **Iyo afite abana benshi**, ahindura umwana umwe ku wundi mu nzira imwe
+  (child selector iri ku rubuga rwe).
+
+**Ubuhamya:** "Mbere nasangaga umwana wanjye ategereje iherezo
+ry'igihembwe ngo amenye uko yagenze. Ubu nibareba ako kanya — bituma
+mfasha ibibazo bigitangira."
+
+---
+
+### 7.2 Abanyeshuri — ubumenyi mu biganza byabo
+
+**Inzira yo kwinjira:** kode (urugero `2026/SOF/001`) + nyuma 4 z'imibare
+ya telefoni — ntakimuhuma. Bidatangiye, ahabwa ijambobanga rye bwite agahindura
+ako kanya (`must_change_password`).
+
+**Ibyo umunyeshuri yumva:**
+- **Ahereye ku mafoni yo mu nshyimbo** — sisitemu yose ikora kuri
+  smartphone (Tailwind responsive design).
+- **Areba amanota** ye yose, GPA n'urutonde rw'isomo rikiri kunyura.
+- **Asoma inyandiko z'amasomo** ku rubuga rwa **/kwiga** — atarinze
+  kwinjira, ariko iyo afite konti ashobora kwandika comments,
+  kuyatanga **like**, no kuyabika muri **bookmarks**.
+- **Atanga ikibazo** (raised hand) ku note umwarimu yashyize, mwarimu
+  akamusubiza nyuma — bose bahabwa notification.
+- **Areba amafaranga** ye, ibyatanzwe, n'ibisigaye — ntashidikanya
+  ku byerekeye amafaranga.
+- **Ahindura ijambobanga** rye bwite kandi nta wundi muntu agira
+  ububasha bwo kuryikuza (njye n'admin tubasha gusa kuryikuvugurura
+  ngo agarure new default).
+
+**Inyungu yihariye:** abana b'i Rwanda batashyizemo umuti benshi bafite
+problem yo kubura amakuru y'amasomo bwa nyuma. Iyi sisitemu rero
+ibafasha **kubaka inshingano kuri bo ubwabo**.
+
+---
+
+### 7.3 Abarimu — igihe cyiza cyo kwigisha
+
+**Sidebar y'umwarimu** ifite ubuyobozi bwose mu nzira imwe:
+- **Inyandiko** (Notes) — kohereza PDF, sisitemu yikuramo cover ya
+  mbere otomatik (PDF.js), gushyira description, no gusiba.
+- **Ibibazo by'Abanyeshuri** — gusubiza ibibazo byatanzwe ku
+  rubuga rwa /kwiga; abasaba bahabwa notification.
+- **Imyitwarire** — kwandika warning, conduct removal, praise — bigira
+  ingaruka ku ipoints z'umunyeshuri kandi bohereza SMS ku mubyeyi.
+- **Reactions & Comments** — areba uko notes ze zigeze gusomwa, ni
+  ngahe babigizemo "like", abakoze "raised hand", n'abandi byinshi.
+- **Read-only abanyeshuri** — kuko mwarimu atagomba kwandika cyangwa
+  guhindura abanyeshuri, sisitemu imukingira kuri urwo rwego.
+
+**Inyungu:** umwarimu agira igihe cyo kwigisha, atarinze gutonda
+inyandiko cyangwa kwandukura amanota — sisitemu ibikora.
+
+---
+
+### 7.4 Ubuyobozi (admin/director) — kugenzura byose ku gicaniro kimwe
+
+**Dashboard ya mbere** itanga incamake muri jisho rimwe: umubare
+w'abanyeshuri, ababyeyi, abasoje, amafaranga yakiriwe muri uku kwezi,
+n'ibyifuzo by'ababyeyi bagombye gusubizwa.
+
+**Ibyo admin akora ku rwego rwo hejuru:**
+- **Kugena umwaka w'amasomo ukoreshwa** — `current academic year`
+  ihindura uburyo statistike zibarwa.
+- **Kuzamuwa ku rwego rwo hejuru** (promotion) — abana ba L3 bajya kuri
+  L4, abandi barangiza bajya ku basoje (`graduated`).
+- **CMS** — guhindura amakuru y'urubuga rusange (banner, news,
+  trades, services) — atarinze developer.
+- **Staff Manager** — kongera abakozi, kubaha urwego, gusiba.
+- **Link Manager** — kwemera/guhakana ibyifuzo by'ababyeyi byo guhuzwa
+  n'abana, no guhuza wenyine ku buryo bwa manual.
+
+**Inyungu nyamukuru:** ubuyobozi bw'ishuri butinda mu nzira nke kandi
+buryoroshye gufata icyemezo gishingiye ku makuru y'ukuri.
+
+---
+
+### 7.5 Abiga amategeko y'umuhanda
+
+**Driving School** ifite uburyo bwose bw'ishuri risanzwe ariko ku byerekeye
+amategeko y'umuhanda gusa:
+- **Categories A, B, C, D** — buri rwego rufite amategeko yarwo
+  (`driving_categories` na `driving_rules`).
+- **Quiz online** — abakoresha bakora ibizamini bya multiple choice
+  buri munsi; sisitemu ibika amanota n'igihe.
+- **Iyandikisha** — gushyiraho amafoto, kwishyura, no kubona umunsi
+  w'ikizamini.
+- **Driving Instructor Dashboard** — umwigisha agenzura abanyeshuri be,
+  agatanga amanota y'ibizamini bya practical.
+
+**Inyungu:** abenshi mu Rwanda batsindwa ibizamini by'amategeko si uko
+batayazi — ni uko bataba bagize aho bakora ibizamini buri munsi. Iyi
+sisitemu ihindura iyo mvugo.
+
+---
+
+### 7.6 Leta n'inzego z'uburezi
+
+Sisitemu yubatswe mu buryo iri **transparent** kandi yoroshye **kugenzurwa**:
+- **Audit trail** — buri myanya yose y'ingenzi (kwakira amafaranga,
+  kuzamuwa ku rwego, gusiba umunyeshuri) ifite umukoresha n'igihe
+  byanditseho.
+- **Reports** — sisitemu ishobora gusohora raporo zigaragaza:
+  - Abanyeshuri biga muri buri trade, buri level.
+  - Conduct rate ku rwego rw'ishuri.
+  - Amafaranga yakiriwe (collection rate) ku gihembwe.
+  - Abasoje (employment outcomes nyuma yo guhuzwa n'employers).
+- **Indimi eshatu** (Kinyarwanda, Icyongereza, Igifaransa) — bituma
+  inzego za leta zubatse muri leta zigana raporo zikorera.
+- **Export PDF/Excel** — birinda inkubiri y'amafayilo Word zandikishijwe
+  intoki.
+
+**Inyungu kuri leta:** Ministeri y'uburezi (MINEDUC) na **REB**
+bashobora kubona amakuru y'ukuri y'ishuri, bigatuma:
+- Politiki y'uburezi ishingira ku makuru.
+- Ubufasha buhagaragara (subsidies, scholarships) butangwa ku banyeshuri
+  bigana neza.
+- TVET ihinduka inkingi y'iterambere — nta uko byari ku gihe cy'amafayilo
+  ya Excel zatakaye buri mwaka.
+
+---
+
+### 7.7 Ayandi mashuri yifuza kubikoresha
+
+Code y'iyi sisitemu ifite **MIT-style license**, kandi yubatswe mu buryo
+butuma yoroshye gukoreshwa n'andi mashuri ya TVET — cyangwa n'ishuri
+risanzwe — atari Garden gusa.
+
+**Ibyo amashuri agomba guhindura gusa:**
+1. **CMS settings** — izina, logo, ibara, telefoni, ikarita y'aho biri.
+2. **Trades** — bashyiraho imyuga yabo (`trades` table), iyo Garden
+   ifite **AUTO/BDC/SOD**, ndetse n'ayandi ashobora kuba **Tailoring,
+   Hospitality, Beauty**, n'ibindi.
+3. **Driving School module** — ushobora kuyikuraho mu **routes** zibikora
+   niba ishuri ryacu ridakora amategeko y'umuhanda.
+4. **Translations** — sisitemu yumva indimi eshatu; ushobora kongeraho
+   urundi rurimi (Swahili, Kirundi, …) ushyira `frontend/src/locales/sw.json`
+   ukongera muri `frontend/src/i18n.js`.
+5. **DB credentials** — guhindura `.env` gusa, schema yose iri muri
+   `backend/garden_tvet.sql` — `mysql -u root -p ishuri_ryanjye < garden_tvet.sql`
+   ihindura buri kintu.
+
+**Inyungu:** Garden TVET ifite intego yo gufasha amashuri yose ya
+TVET mu Rwanda no muri Afurika kuvana mu nyandiko zo mu makayi
+zikajya kuri **digital systems** zumvikana — kandi mu buryo budasaba
+ibihumbi bya dollar.
+
+---
+
+## 8. Inyungu z'imari
+
+Iyi sisitemu yashyizweho ifite intego yo **kongera ibyinjira** no
+**kugabanya ibyo bitakara** ku ishuri.
+
+**Aho amafaranga ariho ari atakara mbere ya sisitemu:**
+| Ikibazo | Igihombo |
+|---|---|
+| Amafaranga atari yatanzwe ariko atanditse mu makayi neza | Amafaranga abura |
+| Inyemezabwishyu zibamo amakosa | Kongera amafaranga |
+| Ababyeyi batamenya ko hari ifaranga ribura | Late payments |
+| Stock — ibikoresho byibwa cyangwa bigura kabiri | Ibihumbi bya RWF buri kwezi |
+| Conduct — abana bahohoterwa ariko ababyeyi batabimenya | Abana bava ku ishuri |
+
+**Aho sisitemu ikora amafaranga:**
+- **Collection rate yiyongereye** — ababyeyi babona ideni ako kanya,
+  bigatuma bishyura vuba (data: amashuri akoresha sisitemu zisa zibona
+  collection rate yiyongera 25-40%).
+- **Inyemezabwishyu zikomeye** — auto-numbering ikuraho impamvu zo
+  kwiba.
+- **Stock tracking** — ibikoresho ntibitakara, kandi buying ifatwa
+  ku gihe cyiza (low-stock alerts).
+- **Conduct visibility** — abana b'imyitwarire mibi bahindurwa
+  hakiri kare, bigatuma ishuri ridatakaza abana benshi (retention
+  rate yiyongera).
+- **Digital marketing** — urubuga rusange (CMS) rufasha kwiyamamaza
+  kandi ababyeyi bashya bashobora kwiyandikisha **online**, ntibikenewe
+  inzira ndende.
+
+**Igiteranyo:** ku ishuri rifite **abanyeshuri 500**, sisitemu
+ishobora kongera ibyinjira bya **5–8 miliyoni RWF ku mwaka**, kandi
+ikabuza ko ibihumbi bya dollar bitakara mu bicuruzwa byangiritse cyangwa
+mu nyandiko zibura.
+
+---
+
+## 9. Indimi (i18n)
+
+Sisitemu yose yumva indimi eshatu nyazo (real translations, ntabwo ari
+machine translation):
+
+| Code | Ururimi | Aho yifashishwa |
+|---|---|---|
+| **rw** | **Kinyarwanda** | Default ku **rubuga rusange** na **portal y'umubyeyi**. Iyo umuntu adafite ururimi rwihariye, sisitemu imuhitiramo Kinyarwanda. |
+| **en** | English | Default ku **konti z'abakozi** (admin, dod, accountant, stock manager, teacher, librarian, registrar) — kuko byinshi mu bya tekiniki bisanzwe biri muri English. |
+| **fr** | Français | Ihitamo ku banyeshuri n'abayobozi bavuga igifaransa — Rwanda ifite abakoresha benshi b'igifaransa. |
+
+**Aho ushobora guhindura ururimi:**
+- Buri konti ifite **language switcher** (rw / en / fr) hejuru y'ipaji.
+- Ihitamo rye ribikwa muri `localStorage` rikongera kugaragara
+  igihe agarutse.
+- Browser detection — niba browser ya mukoresha iri muri `fr-FR`,
+  sisitemu ibihindura otomatik mbere yo kwinjira.
+
+**Aho indimi zibikwa muri code:**
+- `frontend/src/locales/rw.json` — Kinyarwanda
+- `frontend/src/locales/en.json` — English
+- `frontend/src/locales/fr.json` — Français
+- `frontend/src/i18n.js` — initialization na detection logic.
+
+**Ushaka kongeraho urundi rurimi (urugero Swahili)?**
+1. Andika `frontend/src/locales/sw.json` (kopi ya rw.json wuzuze).
+2. Hindura `i18n.js` ushyire `sw` mu `resources` na `supportedLngs`.
+3. Hindura `Layout` ushyire button ya `Sw` mu language switcher.
+4. Ntakindi gisabwa.
+
+---
+
+## 10. Endpoints zose za API
 
 ### Authentication
 - `POST /api/auth/login` — login y'abakozi (admin/dod/accountant/…).
@@ -418,7 +672,7 @@ URL: **`/kwiga`** (rusange — ntabwo bisaba kwinjira)
 
 ---
 
-## 8. Database — imbonerahamwe nyamukuru
+## 11. Database — imbonerahamwe nyamukuru
 
 | Imbonerahamwe | Akamaro |
 |---|---|
@@ -438,7 +692,7 @@ URL: **`/kwiga`** (rusange — ntabwo bisaba kwinjira)
 
 ---
 
-## 9. Umutekano
+## 12. Umutekano
 
 - **JWT** ikoreshwa kuri authentication; secret iri muri `JWT_SECRET`.
 - **bcrypt** ihisha amabanga (10 rounds) — hano harimo n'ay'abanyeshuri.
@@ -452,7 +706,7 @@ URL: **`/kwiga`** (rusange — ntabwo bisaba kwinjira)
 
 ---
 
-## 10. Ibyumba bishyaho (Deployment)
+## 13. Ibyumba bishyaho (Deployment)
 
 Sisitemu yashyizweho mu buryo bukurikira:
 

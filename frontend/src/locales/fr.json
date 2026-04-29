@@ -89,7 +89,10 @@
     "continue": "Continuer",
     "finish": "Terminer",
     "processing": "Traitement en cours...",
-    "please_wait": "Veuillez patienter..."
+    "please_wait": "Veuillez patienter...",
+    "approved": "Approuvé",
+    "rejected": "Rejeté",
+    "pending": "En attente"
   },
   "login": {
     "title": "Connexion à Garden TVET School",
@@ -1640,6 +1643,1915 @@
         "title_required": "Le titre est requis",
         "image_required": "L'image est requise"
       }
+    }
+  },
+  "common_extra": {
+    "refresh": "Actualiser",
+    "refreshing": "Actualisation...",
+    "export": "Exporter",
+    "exporting": "Exportation...",
+    "print": "Imprimer",
+    "view_all": "Voir tout",
+    "view_more": "Voir plus",
+    "load_more": "Charger plus",
+    "loading_data": "Chargement des données...",
+    "no_data_yet": "Aucune donnée",
+    "not_available": "N/A",
+    "total_count": "Total",
+    "this_month_short": "Ce mois",
+    "action": "Action",
+    "actions": "Actions",
+    "operations": "Opérations",
+    "reason": "Raison",
+    "notes": "Notes",
+    "message": "Message",
+    "message_placeholder": "Tapez votre message...",
+    "send_sms": "Envoyer SMS",
+    "sms_sent": "SMS envoyé avec succès",
+    "sms_failed": "Échec de l'envoi du SMS",
+    "generic_error": "Une erreur s'est produite. Veuillez réessayer.",
+    "saved": "Enregistré avec succès",
+    "deleted": "Supprimé avec succès",
+    "updated": "Mis à jour avec succès",
+    "created": "Créé avec succès",
+    "confirm_delete": "Êtes-vous sûr de vouloir supprimer ?",
+    "confirm_action": "Êtes-vous sûr ?",
+    "no_permission": "Vous n'avez pas l'autorisation",
+    "copy": "Copier",
+    "copied": "Copié !",
+    "operational": "Opérationnel",
+    "system_status": "État du système",
+    "system_version": "Système de gestion Garden TVET v2.0",
+    "male": "Homme",
+    "female": "Femme",
+    "both": "Les deux",
+    "gender": "Genre",
+    "first_name": "Prénom",
+    "last_name": "Nom",
+    "full_name": "Nom complet",
+    "phone": "Téléphone",
+    "email": "E-mail",
+    "address": "Adresse",
+    "province": "Province",
+    "district": "District",
+    "sector": "Secteur",
+    "cell": "Cellule",
+    "village": "Village",
+    "date_of_birth": "Date de naissance",
+    "national_id": "Carte d'identité",
+    "relationship": "Relation",
+    "records": "Enregistrements",
+    "record": "Enregistrement",
+    "students": "Étudiants",
+    "parents": "Parents",
+    "teachers": "Enseignants",
+    "payments": "Paiements",
+    "fees": "Frais",
+    "currency_rwf": "RWF",
+    "total_label": "Total :",
+    "balance": "Solde",
+    "paid": "Payé",
+    "unpaid": "Impayé",
+    "partially_paid": "Partiellement payé",
+    "pending": "En attente",
+    "approved": "Approuvé",
+    "rejected": "Rejeté",
+    "cancelled": "Annulé",
+    "done": "Terminé",
+    "add": "Ajouter",
+    "add_new": "Nouveau",
+    "edit": "Modifier",
+    "remove": "Retirer",
+    "back": "Retour",
+    "view": "Voir",
+    "details": "Détails",
+    "filters": "Filtres",
+    "reset_filters": "Réinitialiser",
+    "apply_filters": "Appliquer",
+    "search_placeholder": "Rechercher...",
+    "no_results": "Aucun résultat",
+    "page": "Page",
+    "of_total": "sur",
+    "items_per_page": "Éléments par page",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "yes": "Oui",
+    "no": "Non",
+    "open": "Ouvrir",
+    "close": "Fermer",
+    "type": "Type",
+    "category": "Catégorie",
+    "status": "Statut",
+    "date": "Date",
+    "time": "Heure",
+    "from_date": "Du",
+    "to_date": "Au",
+    "created_at": "Créé le",
+    "updated_at": "Modifié le",
+    "available": "Disponible",
+    "unknown_error": "Erreur inconnue",
+    "access_denied": "Accès refusé",
+    "clear": "Effacer"
+  },
+  "dash_main": {
+    "welcome_user": "Bienvenue, {{name}} ! 👋",
+    "tagline": "Système de gestion Garden TVET — suivez les étudiants, gérez les finances et les opérations scolaires en un seul endroit.",
+    "refresh_tooltip": "Actualiser le tableau de bord",
+    "refresh_success": "Tableau de bord actualisé !",
+    "pending_link_requests": "{{count}} nouvelles demandes de parents",
+    "role_titles": {
+      "admin": "Administrateur principal",
+      "dod": "Directeur de discipline",
+      "accountant": "Comptable",
+      "stock_manager": "Gestionnaire de stock",
+      "parent": "Parent"
+    },
+    "cards": {
+      "total_students": "Total des étudiants",
+      "active_cases": "Cas actifs",
+      "total_collected": "Total collecté",
+      "low_stock": "Stock faible",
+      "parents": "Parents",
+      "pending_links": "Liens en attente",
+      "applications": "Candidatures",
+      "on_leave": "En congé",
+      "sms_balance": "Solde SMS"
+    },
+    "sub_values": {
+      "plus_this_month": "+{{count}} ce mois",
+      "resolved_this_month": "{{count}} résolus ce mois",
+      "items_need_attention": "Éléments à surveiller",
+      "registered": "Inscrits",
+      "requests_waiting": "Demandes en attente",
+      "pending_review": "En attente de révision",
+      "students": "Étudiants",
+      "airtime": "Crédit",
+      "collection_rate_label": "Taux de recouvrement {{rate}}%"
+    },
+    "sections": {
+      "revenue_trend": "Tendance des revenus",
+      "last_6_months": "6 derniers mois",
+      "gender_distribution": "Répartition par genre",
+      "collection_rate": "Taux de recouvrement",
+      "todays_activity": "Activité du jour",
+      "top_trades": "Métiers populaires",
+      "quick_actions": "Actions rapides",
+      "recent_payments": "Paiements récents",
+      "no_recent_payments": "Aucun paiement récent",
+      "payments_label": "Paiements",
+      "transactions_label": "Transactions",
+      "male": "Hommes",
+      "female": "Femmes",
+      "collection_rate_caption": "Taux de recouvrement"
+    },
+    "quick": {
+      "add_student": "Ajouter un étudiant",
+      "review_parent_requests": "Examiner les demandes",
+      "add_staff": "Ajouter un membre du personnel",
+      "post_news": "Publier une actualité",
+      "manage_students": "Gérer les étudiants",
+      "manage_discipline": "Gérer la discipline",
+      "review_applications": "Examiner les candidatures",
+      "parent_links": "Liens parents",
+      "manage_finances": "Gérer les finances",
+      "view_students": "Voir les étudiants",
+      "applications": "Candidatures",
+      "stock": "Stock",
+      "parents": "Parents",
+      "manage_inventory": "Gérer l'inventaire",
+      "view_my_children": "Voir mes enfants"
+    }
+  },
+  "stu_full": {
+    "title": "Étudiants",
+    "subtitle": "Gérer tous les dossiers étudiants",
+    "add_student_btn": "Ajouter un étudiant",
+    "tabs": {
+      "students": "Étudiants",
+      "attendance": "Présence",
+      "grades": "Notes",
+      "payments": "Paiements",
+      "messages": "Messages"
+    },
+    "stats": {
+      "total": "Total",
+      "active": "Actifs",
+      "suspended": "Suspendus",
+      "left": "Partis",
+      "expelled": "Renvoyés"
+    },
+    "search_placeholder": "Rechercher par nom, n° d'inscription ou téléphone...",
+    "filters": {
+      "all_statuses": "Tous les statuts",
+      "all_trades": "Tous les métiers",
+      "all_levels": "Tous les niveaux",
+      "active": "Actif",
+      "suspended": "Suspendu",
+      "left": "Parti",
+      "expelled": "Renvoyé",
+      "sick": "Malade"
+    },
+    "table": {
+      "reg": "N° Inscription",
+      "name": "Nom",
+      "gender": "Genre",
+      "trade": "Métier",
+      "level": "Niveau",
+      "phone": "Téléphone",
+      "guardian": "Tuteur",
+      "status": "Statut",
+      "actions": "Actions",
+      "conduct": "Conduite"
+    },
+    "modal": {
+      "add_title": "Ajouter un nouvel étudiant",
+      "edit_title": "Modifier l'étudiant",
+      "details_title": "Détails de l'étudiant",
+      "change_status_title": "Changer le statut",
+      "record_conduct": "Enregistrer un incident",
+      "request_leave": "Demander un congé",
+      "link_parent": "Lier un parent",
+      "reinstate": "Réintégrer",
+      "add_grade": "Ajouter une note",
+      "record_payment": "Enregistrer un paiement",
+      "send_message": "Envoyer un message"
+    },
+    "form": {
+      "reg_number": "N° d'inscription (optionnel)",
+      "first_name": "Prénom",
+      "last_name": "Nom",
+      "gender": "Genre",
+      "male": "Homme",
+      "female": "Femme",
+      "dob": "Date de naissance",
+      "trade": "Métier",
+      "level": "Niveau",
+      "select_trade": "-- Choisir un métier --",
+      "select_level": "-- Choisir un niveau --",
+      "phone": "Téléphone",
+      "email": "E-mail",
+      "province": "Province",
+      "district": "District",
+      "sector": "Secteur",
+      "guardian_name": "Nom du tuteur",
+      "guardian_phone": "Téléphone du tuteur",
+      "guardian_relation": "Relation",
+      "student_type": "Type d'étudiant",
+      "student_type_private": "Privé",
+      "student_type_public": "Public",
+      "academic_year": "Année académique",
+      "status": "Statut",
+      "enrollment_date": "Date d'inscription",
+      "save": "Enregistrer",
+      "update": "Mettre à jour"
+    },
+    "attendance": {
+      "title": "Présence quotidienne",
+      "subtitle": "Marquer la présence et notifier les parents par SMS",
+      "date": "Date",
+      "trade": "Métier",
+      "level": "Niveau",
+      "choose_trade": "-- Choisir un métier --",
+      "choose_level": "-- Choisir un niveau --",
+      "load_class": "Charger la classe",
+      "save_attendance": "Enregistrer la présence",
+      "no_class_loaded": "Choisissez un métier et niveau",
+      "present": "Présent",
+      "absent": "Absent",
+      "late": "En retard",
+      "excused": "Excusé",
+      "notes": "Notes",
+      "student": "Étudiant",
+      "recorded_success": "Présence enregistrée et SMS envoyés !",
+      "recorded_failed": "Échec de l'enregistrement"
+    },
+    "toasts": {
+      "no_perm": "Vous n'avez pas l'autorisation d'accéder à cette page",
+      "added": "Étudiant ajouté — N° {{reg}}",
+      "updated": "Étudiant mis à jour",
+      "deleted": "Étudiant supprimé",
+      "status_changed": "Statut mis à jour",
+      "load_failed": "Échec du chargement",
+      "load_no_perm": "Vous n'avez pas l'autorisation"
+    },
+    "details": {
+      "personal_info": "Informations personnelles",
+      "academic_info": "Informations académiques",
+      "contact_info": "Coordonnées",
+      "guardian_info": "Informations du tuteur",
+      "grades": "Notes",
+      "payments": "Paiements",
+      "discipline": "Discipline",
+      "linked_parents": "Parents liés",
+      "no_grades": "Aucune note",
+      "no_payments": "Aucun paiement",
+      "no_discipline": "Aucun incident",
+      "no_linked_parents": "Aucun parent lié"
+    },
+    "actions": {
+      "view": "Voir",
+      "edit": "Modifier",
+      "change_status": "Changer le statut",
+      "record_conduct": "Incident",
+      "request_leave": "Congé",
+      "link_parent": "Lier parent",
+      "send_message": "Message",
+      "delete": "Supprimer"
+    },
+    "empty": "Aucun étudiant trouvé"
+  },
+  "disc_full": {
+    "title_dod": "Directeur de discipline",
+    "title_general": "Gestion de la discipline",
+    "subtitle_dod": "Gérer la discipline, les congés et la communication",
+    "subtitle_general": "Suivre le comportement des étudiants",
+    "add_record": "Ajouter un dossier",
+    "refresh": "Actualiser",
+    "tabs": {
+      "records": "Dossiers",
+      "leaves": "Congés",
+      "appeals": "Appels",
+      "conduct": "Feuille de conduite",
+      "sms": "Centre SMS"
+    },
+    "stats": {
+      "total_records": "Total dossiers",
+      "pending_leaves": "Congés en attente",
+      "pending_appeals": "Appels en attente",
+      "active_today": "Actifs aujourd'hui",
+      "warnings": "Avertissements",
+      "last_30": "30 derniers jours"
+    },
+    "search_placeholder": "Rechercher par nom ou n° d'étudiant...",
+    "filters": {
+      "all_types": "Tous types",
+      "all_statuses": "Tous statuts"
+    },
+    "table": {
+      "student": "Étudiant",
+      "action_type": "Action",
+      "description": "Description",
+      "points": "Points",
+      "date": "Date",
+      "recorded_by": "Enregistré par",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "modals": {
+      "add_record": "Nouveau dossier",
+      "request_leave": "Demande de congé",
+      "review_appeal": "Examiner l'appel",
+      "send_sms": "Envoyer SMS"
+    },
+    "form": {
+      "choose_class": "Choisir d'abord la classe",
+      "select_trade": "-- Choisir un métier --",
+      "select_level": "-- Choisir un niveau --",
+      "student": "Étudiant",
+      "select_student": "-- Choisir --",
+      "select_all_in_class": "Sélectionner toute la classe",
+      "action_type": "Type d'action",
+      "select_action": "-- Choisir --",
+      "description": "Description",
+      "description_placeholder": "Décrire l'incident...",
+      "points_deducted": "Points à déduire",
+      "incident_date": "Date de l'incident",
+      "evidence": "Preuves (optionnel)",
+      "upload_evidence": "Télécharger des preuves",
+      "submit": "Soumettre",
+      "leave_type": "Type de congé",
+      "select_leave_type": "-- Choisir --",
+      "start_date": "Date de début",
+      "end_date": "Date de fin",
+      "reason": "Raison",
+      "start_time": "Heure de début",
+      "end_time": "Heure de fin",
+      "lesson": "Leçon"
+    },
+    "action_types": {
+      "warning": "Avertissement",
+      "suspended": "Suspendu",
+      "expelled": "Renvoyé",
+      "detention": "Retenue",
+      "community_service": "Travail communautaire",
+      "counseling": "Conseil",
+      "parent_meeting": "Réunion parents",
+      "suspension": "Suspension",
+      "behavioral_contract": "Contrat de conduite"
+    },
+    "leave_types": {
+      "sick": "Maladie",
+      "personal": "Personnel",
+      "emergency": "Urgence",
+      "bereavement": "Deuil",
+      "academic": "Académique",
+      "other": "Autre"
+    },
+    "conduct": {
+      "title": "Feuille de conduite",
+      "student": "Étudiant",
+      "trade": "Métier",
+      "level": "Niveau",
+      "total_points": "Total points",
+      "active_records": "Dossiers actifs",
+      "last_incident": "Dernier incident",
+      "clear_all": "Tout effacer",
+      "clear_active": "Effacer actifs",
+      "empty": "Aucun dossier"
+    },
+    "sms": {
+      "single": "Destinataire unique",
+      "broadcast": "Diffusion",
+      "choose_parent": "Choisir un parent",
+      "search_parent": "Rechercher un parent",
+      "recipient_type": "Type de destinataire",
+      "message": "Message",
+      "message_placeholder": "Tapez votre message...",
+      "send": "Envoyer",
+      "sending": "Envoi...",
+      "sent_count": "SMS envoyé à {{count}} destinataires",
+      "empty": "Aucun parent trouvé"
+    },
+    "appeals": {
+      "title": "Appels",
+      "student": "Étudiant",
+      "appealed_record": "Dossier original",
+      "reason": "Raison",
+      "decision_notes": "Notes de décision",
+      "accept": "Accepter",
+      "reject": "Rejeter",
+      "empty": "Aucun appel"
+    },
+    "leaves": {
+      "title": "Congés",
+      "student": "Étudiant",
+      "type": "Type",
+      "period": "Période",
+      "reason": "Raison",
+      "approve": "Approuver",
+      "reject": "Rejeter",
+      "mark_returned": "Marquer retour",
+      "return_note_prompt": "Note sur le retour (optionnel) :",
+      "marked_returned": "Marqué comme retourné, parents notifiés",
+      "empty": "Aucun congé"
+    },
+    "toasts": {
+      "select_student": "Veuillez sélectionner un étudiant",
+      "record_saved": "Dossier enregistré pour {{count}} étudiant(s)",
+      "record_deleted": "Dossier supprimé",
+      "record_delete_confirm": "Supprimer ce dossier ?",
+      "leave_submitted": "Demande soumise",
+      "leave_approved": "Congé approuvé",
+      "leave_rejected": "Congé rejeté",
+      "appeal_accepted": "Appel accepté",
+      "appeal_rejected": "Appel rejeté",
+      "sms_sent": "SMS envoyé !",
+      "sms_failed": "Échec SMS",
+      "clear_confirm": "Effacer les dossiers de cet étudiant ?",
+      "cleared": "Dossiers effacés",
+      "generic_error": "Une erreur s'est produite",
+      "conduct_cleared": "Dossiers de conduite effacés"
+    },
+    "confirm_delete_record": "Êtes-vous sûr de vouloir supprimer ce dossier disciplinaire ?",
+    "confirm_clear_all_conduct": "Êtes-vous sûr de vouloir effacer TOUS les dossiers de conduite de cet élève ?",
+    "confirm_clear_active_conduct": "Êtes-vous sûr de vouloir effacer les dossiers de conduite actifs de cet élève ?",
+    "contact_parents": "Contacter les parents",
+    "manage_students": "Gérer les étudiants"
+  },
+  "fin_full": {
+    "title": "Finance",
+    "subtitle": "Suivre les paiements, frais et rapports financiers",
+    "add_payment": "Enregistrer paiement",
+    "add_fee": "Ajouter frais",
+    "bulk_fees": "Frais en lot",
+    "view_debtors": "Voir débiteurs",
+    "check_sms_balance": "Solde SMS",
+    "refresh": "Actualiser",
+    "export": "Exporter",
+    "tabs": {
+      "payments": "Paiements",
+      "fees": "Frais",
+      "receipts": "Reçus",
+      "reports": "Rapports"
+    },
+    "stats": {
+      "total_collected": "Total collecté",
+      "outstanding": "En attente",
+      "this_month": "Ce mois",
+      "receipts": "Reçus",
+      "debtors": "Débiteurs",
+      "collection_rate": "Taux de recouvrement"
+    },
+    "search_placeholder": "Rechercher par nom, n° ou reçu...",
+    "filters": {
+      "all_methods": "Toutes méthodes",
+      "cash": "Espèces",
+      "bank": "Banque",
+      "mobile_money": "Mobile Money",
+      "all_terms": "Tous trimestres"
+    },
+    "table": {
+      "receipt": "Reçu",
+      "student": "Étudiant",
+      "term": "Trimestre",
+      "amount": "Montant",
+      "method": "Méthode",
+      "date": "Date",
+      "recorded_by": "Caissier",
+      "status": "Statut",
+      "actions": "Actions",
+      "balance": "Solde",
+      "fee": "Frais",
+      "category": "Catégorie"
+    },
+    "methods": {
+      "cash": "Espèces",
+      "bank": "Virement bancaire",
+      "momo": "Mobile Money",
+      "cheque": "Chèque"
+    },
+    "form": {
+      "student": "Étudiant",
+      "select_student": "-- Choisir un étudiant --",
+      "trade": "Métier",
+      "level": "Niveau",
+      "all": "Tous",
+      "fee": "Frais",
+      "select_fee": "-- Choisir --",
+      "amount_paid": "Montant payé",
+      "payment_method": "Méthode de paiement",
+      "notes": "Notes",
+      "send_sms": "Envoyer reçu SMS aux parents",
+      "save": "Enregistrer",
+      "term": "Trimestre",
+      "description": "Description",
+      "due_date": "Date d'échéance",
+      "student_category": "Catégorie d'étudiant",
+      "public": "Public",
+      "private": "Privé",
+      "both": "Les deux",
+      "amount": "Montant (RWF)",
+      "bulk_intro": "Appliquer des frais à plusieurs métiers à la fois",
+      "select_trades": "Choisir métiers",
+      "select_levels": "Choisir niveaux",
+      "public_amount": "Montant public",
+      "private_amount": "Montant privé",
+      "both_amount": "Montant combiné",
+      "save_bulk": "Créer frais en lot"
+    },
+    "debtors": {
+      "title": "Débiteurs",
+      "min_balance": "Solde min (RWF)",
+      "max_balance": "Solde max (RWF)",
+      "trade": "Métier",
+      "level": "Niveau",
+      "gender": "Genre",
+      "apply": "Appliquer",
+      "student": "Étudiant",
+      "balance_due": "Solde dû",
+      "send_reminder": "Envoyer rappel",
+      "send_to_selected": "Envoyer aux sélectionnés",
+      "select_all": "Tout sélectionner",
+      "empty": "Aucun débiteur"
+    },
+    "receipt": {
+      "view_receipt": "Voir reçu",
+      "download": "Télécharger",
+      "print": "Imprimer",
+      "receipt_number": "N° Reçu",
+      "issued_to": "Émis à",
+      "amount": "Montant",
+      "method": "Méthode",
+      "cashier": "Caissier",
+      "date": "Date",
+      "signature": "Signature",
+      "thank_you": "Merci pour votre paiement"
+    },
+    "sms_balance": {
+      "title": "Solde SMS",
+      "balance": "Solde",
+      "refresh": "Actualiser"
+    },
+    "toasts": {
+      "payment_recorded": "Paiement enregistré !",
+      "payment_failed": "Échec de l'enregistrement",
+      "fee_added": "Frais ajoutés",
+      "fee_updated": "Frais mis à jour",
+      "fee_deleted": "Frais supprimés",
+      "bulk_created": "Frais créés en lot",
+      "reminder_sent": "Rappel envoyé",
+      "reminders_sent": "{{count}} rappels envoyés",
+      "debtors_failed": "Échec du chargement",
+      "sms_balance_failed": "Échec du chargement du solde",
+      "data_refreshed": "Données actualisées !"
+    }
+  },
+  "stk_full": {
+    "title": "Stock & Inventaire",
+    "subtitle": "Suivre l'équipement et fournitures de l'école",
+    "add_item": "Ajouter un article",
+    "tabs": {
+      "items": "Articles",
+      "movements": "Mouvements",
+      "reports": "Rapports",
+      "transactions": "Transactions"
+    },
+    "stats": {
+      "total_items": "Total articles",
+      "total_value": "Valeur totale",
+      "low_stock": "Stock faible",
+      "out_of_stock": "Rupture"
+    },
+    "search_placeholder": "Rechercher des articles...",
+    "filters": {
+      "all_categories": "Toutes catégories",
+      "in_stock": "En stock",
+      "low_stock": "Faible",
+      "out_of_stock": "Rupture"
+    },
+    "table": {
+      "item": "Article",
+      "code": "Code",
+      "category": "Catégorie",
+      "quantity": "Quantité",
+      "unit": "Unité",
+      "unit_price": "Prix unitaire",
+      "total_value": "Valeur totale",
+      "location": "Emplacement",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "form": {
+      "name": "Nom de l'article",
+      "code": "Code",
+      "category": "Catégorie",
+      "quantity": "Quantité",
+      "unit": "Unité",
+      "unit_price": "Prix unitaire (RWF)",
+      "min_quantity": "Quantité minimale",
+      "location": "Emplacement",
+      "supplier": "Fournisseur",
+      "description": "Description",
+      "save": "Enregistrer",
+      "update": "Mettre à jour",
+      "add_title": "Ajouter un nouvel article",
+      "item_name": "Nom de l'article",
+      "item_name_ph": "ex: Moniteur Dell",
+      "min_qty": "Quantité min (Alerte)",
+      "location_ph": "ex: Salle 101",
+      "price": "Prix d'achat",
+      "purchase_date": "Date d'achat",
+      "image": "Image de l'article (facultatif)"
+    },
+    "movement": {
+      "title": "Enregistrer mouvement",
+      "type": "Type",
+      "in": "Entrée",
+      "out": "Sortie",
+      "adjustment": "Ajustement",
+      "quantity": "Quantité",
+      "reference": "Référence",
+      "notes": "Notes",
+      "save": "Enregistrer"
+    },
+    "categories": {
+      "equipment": "Équipement",
+      "consumables": "Consommables",
+      "tools": "Outils",
+      "materials": "Matériaux",
+      "office": "Bureau",
+      "other": "Autre"
+    },
+    "toasts": {
+      "added": "Article ajouté",
+      "updated": "Article mis à jour",
+      "deleted": "Article supprimé",
+      "movement_saved": "Mouvement enregistré",
+      "load_failed": "Échec du chargement"
+    },
+    "transaction": "Transaction",
+    "image_too_large": "L'image doit être inférieure à 5 Mo",
+    "image_uploaded": "Image téléchargée",
+    "image_upload_failed": "Échec du téléchargement de l'image",
+    "load_failed": "Échec du chargement de l'inventaire",
+    "refreshed": "Inventaire actualisé !",
+    "item_added": "Article ajouté avec succès",
+    "add_failed": "Échec de l'ajout",
+    "transaction_recorded": "Transaction enregistrée",
+    "transaction_failed": "Échec de l'enregistrement",
+    "update_failed": "Échec de la mise à jour du stock",
+    "confirm_delete": "Êtes-vous sûr de vouloir supprimer cet article ?",
+    "item_deleted": "Article supprimé",
+    "delete_failed": "Échec de la suppression",
+    "save_item": "Enregistrer",
+    "uploading": "Téléchargement...",
+    "search_ph": "Rechercher des articles...",
+    "all_categories": "Toutes les catégories",
+    "low_stock_only": "Stock faible uniquement",
+    "qty_short": "Qté",
+    "no_transactions": "Aucune transaction trouvée",
+    "empty": "L'inventaire est vide",
+    "empty_desc": "Commencez par ajouter votre premier article",
+    "summary": {
+      "total_items": "Total Articles",
+      "total_qty": "Quantité Totale",
+      "low_stock": "Stock Faible",
+      "depleted": "Épuisé"
+    },
+    "cats": {
+      "equipment": "Équipement",
+      "supplies": "Fournitures",
+      "furniture": "Mobilier",
+      "electronics": "Électronique",
+      "tools": "Outils",
+      "stationery": "Papeterie",
+      "other": "Autre",
+      "food": "Alimentation"
+    },
+    "units": {
+      "pieces": "Pièces",
+      "boxes": "Boîtes",
+      "reams": "Rames",
+      "liters": "Litres",
+      "kg": "Kg",
+      "pairs": "Paires",
+      "sets": "Lots"
+    },
+    "tx_form": {
+      "title": "Enregistrer une transaction",
+      "item": "Article",
+      "select_item": "Sélectionner un article...",
+      "current": "Actuel",
+      "type": "Type de transaction",
+      "unit_price": "Prix unitaire (RWF)",
+      "reference": "Référence",
+      "invoice_ph": "N° facture",
+      "notes": "Notes",
+      "record": "Enregistrer"
+    },
+    "tx_types": {
+      "purchase": "Achat (Ajouter)",
+      "usage": "Utilisation (Retirer)",
+      "damage": "Dommage",
+      "disposal": "Mise au rebut",
+      "return": "Retour"
+    }
+  },
+  "pnt_full": {
+    "title": "Parents",
+    "subtitle": "Gérer les parents et leurs enfants liés",
+    "add_parent": "Ajouter un parent",
+    "send_bulk_sms": "SMS groupé",
+    "tabs": {
+      "parents": "Parents",
+      "link_requests": "Demandes",
+      "sms_history": "Historique SMS"
+    },
+    "stats": {
+      "total_parents": "Total parents",
+      "verified": "Vérifiés",
+      "pending_link": "En attente",
+      "with_children": "Avec enfants"
+    },
+    "search_placeholder": "Rechercher un parent...",
+    "table": {
+      "name": "Nom",
+      "phone": "Téléphone",
+      "email": "E-mail",
+      "children_count": "Enfants",
+      "status": "Statut",
+      "joined": "Inscrit",
+      "actions": "Actions"
+    },
+    "modal": {
+      "add_title": "Ajouter un parent",
+      "edit_title": "Modifier",
+      "details_title": "Détails",
+      "link_child": "Lier un enfant",
+      "view_children": "Voir enfants",
+      "send_sms": "Envoyer SMS",
+      "approve_link": "Approuver",
+      "reject_link": "Rejeter"
+    },
+    "form": {
+      "first_name": "Prénom",
+      "last_name": "Nom",
+      "phone": "Téléphone",
+      "email": "E-mail (optionnel)",
+      "relationship": "Relation",
+      "father": "Père",
+      "mother": "Mère",
+      "guardian": "Tuteur",
+      "other": "Autre",
+      "address": "Adresse",
+      "save": "Enregistrer",
+      "update": "Mettre à jour",
+      "password": "Mot de passe",
+      "password_optional": "Mot de passe (optionnel — défaut : 4 derniers chiffres du téléphone)"
+    },
+    "links": {
+      "title": "Demandes parent-étudiant",
+      "student": "Étudiant",
+      "parent": "Parent",
+      "relationship": "Relation",
+      "requested": "Demandé",
+      "approve": "Approuver",
+      "reject": "Rejeter",
+      "empty": "Aucune demande"
+    },
+    "sms_modal": {
+      "title": "Envoyer SMS au parent",
+      "message": "Message",
+      "send": "Envoyer",
+      "sending": "Envoi..."
+    },
+    "toasts": {
+      "added": "Parent ajouté",
+      "updated": "Mis à jour",
+      "deleted": "Supprimé",
+      "linked": "Enfant lié",
+      "unlinked": "Lien supprimé",
+      "approved": "Approuvé",
+      "rejected": "Rejeté",
+      "sms_sent": "SMS envoyé",
+      "load_failed": "Échec du chargement"
+    }
+  },
+  "parent_mgmt": {
+    "title": "Gestion des parents",
+    "subtitle": "Approuver les inscriptions et gérer les liens",
+    "tabs": {
+      "pending": "En attente",
+      "approved": "Approuvés",
+      "all": "Tous"
+    },
+    "pending_label": "En attente d'approbation",
+    "approve": "Approuver",
+    "reject": "Rejeter",
+    "view": "Voir",
+    "empty_pending": "Aucune inscription en attente",
+    "reject_confirm": "Rejeter cette inscription ?",
+    "approved_msg": "Parent approuvé et SMS envoyé",
+    "rejected_msg": "Parent rejeté",
+    "load_failed": "Échec du chargement",
+    "total_parents": "Total Parents",
+    "col_name": "Nom",
+    "no_children": "Aucun enfant lié",
+    "send_message_title": "Envoyer un message",
+    "to_label": "À :",
+    "send": "Envoyer",
+    "children_of": "Enfants de {{name}}"
+  },
+  "parent_portal": {
+    "portal_title": "Portail des parents",
+    "welcome": "Bienvenue, {{name}}",
+    "tabs": {
+      "overview": "Aperçu",
+      "children": "Mes enfants",
+      "payments": "Paiements",
+      "grades": "Notes",
+      "attendance": "Présence",
+      "discipline": "Discipline",
+      "messages": "Messages",
+      "notifications": "Notifications",
+      "settings": "Paramètres"
+    },
+    "child": {
+      "select_child": "Sélectionner un enfant",
+      "no_children": "Aucun enfant lié. Utilisez 'Lier un enfant' pour en ajouter.",
+      "link_child": "Lier un enfant",
+      "link_child_subtitle": "Entrez le n° d'inscription de votre enfant",
+      "reg_number": "N° d'inscription (ex. 2026/SOF/001)",
+      "relationship": "Votre relation",
+      "request_link": "Demander le lien",
+      "link_requested": "Demande envoyée. Attendez l'approbation.",
+      "link_failed": "Échec de la demande"
+    },
+    "stats": {
+      "total_paid": "Total payé",
+      "outstanding": "En attente",
+      "avg_grade": "Note moyenne",
+      "attendance_rate": "Taux de présence"
+    },
+    "payments": {
+      "pay_now": "Payer maintenant",
+      "pay_amount": "Montant à payer",
+      "pay_method": "Méthode de paiement",
+      "pay_phone": "Téléphone MoMo",
+      "confirm_pay": "Confirmer",
+      "payment_history": "Historique",
+      "no_payments": "Aucun paiement",
+      "receipt": "Reçu"
+    },
+    "grades": {
+      "course": "Cours",
+      "score": "Score",
+      "max": "Max",
+      "grade": "Note",
+      "comments": "Commentaires",
+      "no_grades": "Aucune note"
+    },
+    "attendance": {
+      "date": "Date",
+      "status": "Statut",
+      "notes": "Notes",
+      "present": "Présent",
+      "absent": "Absent",
+      "late": "Retard",
+      "excused": "Excusé",
+      "no_attendance": "Aucun enregistrement"
+    },
+    "messages": {
+      "title": "Messages de l'école",
+      "no_messages": "Aucun message"
+    },
+    "logout": "Déconnexion",
+    "title": "Portail Parent",
+    "parent_label": "Parent",
+    "last_refresh": "Dernière actualisation",
+    "average": "Moyenne",
+    "toast_new_reply": "Nouvelle réponse de l'école !",
+    "greeting": "Bonjour {{name}}",
+    "link_subtitle": "Connectez votre enfant à votre compte",
+    "link_title": "Demander à être lié à votre enfant",
+    "link_help": "Fournissez les informations de votre enfant — l'administration approuvera le lien.",
+    "reg_number": "Numéro d'élève (matricule)",
+    "reg_number_ph": "ex. GTV/2025/001",
+    "child_name": "Nom complet de l'enfant",
+    "child_name_ph": "ex. UWASE Aline",
+    "relationship": "Lien de parenté",
+    "rel_father": "Père",
+    "rel_mother": "Mère",
+    "rel_guardian": "Tuteur",
+    "rel_other": "Autre",
+    "notes_label": "Notes (facultatif)",
+    "notes_ph": "Tout élément utile à l'administration...",
+    "send_request": "Envoyer la demande",
+    "your_requests": "Vos Demandes",
+    "no_requests": "Aucune demande envoyée."
+  },
+  "wait_confirm": {
+    "title": "En attente de confirmation",
+    "subtitle": "Votre inscription a été reçue",
+    "info": "Notre équipe examine votre demande. Vous recevrez un SMS dès l'approbation.",
+    "check_status": "Vérifier le statut",
+    "not_approved_yet": "Votre inscription est en attente. Attendez le SMS.",
+    "approved": "Approuvée ! Vous pouvez vous connecter.",
+    "go_login": "Se connecter",
+    "back_home": "Accueil"
+  },
+  "academic_year": {
+    "title": "Années académiques",
+    "subtitle": "Gérer les années et trimestres scolaires",
+    "add_year": "Ajouter une année",
+    "add_term": "Ajouter un trimestre",
+    "add_promotion": "Promouvoir",
+    "current_year": "Année en cours",
+    "tabs": {
+      "years": "Années",
+      "terms": "Trimestres",
+      "promotions": "Promotions"
+    },
+    "table": {
+      "name": "Nom",
+      "start_date": "Date début",
+      "end_date": "Date fin",
+      "is_current": "En cours",
+      "status": "Statut",
+      "actions": "Actions",
+      "term_name": "Nom du trimestre",
+      "academic_year": "Année",
+      "from_level": "De",
+      "to_level": "À",
+      "students_count": "Étudiants",
+      "promoted_at": "Promu le",
+      "promoted_by": "Promu par"
+    },
+    "form": {
+      "name": "Nom de l'année (ex. 2026)",
+      "start_date": "Date début",
+      "end_date": "Date fin",
+      "is_current": "Année en cours",
+      "save": "Enregistrer",
+      "update": "Mettre à jour",
+      "term_name": "Nom du trimestre",
+      "academic_year": "Année",
+      "select_year": "-- Choisir --",
+      "from_trade": "Métier",
+      "from_level": "Niveau de départ",
+      "to_level": "Niveau d'arrivée",
+      "select_trade": "-- Choisir --",
+      "select_level": "-- Choisir --",
+      "promote": "Promouvoir"
+    },
+    "toasts": {
+      "year_added": "Année ajoutée",
+      "year_updated": "Année mise à jour",
+      "year_deleted": "Année supprimée",
+      "term_added": "Trimestre ajouté",
+      "promoted": "{{count}} étudiants promus",
+      "load_failed": "Échec du chargement"
+    },
+    "new_year": "Nouvelle année",
+    "no_years": "Aucune année enregistrée.",
+    "start_open_year": "Commencez par ouvrir une nouvelle année ci-dessus.",
+    "current": "Année en cours",
+    "set_current": "Définir comme actuelle",
+    "stats": {
+      "total_years": "Total Années",
+      "current_year": "Année en cours",
+      "graduated": "Diplômés (historique)",
+      "promoted": "Promus (historique)"
+    }
+  },
+  "grad_full": {
+    "title": "Diplômés",
+    "subtitle": "Suivre les diplômés et leur emploi",
+    "add_graduate": "Ajouter",
+    "generate_certificate": "Générer certificat",
+    "tabs": {
+      "all": "Tous",
+      "employed": "En emploi",
+      "unemployed": "Sans emploi",
+      "further_studies": "Poursuite d'études"
+    },
+    "stats": {
+      "total_graduates": "Total diplômés",
+      "employed": "En emploi",
+      "employment_rate": "Taux d'emploi",
+      "further_studies": "Poursuite d'études",
+      "years": "Années",
+      "trades": "Filières",
+      "diplomas": "Diplômes"
+    },
+    "search_placeholder": "Rechercher...",
+    "table": {
+      "name": "Nom",
+      "reg": "N°",
+      "trade": "Métier",
+      "graduation_year": "Année",
+      "certificate": "Certificat",
+      "employment_status": "Statut",
+      "employer": "Employeur",
+      "actions": "Actions"
+    },
+    "employment": {
+      "employed": "Emploi",
+      "unemployed": "Sans emploi",
+      "further_studies": "Études",
+      "self_employed": "Indépendant"
+    },
+    "form": {
+      "student": "Étudiant",
+      "select_student": "-- Choisir --",
+      "graduation_year": "Année de diplôme",
+      "certificate_no": "N° Certificat",
+      "employment_status": "Statut",
+      "employer": "Employeur",
+      "position": "Poste",
+      "save": "Enregistrer"
+    },
+    "toasts": {
+      "added": "Diplômé enregistré",
+      "updated": "Mis à jour",
+      "deleted": "Supprimé",
+      "cert_generated": "Certificat généré",
+      "load_failed": "Échec du chargement"
+    },
+    "subtitle_yearbook": "Liste des diplômés regroupés par année et par filière — recherchez une personne, déployez une promotion ou imprimez un PDF.",
+    "send_to_employers": "Envoyer aux Employeurs",
+    "print_pdf": "Imprimer PDF",
+    "all_years": "Toutes les années",
+    "all_trades": "Toutes les filières",
+    "empty_title": "Aucun diplômé pour le moment.",
+    "empty_hint": "Une fois l'année clôturée sur la page Année Académique, les étudiants de Niveau 5/5b apparaîtront ici.",
+    "n_graduates": "{{count}} diplômés"
+  },
+  "emp_full": {
+    "title": "Employeurs",
+    "subtitle": "Entreprises qui embauchent nos diplômés",
+    "add_employer": "Ajouter",
+    "stats": {
+      "total_employers": "Total employeurs",
+      "graduates_employed": "Diplômés embauchés",
+      "active_partnerships": "Partenariats actifs",
+      "with_email": "Avec Email",
+      "total_outreach": "Total Envois"
+    },
+    "search_placeholder": "Rechercher...",
+    "table": {
+      "name": "Entreprise",
+      "sector": "Secteur",
+      "contact_person": "Contact",
+      "phone": "Téléphone",
+      "email": "E-mail",
+      "graduates": "Diplômés",
+      "actions": "Actions",
+      "company": "Société",
+      "contact": "Contact",
+      "sector_trades": "Secteur / Filières",
+      "status": "Statut",
+      "last_sent": "Dernier envoi"
+    },
+    "form": {
+      "name": "Nom de l'entreprise",
+      "sector": "Secteur",
+      "contact_person": "Personne contact",
+      "phone": "Téléphone",
+      "email": "E-mail",
+      "address": "Adresse",
+      "website": "Site web",
+      "notes": "Notes",
+      "save": "Enregistrer"
+    },
+    "toasts": {
+      "added": "Employeur ajouté",
+      "updated": "Mis à jour",
+      "deleted": "Supprimé",
+      "load_failed": "Échec du chargement"
+    },
+    "subtitle_full": "Entreprises qui embauchent nos diplômés. Cliquez sur <strong>Envoyer la liste</strong> pour envoyer un PDF aux employeurs sélectionnés.",
+    "outreach_log": "Journal d'envoi",
+    "send_roster": "Envoyer la liste",
+    "all_sectors": "Tous les secteurs",
+    "all_statuses": "Tous les statuts",
+    "empty_title": "Aucun employeur ajouté.",
+    "empty_hint": "Cliquez sur \"Ajouter un employeur\" pour ajouter le premier.",
+    "email_not_set_title": "Email non configuré.",
+    "email_not_set_body": "Pour envoyer des listes, un admin doit définir SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS et SMTP_FROM dans les variables d'environnement, puis redémarrer le serveur.",
+    "status": {
+      "active": "Actif",
+      "inactive": "Inactif",
+      "archived": "Archivé"
+    }
+  },
+  "notif_full": {
+    "title": "Notifications",
+    "subtitle": "Restez informé de tout ce qui se passe à l'école",
+    "mark_all_read": "Marquer tout lu",
+    "send_sms": "SMS groupé",
+    "refresh": "Actualiser",
+    "tabs": {
+      "all": "Toutes",
+      "unread": "Non lues",
+      "read": "Lues",
+      "sms_history": "Historique SMS"
+    },
+    "stats": {
+      "total": "Total",
+      "unread": "Non lues",
+      "urgent": "Urgentes",
+      "today": "Aujourd'hui"
+    },
+    "filters": {
+      "all_types": "Tous types",
+      "all_priorities": "Toutes priorités",
+      "urgent": "Urgent",
+      "high": "Élevé",
+      "normal": "Normal",
+      "low": "Faible"
+    },
+    "empty": "Aucune notification",
+    "empty_desc": "Vos notifications apparaîtront ici",
+    "mark_read": "Marquer lue",
+    "delete": "Supprimer",
+    "sms_modal": {
+      "title": "Envoyer SMS groupé",
+      "message": "Message",
+      "recipients": "Destinataires",
+      "all_parents": "Tous les parents",
+      "by_trade": "Par métier",
+      "trade": "Métier",
+      "level": "Niveau",
+      "send": "Envoyer",
+      "sending": "Envoi...",
+      "success": "SMS envoyé ! {{count}} messages livrés.",
+      "failed": "Échec de l'envoi"
+    },
+    "sms_history": {
+      "title": "Historique SMS",
+      "message": "Message",
+      "recipients": "Destinataires",
+      "sent_count": "Envoyés",
+      "failed_count": "Échec",
+      "sent_at": "Envoyé le",
+      "sent_by": "Par",
+      "empty": "Aucun historique"
+    },
+    "time": {
+      "just_now": "À l'instant",
+      "minutes_ago": "Il y a {{n}} min",
+      "hours_ago": "Il y a {{n}} h",
+      "days_ago": "Il y a {{n}} jours",
+      "weeks_ago": "Il y a {{n}} semaines"
+    },
+    "types": {
+      "sms_sent": "SMS envoyé",
+      "student_created": "Nouvel étudiant",
+      "student_updated": "Étudiant modifié",
+      "student_deleted": "Étudiant supprimé",
+      "student_status": "Changement de statut",
+      "grade_added": "Note ajoutée",
+      "grade_updated": "Note modifiée",
+      "payment_received": "Paiement reçu",
+      "payment_reminder": "Rappel de paiement",
+      "link_approved": "Lien approuvé",
+      "link_rejected": "Lien rejeté",
+      "discipline_warning": "Avertissement",
+      "discipline_suspension": "Suspension",
+      "application_received": "Candidature reçue",
+      "application_approved": "Candidature approuvée",
+      "application_rejected": "Candidature rejetée",
+      "staff_created": "Nouveau personnel",
+      "staff_deleted": "Personnel retiré",
+      "system": "Système",
+      "announcement": "Annonce",
+      "general": "Général"
+    }
+  },
+  "admin_cms": {
+    "title": "Gérer le site web",
+    "subtitle": "Modifier le contenu, actualités, galerie, etc.",
+    "tabs": {
+      "hero_slides": "Diapositives",
+      "news": "Actualités",
+      "gallery": "Galerie",
+      "leadership": "Direction",
+      "faq": "FAQ",
+      "testimonials": "Témoignages",
+      "contact": "Contact",
+      "social": "Réseaux sociaux",
+      "about": "À propos"
+    },
+    "add": "Ajouter",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "news": {
+      "title": "Actualités",
+      "add_btn": "Ajouter un article",
+      "form": {
+        "title": "Titre",
+        "excerpt": "Extrait",
+        "content": "Contenu",
+        "category": "Catégorie",
+        "author": "Auteur",
+        "published": "Publié",
+        "featured": "À la une",
+        "image": "Image de couverture",
+        "gallery_images": "Images de galerie",
+        "video_url": "URL vidéo",
+        "tags": "Tags",
+        "save": "Enregistrer"
+      },
+      "empty": "Aucun article"
+    },
+    "gallery": {
+      "title": "Galerie",
+      "add_btn": "Ajouter photo",
+      "form": {
+        "caption": "Légende",
+        "image": "Photo",
+        "save": "Enregistrer"
+      },
+      "empty": "Aucune photo"
+    },
+    "leadership": {
+      "title": "Direction",
+      "add_btn": "Ajouter",
+      "form": {
+        "name": "Nom",
+        "role": "Rôle",
+        "bio": "Bio",
+        "photo": "Photo",
+        "email": "E-mail",
+        "phone": "Téléphone",
+        "linkedin": "LinkedIn",
+        "order": "Ordre",
+        "save": "Enregistrer"
+      },
+      "empty": "Aucun"
+    },
+    "faq": {
+      "title": "FAQ",
+      "add_btn": "Ajouter",
+      "form": {
+        "question": "Question",
+        "answer": "Réponse",
+        "category": "Catégorie",
+        "order": "Ordre",
+        "save": "Enregistrer"
+      },
+      "empty": "Aucune"
+    },
+    "testimonials": {
+      "title": "Témoignages",
+      "add_btn": "Ajouter",
+      "form": {
+        "name": "Nom",
+        "role": "Rôle",
+        "quote": "Citation",
+        "photo": "Photo",
+        "rating": "Note (1-5)",
+        "save": "Enregistrer"
+      },
+      "empty": "Aucun"
+    },
+    "contact": {
+      "title": "Coordonnées",
+      "location": "Emplacement",
+      "phone": "Téléphone",
+      "email": "E-mail",
+      "hours": "Horaires",
+      "save": "Enregistrer"
+    },
+    "social": {
+      "title": "Réseaux sociaux",
+      "facebook": "Facebook",
+      "twitter": "Twitter",
+      "instagram": "Instagram",
+      "youtube": "YouTube",
+      "linkedin": "LinkedIn",
+      "whatsapp": "WhatsApp",
+      "save": "Enregistrer"
+    },
+    "about": {
+      "title": "Page À propos",
+      "mission": "Mission",
+      "vision": "Vision",
+      "history": "Histoire",
+      "values": "Valeurs",
+      "save": "Enregistrer"
+    },
+    "hero": {
+      "title": "Diapositives d'accueil",
+      "add_btn": "Ajouter",
+      "form": {
+        "title": "Titre",
+        "subtitle": "Sous-titre",
+        "cta_text": "Texte bouton",
+        "cta_link": "Lien",
+        "image": "Image",
+        "order": "Ordre",
+        "active": "Active",
+        "save": "Enregistrer"
+      },
+      "empty": "Aucune"
+    },
+    "toasts": {
+      "saved": "Enregistré",
+      "deleted": "Supprimé",
+      "updated": "Mis à jour",
+      "error": "Erreur"
+    }
+  },
+  "admin_link": {
+    "title": "Demandes de liens parents",
+    "subtitle": "Examiner et approuver les liens parent-enfant",
+    "tabs": {
+      "pending": "En attente",
+      "approved": "Approuvés",
+      "rejected": "Rejetés",
+      "all": "Tous",
+      "requests": "Demandes",
+      "history": "Historique",
+      "all_linked": "Tous liés"
+    },
+    "stats": {
+      "pending": "En attente",
+      "approved_today": "Approuvés aujourd'hui",
+      "total_links": "Total liens",
+      "rejected": "Rejetés",
+      "approved": "Approuvées"
+    },
+    "search_placeholder": "Rechercher...",
+    "table": {
+      "parent": "Parent",
+      "parent_phone": "Téléphone",
+      "student": "Étudiant",
+      "student_reg": "N°",
+      "relationship": "Relation",
+      "requested_at": "Demandé",
+      "status": "Statut",
+      "actions": "Actions",
+      "reviewed_by": "Examiné par",
+      "reviewed_at": "Examiné le"
+    },
+    "actions": {
+      "approve": "Approuver",
+      "reject": "Rejeter",
+      "view": "Voir"
+    },
+    "modal": {
+      "approve_title": "Approuver le lien",
+      "reject_title": "Rejeter",
+      "notes": "Notes (optionnel)",
+      "confirm_approve": "Approuver ce lien ?",
+      "confirm_reject": "Rejeter cette demande ?",
+      "approve": "Approuver",
+      "reject": "Rejeter"
+    },
+    "empty": "Aucune demande",
+    "toasts": {
+      "approved": "Lien approuvé — parent notifié",
+      "rejected": "Lien rejeté — parent notifié",
+      "load_failed": "Échec du chargement"
+    },
+    "manual_link": "Lien manuel"
+  },
+  "admin_staff": {
+    "title": "Gestion du personnel",
+    "subtitle": "Gérer les comptes et rôles du personnel",
+    "add_staff": "Ajouter",
+    "tabs": {
+      "all": "Tous",
+      "admins": "Admins",
+      "teachers": "Enseignants",
+      "accounting": "Comptabilité",
+      "discipline": "Discipline",
+      "stock": "Stock"
+    },
+    "stats": {
+      "total": "Total",
+      "active": "Actifs",
+      "teachers": "Enseignants",
+      "admins": "Admins"
+    },
+    "search_placeholder": "Rechercher...",
+    "table": {
+      "name": "Nom",
+      "email": "E-mail",
+      "phone": "Téléphone",
+      "role": "Rôle",
+      "status": "Statut",
+      "last_login": "Dernière connexion",
+      "actions": "Actions",
+      "username": "Identifiant"
+    },
+    "form": {
+      "first_name": "Prénom",
+      "last_name": "Nom",
+      "username": "Identifiant",
+      "email": "E-mail",
+      "phone": "Téléphone",
+      "role": "Rôle",
+      "select_role": "-- Choisir --",
+      "password": "Mot de passe",
+      "confirm_password": "Confirmer",
+      "is_active": "Actif",
+      "save": "Enregistrer",
+      "update": "Mettre à jour",
+      "password_hint": "Laissez vide pour conserver"
+    },
+    "modal": {
+      "add_title": "Ajouter un membre",
+      "edit_title": "Modifier",
+      "details_title": "Détails",
+      "reset_password": "Réinitialiser",
+      "deactivate": "Désactiver",
+      "activate": "Activer"
+    },
+    "toasts": {
+      "added": "Personnel ajouté",
+      "updated": "Mis à jour",
+      "deleted": "Supprimé",
+      "password_reset": "Mot de passe réinitialisé",
+      "deactivated": "Désactivé",
+      "activated": "Activé",
+      "load_failed": "Échec du chargement",
+      "delete_confirm": "Supprimer ce membre ?"
+    }
+  },
+  "student_dash": {
+    "portal_title": "Portail étudiant",
+    "welcome": "Bienvenue, {{name}}",
+    "tabs": {
+      "overview": "Aperçu",
+      "grades": "Notes",
+      "fees": "Frais",
+      "attendance": "Présence",
+      "conduct": "Conduite",
+      "notes": "Notes de cours",
+      "messages": "Messages",
+      "settings": "Paramètres"
+    },
+    "stats": {
+      "avg_grade": "Note moyenne",
+      "attendance_rate": "Taux de présence",
+      "outstanding_fees": "Frais en attente",
+      "conduct_points": "Points conduite"
+    },
+    "grades": {
+      "title": "Mes notes",
+      "course": "Cours",
+      "score": "Score",
+      "max": "Max",
+      "grade": "Note",
+      "date": "Date",
+      "teacher": "Enseignant",
+      "empty": "Aucune note"
+    },
+    "fees": {
+      "title": "Mes frais",
+      "term": "Trimestre",
+      "amount": "Montant",
+      "paid": "Payé",
+      "balance": "Solde",
+      "due_date": "Échéance",
+      "status": "Statut",
+      "empty": "Aucun frais",
+      "history_title": "Historique",
+      "no_payments": "Aucun paiement"
+    },
+    "attendance": {
+      "title": "Ma présence",
+      "date": "Date",
+      "status": "Statut",
+      "notes": "Notes",
+      "empty": "Aucun enregistrement",
+      "present": "Présent",
+      "absent": "Absent",
+      "late": "Retard",
+      "excused": "Excusé"
+    },
+    "conduct": {
+      "title": "Dossier de conduite",
+      "date": "Date",
+      "action": "Action",
+      "description": "Description",
+      "points": "Points",
+      "empty": "Conduite irréprochable"
+    },
+    "notes": {
+      "title": "Notes de cours",
+      "course": "Cours",
+      "teacher": "Enseignant",
+      "date": "Date",
+      "download": "Télécharger",
+      "empty": "Aucune note publiée"
+    },
+    "messages": {
+      "title": "Messages",
+      "from": "De",
+      "date": "Date",
+      "empty": "Aucun message"
+    },
+    "change_password": "Changer mot de passe",
+    "logout": "Déconnexion",
+    "conduct_excellent": "Excellent !",
+    "conduct_keep_up": "Continuez",
+    "conduct_warning": "Attention",
+    "gpa": "Moyenne",
+    "balance": "Solde",
+    "paid_lower": "payé",
+    "my_grades": "Mes notes",
+    "no_grades": "Aucune note disponible.",
+    "subject": "Matière",
+    "term_year": "Trimestre / Année",
+    "type": "Type",
+    "marks": "Notes",
+    "letter": "Lettre",
+    "fees_title": "Frais scolaires",
+    "total": "Total",
+    "paid": "Payé"
+  },
+  "teach_pages": {
+    "overview": {
+      "title": "Aperçu enseignant",
+      "welcome": "Bienvenue, {{name}}",
+      "my_classes": "Mes classes",
+      "my_notes": "Mes notes",
+      "pending_questions": "Questions en attente",
+      "recent_activity": "Activité récente",
+      "quick_actions": "Actions rapides",
+      "upload_note": "Télécharger note",
+      "answer_questions": "Répondre",
+      "view_students": "Voir étudiants",
+      "send_message": "Message",
+      "empty_activity": "Aucune activité récente",
+      "stats": {
+        "notes": "Notes",
+        "students": "Étudiants",
+        "questions": "Questions",
+        "comments": "Commentaires",
+        "likes": "J'aime",
+        "hands_raised": "Mains levées"
+      }
+    },
+    "notes": {
+      "title": "Mes notes",
+      "upload_note": "Télécharger",
+      "search_placeholder": "Rechercher...",
+      "filters": {
+        "all_trades": "Tous métiers",
+        "all_levels": "Tous niveaux",
+        "published": "Publiés",
+        "drafts": "Brouillons"
+      },
+      "table": {
+        "title": "Titre",
+        "trade": "Métier",
+        "level": "Niveau",
+        "published": "Publié",
+        "views": "Vues",
+        "downloads": "Téléchargements",
+        "actions": "Actions"
+      },
+      "form": {
+        "title": "Titre",
+        "description": "Description",
+        "trade": "Métier",
+        "level": "Niveau",
+        "select_trade": "-- Choisir --",
+        "select_level": "-- Choisir --",
+        "pdf": "Fichier PDF",
+        "published": "Publier",
+        "save": "Enregistrer",
+        "update": "Mettre à jour"
+      },
+      "empty": "Aucune note",
+      "toasts": {
+        "uploaded": "Note téléchargée",
+        "updated": "Mise à jour",
+        "deleted": "Supprimée",
+        "delete_confirm": "Supprimer cette note ?",
+        "load_failed": "Échec du chargement"
+      }
+    },
+    "questions": {
+      "title": "Questions des étudiants",
+      "subtitle": "Répondre aux questions sur vos notes",
+      "filters": {
+        "all": "Toutes",
+        "pending": "Sans réponse",
+        "answered": "Répondues"
+      },
+      "table": {
+        "student": "Étudiant",
+        "note": "Note",
+        "question": "Question",
+        "asked": "Demandé",
+        "status": "Statut"
+      },
+      "answer": "Répondre",
+      "view_thread": "Voir conversation",
+      "empty": "Aucune question"
+    },
+    "students": {
+      "title": "Étudiants (lecture seule)",
+      "subtitle": "Voir les étudiants",
+      "search_placeholder": "Rechercher...",
+      "table": {
+        "name": "Nom",
+        "reg": "N°",
+        "trade": "Métier",
+        "level": "Niveau",
+        "phone": "Téléphone"
+      },
+      "empty": "Aucun étudiant"
+    },
+    "conduct": {
+      "title": "Conduite des étudiants",
+      "subtitle": "Soumettre des incidents",
+      "report_btn": "Signaler",
+      "form": {
+        "student": "Étudiant",
+        "select_student": "-- Choisir --",
+        "action_type": "Type",
+        "description": "Description",
+        "incident_date": "Date",
+        "submit": "Envoyer"
+      },
+      "recent": "Mes rapports récents",
+      "empty": "Aucun rapport",
+      "toasts": {
+        "submitted": "Rapport envoyé",
+        "load_failed": "Échec"
+      }
+    },
+    "messages": {
+      "title": "Messages aux parents",
+      "subtitle": "Envoyer SMS aux parents",
+      "form": {
+        "target": "Cible",
+        "single": "Un parent",
+        "class": "Toute la classe",
+        "trade": "Métier",
+        "level": "Niveau",
+        "parent": "Parent",
+        "select_parent": "-- Choisir --",
+        "message": "Message",
+        "send": "Envoyer",
+        "sending": "Envoi..."
+      },
+      "history": "Messages envoyés",
+      "empty": "Aucun",
+      "toasts": {
+        "sent": "Envoyé",
+        "failed": "Échec"
+      }
+    },
+    "engagement": {
+      "title": "Engagement",
+      "subtitle": "J'aime, commentaires et mains levées",
+      "tabs": {
+        "likes": "J'aime",
+        "comments": "Commentaires",
+        "hands": "Mains"
+      },
+      "table": {
+        "note": "Note",
+        "student": "Étudiant",
+        "comment": "Commentaire",
+        "posted": "Publié"
+      },
+      "empty": "Aucun"
+    }
+  },
+  "components": {
+    "mobile_nav": {
+      "home": "Accueil",
+      "kwiga": "Apprendre",
+      "services": "Services",
+      "news": "Actualités",
+      "more": "Plus"
+    },
+    "ask_teacher": {
+      "title": "Poser une question",
+      "subtitle": "Votre enseignant recevra et répondra bientôt.",
+      "question": "Votre question",
+      "question_placeholder": "Posez votre question clairement...",
+      "attach_image": "Joindre photo (optionnel)",
+      "send": "Envoyer",
+      "sending": "Envoi...",
+      "success": "Question envoyée — enseignant notifié.",
+      "failed": "Échec de l'envoi."
+    },
+    "grades_manager": {
+      "title": "Gestionnaire de notes",
+      "add_grade": "Ajouter note",
+      "bulk_grade": "Saisie en lot",
+      "student": "Étudiant",
+      "course": "Cours",
+      "score": "Score",
+      "max_score": "Score max",
+      "grade_letter": "Note",
+      "comments": "Commentaires",
+      "date": "Date",
+      "save": "Enregistrer",
+      "update": "Mettre à jour",
+      "delete_confirm": "Supprimer cette note ?",
+      "empty": "Aucune note"
+    },
+    "note_card": {
+      "published": "Publié",
+      "draft": "Brouillon",
+      "views": "{{count}} vues",
+      "downloads": "{{count}} téléchargements",
+      "comments": "{{count}} commentaires",
+      "likes": "{{count}} j'aime",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "view": "Voir",
+      "open_pdf": "Ouvrir PDF",
+      "download_pdf": "Télécharger PDF"
+    },
+    "note_comments": {
+      "title": "Commentaires",
+      "write_placeholder": "Écrire un commentaire...",
+      "post": "Publier",
+      "posting": "Publication...",
+      "delete_confirm": "Supprimer ce commentaire ?",
+      "no_comments": "Aucun commentaire — soyez le premier.",
+      "anonymous": "Anonyme"
+    },
+    "payment_reminders": {
+      "title": "Rappels de paiement",
+      "subtitle": "Envoyer des rappels aux parents des débiteurs",
+      "send_to_all": "Envoyer à tous",
+      "custom_message": "Message personnalisé (optionnel)",
+      "message_placeholder": "Message par défaut sera utilisé si vide...",
+      "filters": {
+        "trade": "Métier",
+        "level": "Niveau",
+        "min_balance": "Solde min",
+        "max_balance": "Solde max",
+        "all": "Tous"
+      },
+      "select_all": "Tout sélectionner",
+      "deselect_all": "Tout désélectionner",
+      "send_selected": "Envoyer aux sélectionnés ({{count}})",
+      "send_one": "Envoyer",
+      "sending": "Envoi...",
+      "sent_summary": "Rappels : {{success}} réussis, {{failed}} échoués",
+      "history_title": "Historique",
+      "no_debtors": "Aucun débiteur",
+      "no_history": "Aucun rappel",
+      "table": {
+        "student": "Étudiant",
+        "parent": "Parent",
+        "phone": "Téléphone",
+        "balance": "Solde",
+        "last_reminder": "Dernier rappel",
+        "reminders_sent": "Rappels",
+        "actions": "Actions"
+      },
+      "toasts": {
+        "sent": "Rappel envoyé",
+        "failed": "Échec",
+        "select_recipients": "Sélectionnez au moins un destinataire",
+        "load_failed": "Échec du chargement"
+      }
+    },
+    "pdf_reader": {
+      "loading": "Chargement...",
+      "page_of": "Page {{page}} sur {{total}}",
+      "zoom_in": "Zoom +",
+      "zoom_out": "Zoom -",
+      "rotate": "Rotation",
+      "download": "Télécharger",
+      "print": "Imprimer",
+      "close": "Fermer",
+      "load_error": "Échec du chargement du PDF"
+    },
+    "question_thread": {
+      "title": "Fil de discussion",
+      "original_question": "Question originale",
+      "reply_placeholder": "Tapez votre réponse...",
+      "send_reply": "Envoyer",
+      "sending": "Envoi...",
+      "no_replies": "Aucune réponse",
+      "teacher_label": "Enseignant",
+      "student_label": "Étudiant",
+      "attached_image": "Image jointe"
+    },
+    "realtime_bell": {
+      "title": "Notifications",
+      "no_notifications": "Aucune nouvelle notification",
+      "mark_all_read": "Tout marquer lu",
+      "view_all": "Voir tout"
+    },
+    "sms_templates": {
+      "title": "Modèles SMS",
+      "subtitle": "Créer et gérer des modèles réutilisables",
+      "add_template": "Ajouter",
+      "form": {
+        "name": "Nom",
+        "category": "Catégorie",
+        "message": "Corps du message",
+        "placeholders_hint": "Utilisez {{name}}, {{amount}}, {{date}}",
+        "save": "Enregistrer"
+      },
+      "table": {
+        "name": "Nom",
+        "category": "Catégorie",
+        "message": "Message",
+        "actions": "Actions"
+      },
+      "categories": {
+        "payment": "Paiement",
+        "attendance": "Présence",
+        "discipline": "Discipline",
+        "general": "Général",
+        "announcement": "Annonce"
+      },
+      "delete_confirm": "Supprimer ce modèle ?",
+      "empty": "Aucun modèle"
+    },
+    "send_roster": {
+      "title": "Envoyer la liste de classe",
+      "subtitle": "Envoyer la liste aux parents par SMS",
+      "trade": "Métier",
+      "level": "Niveau",
+      "message": "Message",
+      "send": "Envoyer",
+      "sending": "Envoi...",
+      "sent": "Liste envoyée à {{count}} parents",
+      "failed": "Échec"
+    },
+    "student_questions": {
+      "title": "Questions des étudiants",
+      "empty": "Aucune question",
+      "view_thread": "Voir le fil",
+      "answered_by": "Répondu par {{name}}",
+      "unanswered": "Sans réponse"
+    },
+    "hero_slides": {
+      "title": "Diapositives d'accueil",
+      "add": "Ajouter",
+      "form": {
+        "slide_title": "Titre",
+        "subtitle": "Sous-titre",
+        "cta_text": "Texte bouton",
+        "cta_link": "Lien",
+        "image": "Image",
+        "order": "Ordre",
+        "active": "Active",
+        "save": "Enregistrer"
+      },
+      "delete_confirm": "Supprimer cette diapositive ?",
+      "empty": "Aucune"
     }
   }
 }

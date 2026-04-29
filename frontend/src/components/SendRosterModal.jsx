@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import api from '../utils/api';
 import { toast } from 'react-toastify';
 import {
@@ -15,6 +16,7 @@ import {
  *  - graduateCount: number                (informational)
  */
 const SendRosterModal = ({ open, onClose, filters, graduateCount }) => {
+    const { t } = useTranslation();
     const [loading, setLoading]       = useState(true);
     const [sending, setSending]       = useState(false);
     const [employers, setEmployers]   = useState([]);

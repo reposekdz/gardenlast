@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import useAuthStore from '../store/authStore';
 import { toast } from 'react-toastify';
@@ -11,6 +12,7 @@ import {
 const API_URL = import.meta.env.VITE_API_URL || '';
 
 const WaitConfirmation = () => {
+    const { t } = useTranslation();
     const { token, user, logout } = useAuthStore();
     const navigate = useNavigate();
     const [requests, setRequests] = useState([]);
@@ -24,19 +26,17 @@ const WaitConfirmation = () => {
             });
             setRequests(res.data);
 
-            // Check if any request is approved or linked - if so, redirect to dashboard
             const approved = res.data.find(r => r.status === 'approved' || r.status === 'linked');
             if (approved) {
                 setPolling(false);
-                toast.success('Ubusabe bwakiriwe! Ubashije kwihuza n\'umwana wawe!');
+                toast.success(t('wait_confirm.approved'));
                 navigate('/parents');
                 return;
             }
 
-            // Check if any request is rejected - show message
             const rejected = res.data.find(r => r.status === 'rejected');
             if (rejected) {
-                toast.error('Ubusabe bwanze. Shaka kugira nibazwe.');
+                toast.error(t('wait_confirm.not_approved_yet'));
             }
         } catch (error) {
             console.error('Error fetching requests:', error);
@@ -47,14 +47,11 @@ const WaitConfirmation = () => {
 
     useEffect(() => {
         fetchRequests();
-
-        // Poll for updates every 10 seconds
         const interval = setInterval(() => {
             if (polling) {
                 fetchRequests();
             }
         }, 10000);
-
         return () => clearInterval(interval);
     }, [polling]);
 
@@ -95,71 +92,65 @@ const WaitConfirmation = () => {
         switch (status) {
             case 'approved':
             case 'linked':
-                return 'Yemerewe';
+                return t('common_extra.approved');
             case 'rejected':
-                return 'Byatakajwe';
+                return t('common_extra.rejected');
             default:
-                return 'Biratega';
+                return t('common_extra.pending');
         }
     };
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 p-4">
             <div className="max-w-2xl mx-auto">
-                {/* Header */}
                 <div className="bg-white/10 backdrop-blur rounded-2xl p-6 mb-6">
                     <div className="flex items-center gap-4 mb-4">
                         <button
                             onClick={handleGoHome}
                             className="p-2 bg-white/20 hover:bg-white/30 rounded-xl transition-colors"
+                            title={t('wait_confirm.back_home')}
                         >
                             <ArrowLeft size={20} className="text-white" />
                         </button>
                         <div className="flex-1">
-                            <h1 className="text-2xl font-bold text-white">Kugaba Kwifashishwa</h1>
-                            <p className="text-primary-200">Parent Application Status</p>
+                            <h1 className="text-2xl font-bold text-white">{t('wait_confirm.title')}</h1>
+                            <p className="text-primary-200">{t('wait_confirm.subtitle')}</p>
                         </div>
                         <button
                             onClick={handleLogout}
                             className="p-2 bg-white/20 hover:bg-white/30 rounded-xl transition-colors"
+                            title={t('parent_portal.logout')}
                         >
                             <LogOut size={20} className="text-white" />
                         </button>
                     </div>
                 </div>
 
-                {/* Status Card */}
                 <div className="bg-white rounded-2xl p-8 shadow-xl mb-6">
                     <div className="text-center mb-8">
                         <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <Clock size={40} className="text-yellow-600" />
                         </div>
                         <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                            Ubusabe bwakiriwe
+                            {t('wait_confirm.subtitle')}
                         </h2>
                         <p className="text-gray-500">
-                            Umuyobozi azabusuzuma vuba
-                        </p>
-                        <p className="text-gray-400 text-sm mt-2">
-                            Wasabye kwihuza n'umwana wawe. Tegereza kwemezwa.
+                            {t('wait_confirm.info')}
                         </p>
                     </div>
 
-                    {/* Refresh indicator */}
                     {polling && (
                         <div className="flex items-center justify-center gap-2 text-sm text-gray-400 mb-6">
                             <RefreshCw size={14} className="animate-spin" />
-                            <span>Igihe cyose bigeze</span>
-                            <span>Updates automatically</span>
+                            <span>{t('common_extra.refreshing')}</span>
                         </div>
                     )}
                 </div>
 
-                {/* Requests List */}
                 <div className="bg-white rounded-2xl p-6 shadow-xl">
                     <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
                         <Users size={20} className="text-primary-600" />
-                        Ibibusabwa byawe
+                        {t('parent_portal.tabs.children')}
                     </h3>
 
                     {loading ? (
@@ -169,7 +160,7 @@ const WaitConfirmation = () => {
                     ) : requests.length === 0 ? (
                         <div className="text-center py-8">
                             <User size={48} className="text-gray-300 mx-auto mb-4" />
-                            <p className="text-gray-500">Ntabusabe</p>
+                            <p className="text-gray-500">{t('common_extra.no_data_yet')}</p>
                         </div>
                     ) : (
                         <div className="space-y-4">
@@ -192,11 +183,11 @@ const WaitConfirmation = () => {
                                             <div className="text-sm space-y-1">
                                                 <p>{request.student_trade} - {request.student_level}</p>
                                                 <p className="text-gray-500">
-                                                    Byakorewe: {new Date(request.requested_at || request.created_at).toLocaleDateString()}
+                                                    {t('common_extra.created_at')}: {new Date(request.requested_at || request.created_at).toLocaleDateString()}
                                                 </p>
                                                 {request.status === 'rejected' && request.rejection_reason && (
                                                     <p className="text-red-600 mt-2">
-                                                        Imp reason: {request.rejection_reason}
+                                                        {t('common_extra.reason')}: {request.rejection_reason}
                                                     </p>
                                                 )}
                                             </div>
@@ -206,12 +197,6 @@ const WaitConfirmation = () => {
                             ))}
                         </div>
                     )}
-                </div>
-
-                {/* Help Text */}
-                <div className="mt-6 text-center text-white/70 text-sm">
-                    <p>Waba ufite ikibazo? <span className="font-bold">Contact: 078XXXXXXX</span></p>
-                    <p className="mt-1">Ushaka guhindura ikibazo? Baza kuri school</p>
                 </div>
             </div>
         </div>

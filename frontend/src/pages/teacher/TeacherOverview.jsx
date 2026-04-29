@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import useAuthStore from '../../store/authStore';
@@ -9,6 +10,7 @@ import {
 } from 'lucide-react';
 
 const Card = ({ icon: Icon, label, value, color = 'blue', to, description }) => {
+    const { t } = useTranslation();
     const inner = (
         <div className={`bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all h-full`}>
             <div className="flex items-center justify-between">

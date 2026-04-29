@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import api from '../utils/api';
 import useAuthStore from '../store/authStore';
 import { toast } from 'react-toastify';
@@ -28,6 +29,7 @@ const blankForm = {
 };
 
 const fmt = (d) => {
+    const { t } = useTranslation();
     if (!d) return '—';
     try {
         return new Date(d).toLocaleString('en-GB', {
@@ -182,25 +184,25 @@ const Employers = () => {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                         <h1 className="text-2xl font-black flex items-center gap-2">
-                            <Building2 size={26} /> Employer Directory
+                            <Building2 size={26} /> {t('emp_full.title')}
                         </h1>
                         <p className="text-indigo-100 text-sm">
-                            Sosiyete na compagnies bafata abasoje. Kanda <strong>Send Roster</strong> kugira ngo wohereze PDF roster ku ma-employers wahisemo.
+                            {t('emp_full.subtitle_full')}
                         </p>
                     </div>
                     <div className="flex flex-wrap gap-2">
                         <button onClick={loadHistory}
                             className="px-3 py-2 bg-white/10 hover:bg-white/20 rounded-xl flex items-center gap-2 text-sm">
-                            <History size={16} /> Outreach Log
+                            <History size={16} /> {t('emp_full.outreach_log')}
                         </button>
                         <button onClick={() => { setSendFilters({ yearId: '', trade: '', search: '' }); setShowSend(true); }}
                             className="px-4 py-2 bg-white text-indigo-700 rounded-xl font-bold flex items-center gap-2 hover:bg-indigo-50">
-                            <Send size={18} /> Send Roster
+                            <Send size={18} /> {t('emp_full.send_roster')}
                         </button>
                         {canWrite && (
                             <button onClick={openCreate}
                                 className="px-4 py-2 bg-amber-500 text-white rounded-xl font-bold flex items-center gap-2 hover:bg-amber-600">
-                                <Plus size={18} /> Yongera Employer
+                                <Plus size={18} /> {t('emp_full.add_employer')}
                             </button>
                         )}
                     </div>
@@ -211,18 +213,17 @@ const Employers = () => {
                 <div className="mx-6 mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl flex gap-2 text-sm text-amber-800">
                     <AlertTriangle size={18} className="flex-shrink-0 mt-0.5" />
                     <div>
-                        <strong>Email ntiratunganywa.</strong> Wifuza kohereza roster, admin agomba gushyiraho
-                        SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS na SMTP_FROM mu environment variables hanyuma asubukure server.
+                        <strong>{t('emp_full.email_not_set_title')}</strong> {t('emp_full.email_not_set_body')}
                     </div>
                 </div>
             )}
 
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6">
-                <Stat icon={Building2} label="Employers" value={stats.total}    color="bg-indigo-50 text-indigo-700" />
-                <Stat icon={CheckCircle2} label="Active" value={stats.active}   color="bg-emerald-50 text-emerald-700" />
-                <Stat icon={Mail}      label="With Email" value={stats.emailable} color="bg-blue-50 text-blue-700" />
-                <Stat icon={Send}      label="Total Outreach" value={stats.outreach} color="bg-amber-50 text-amber-700" />
+                <Stat icon={Building2} label={t('emp_full.stats.total_employers')} value={stats.total}    color="bg-indigo-50 text-indigo-700" />
+                <Stat icon={CheckCircle2} label={t('emp_full.stats.active')} value={stats.active}   color="bg-emerald-50 text-emerald-700" />
+                <Stat icon={Mail}      label={t('emp_full.stats.with_email')} value={stats.emailable} color="bg-blue-50 text-blue-700" />
+                <Stat icon={Send}      label={t('emp_full.stats.total_outreach')} value={stats.outreach} color="bg-amber-50 text-amber-700" />
             </div>
 
             {/* Filters */}
@@ -231,25 +232,25 @@ const Employers = () => {
                     <div className="flex-1 min-w-[220px] relative">
                         <Search size={16} className="absolute left-3 top-3 text-gray-400" />
                         <input value={search} onChange={e => setSearch(e.target.value)}
-                            placeholder="Shakisha izina, contact, email, sector..."
+                            placeholder={t('emp_full.search_placeholder')}
                             className="w-full pl-9 pr-3 py-2 rounded-xl border border-gray-200 text-sm" />
                     </div>
                     <Filter size={16} className="text-gray-500" />
                     <select value={sector} onChange={e => setSector(e.target.value)}
                         className="px-3 py-2 rounded-xl border border-gray-200 text-sm bg-white">
-                        <option value="">Sectors zose</option>
+                        <option value="">{t('emp_full.all_sectors')}</option>
                         {sectors.map(s => <option key={s} value={s}>{s}</option>)}
                     </select>
                     <select value={status} onChange={e => setStatus(e.target.value)}
                         className="px-3 py-2 rounded-xl border border-gray-200 text-sm bg-white">
-                        <option value="">Status zose</option>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                        <option value="archived">Archived</option>
+                        <option value="">{t('emp_full.all_statuses')}</option>
+                        <option value="active">{t('emp_full.status.active')}</option>
+                        <option value="inactive">{t('emp_full.status.inactive')}</option>
+                        <option value="archived">{t('emp_full.status.archived')}</option>
                     </select>
                     <button onClick={load}
                         className="px-3 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-xs font-bold flex items-center gap-1">
-                        <RefreshCcw size={14} /> Refresh
+                        <RefreshCcw size={14} /> {t('common_extra.refresh')}
                     </button>
                 </div>
             </div>
@@ -262,20 +263,20 @@ const Employers = () => {
                     ) : !items.length ? (
                         <div className="p-16 text-center text-gray-400">
                             <Briefcase size={48} className="mx-auto mb-3 opacity-30" />
-                            <p className="font-bold text-gray-600">Nta employer yongewe.</p>
-                            {canWrite && <p className="text-xs">Kanda "Yongera Employer" ushyireho iya mbere.</p>}
+                            <p className="font-bold text-gray-600">{t('emp_full.empty_title')}</p>
+                            {canWrite && <p className="text-xs">{t('emp_full.empty_hint')}</p>}
                         </div>
                     ) : (
                         <div className="overflow-x-auto">
                             <table className="w-full text-sm">
                                 <thead className="bg-gray-50 text-xs uppercase text-gray-600">
                                     <tr>
-                                        <th className="px-4 py-3 text-left">Sosiyete</th>
-                                        <th className="px-4 py-3 text-left">Contact</th>
-                                        <th className="px-4 py-3 text-left">Sector / Trades</th>
-                                        <th className="px-4 py-3 text-left">Status</th>
-                                        <th className="px-4 py-3 text-left">Last Sent</th>
-                                        <th className="px-4 py-3 text-right">Actions</th>
+                                        <th className="px-4 py-3 text-left">{t('emp_full.table.company')}</th>
+                                        <th className="px-4 py-3 text-left">{t('emp_full.table.contact')}</th>
+                                        <th className="px-4 py-3 text-left">{t('emp_full.table.sector_trades')}</th>
+                                        <th className="px-4 py-3 text-left">{t('emp_full.table.status')}</th>
+                                        <th className="px-4 py-3 text-left">{t('emp_full.table.last_sent')}</th>
+                                        <th className="px-4 py-3 text-right">{t('emp_full.table.actions')}</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y">

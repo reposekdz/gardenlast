@@ -1,7 +1,9 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { FileText, Download, BookOpen, User, Calendar, Eye, ArrowDownToLine } from 'lucide-react';
 
 const formatBytes = (b) => {
+    const { t } = useTranslation();
     if (!b) return '';
     const kb = b / 1024;
     if (kb < 1024) return `${kb.toFixed(0)} KB`;

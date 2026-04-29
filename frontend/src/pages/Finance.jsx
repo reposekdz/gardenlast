@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import useAuthStore from '../store/authStore';
 import { toast } from 'react-toastify';
@@ -13,6 +14,7 @@ import {
 const API_URL = import.meta.env.VITE_API_URL || '';
 
 const Finance = () => {
+    const { t } = useTranslation();
     const { token, user } = useAuthStore();
     const navigate = useNavigate();
     const [payments, setPayments] = useState([]);
@@ -588,9 +590,9 @@ const Finance = () => {
                     <div>
                         <h2 className="text-2xl font-bold flex items-center gap-3">
                             <DollarSign className="text-green-300" size={28} />
-                            Finance Management
+                            {t('fin_full.title')}
                         </h2>
-                        <p className="text-green-200 text-sm mt-1">Manage fees, payments, and track revenue</p>
+                        <p className="text-green-200 text-sm mt-1">{t('fin_full.subtitle')}</p>
                     </div>
                     {isAccountantOrAdmin && (
                         <div className="flex gap-3">

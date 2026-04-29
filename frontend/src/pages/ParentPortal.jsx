@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import useAuthStore from '../store/authStore';
 import { toast } from 'react-toastify';
@@ -14,6 +15,7 @@ import RealtimeBell from '../components/RealtimeBell';
 const API_URL = import.meta.env.VITE_API_URL || '';
 
 const ParentPortal = () => {
+    const { t } = useTranslation();
     const { token, user, logout } = useAuthStore();
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('overview');
@@ -155,7 +157,7 @@ const ParentPortal = () => {
                             <Home size={22} />
                         </div>
                         <div>
-                            <h1 className="font-bold text-lg leading-tight">Portal y'Umubyeyi</h1>
+                            <h1 className="font-bold text-lg leading-tight">{t('parent_portal.title')}</h1>
                             <p className="text-emerald-200 text-sm">Garden TVET School</p>
                         </div>
                     </div>
@@ -169,15 +171,15 @@ const ParentPortal = () => {
                             }}
                             onAnyEvent={(type) => {
                                 if (type === 'message_reply') {
-                                    toast.info('🔔 Igisubizo gishya kuva ku ishuri!', { autoClose: 4000 });
+                                    toast.info('🔔 ' + t('parent_portal.toast_new_reply'), { autoClose: 4000 });
                                 }
                             }}
                         />
                         <div className="text-right hidden sm:block ml-1">
                             <p className="font-semibold text-sm leading-tight">{user?.first_name} {user?.last_name}</p>
-                            <p className="text-emerald-200 text-xs">Umubyeyi</p>
+                            <p className="text-emerald-200 text-xs">{t('parent_portal.parent_label')}</p>
                         </div>
-                        <button onClick={logout} className="p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-colors" title="Sohoka">
+                        <button onClick={logout} className="p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-colors" title={t('common.logout')}>
                             <LogOut size={18} />
                         </button>
                     </div>
@@ -225,7 +227,7 @@ const ParentPortal = () => {
                             </div>
                             <div className="flex items-center gap-3">
                                 <div className="text-right">
-                                    <p className="text-xs text-gray-400">Ikanyarufu ryanya:</p>
+                                    <p className="text-xs text-gray-400">{t('parent_portal.last_refresh')}:</p>
                                     <p className="text-xs font-medium text-gray-600">{lastRefresh.toLocaleTimeString()}</p>
                                 </div>
                                 <button
@@ -242,7 +244,7 @@ const ParentPortal = () => {
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5">
                             <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-3 text-center">
                                 <p className="text-2xl font-black text-blue-700">{avgGrade ?? '—'}</p>
-                                <p className="text-xs text-blue-600 font-medium mt-0.5">Iciraniro</p>
+                                <p className="text-xs text-blue-600 font-medium mt-0.5">{t('parent_portal.average')}</p>
                             </div>
                             <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-3 text-center">
                                 <p className="text-2xl font-black text-red-700">{disciplineWarnings}</p>
@@ -1128,6 +1130,7 @@ const ParentMessagesPanel = ({ token, linkedChildren, autoOpenThreadId, onAutoOp
 
 // ─── No-child empty state with link-request form ──────────────────────────────
 const NoChildLinkRequest = ({ user, token, logout, onLinked }) => {
+    const { t } = useTranslation();
     const [regNumber, setRegNumber] = useState('');
     const [relationship, setRelationship] = useState('father');
     const [childName, setChildName] = useState('');
@@ -1180,7 +1183,7 @@ const NoChildLinkRequest = ({ user, token, logout, onLinked }) => {
         const cls = s === 'approved' ? 'bg-green-100 text-green-700'
             : s === 'rejected' ? 'bg-red-100 text-red-700'
             : 'bg-amber-100 text-amber-700';
-        const label = s === 'approved' ? 'Yemejwe' : s === 'rejected' ? 'Yangijwe' : 'Iratangirwa';
+        const label = s === 'approved' ? t('common.approved') : s === 'rejected' ? t('common.rejected') : t('common.pending');
         return <span className={`px-2 py-0.5 rounded text-xs font-semibold ${cls}`}>{label}</span>;
     };
 
@@ -1193,66 +1196,66 @@ const NoChildLinkRequest = ({ user, token, logout, onLinked }) => {
                             <User size={24} className="text-white" />
                         </div>
                         <div>
-                            <h1 className="text-xl font-bold text-gray-900">Muraho {user?.first_name || 'Mubyeyi'}</h1>
-                            <p className="text-sm text-gray-500">Konekta umwana wawe kuri konti yawe</p>
+                            <h1 className="text-xl font-bold text-gray-900">{t('parent_portal.greeting', { name: user?.first_name || t('parent_portal.parent_label') })}</h1>
+                            <p className="text-sm text-gray-500">{t('parent_portal.link_subtitle')}</p>
                         </div>
                     </div>
                     <button onClick={logout} className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center gap-2">
-                        <LogOut size={16} /> Sohoka
+                        <LogOut size={16} /> {t('common.logout')}
                     </button>
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-6">
                     <div className="bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-4">
                         <h2 className="text-white font-bold text-lg flex items-center gap-2">
-                            <Send size={20} /> Saba Guhuzwa n'Umwana Wawe
+                            <Send size={20} /> {t('parent_portal.link_title')}
                         </h2>
-                        <p className="text-emerald-50 text-sm mt-1">Tanga amakuru y'umwana wawe ari mu ishuri kandi ubuyobozi buzakwemerera.</p>
+                        <p className="text-emerald-50 text-sm mt-1">{t('parent_portal.link_help')}</p>
                     </div>
                     <form onSubmit={submit} className="p-6 space-y-4">
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">Nimero ya Munyeshuri (Reg Number) *</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">{t('parent_portal.reg_number')} *</label>
                             <input type="text" value={regNumber} onChange={e => setRegNumber(e.target.value)} required
-                                placeholder="urugero: GTV/2025/001"
+                                placeholder={t('parent_portal.reg_number_ph')}
                                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent" />
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">Amazina Yuzuye y'Umwana *</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">{t('parent_portal.child_name')} *</label>
                             <input type="text" value={childName} onChange={e => setChildName(e.target.value)} required
-                                placeholder="urugero: UWASE Aline"
+                                placeholder={t('parent_portal.child_name_ph')}
                                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent" />
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">Isano</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">{t('parent_portal.relationship')}</label>
                             <select value={relationship} onChange={e => setRelationship(e.target.value)}
                                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
-                                <option value="father">Papa</option>
-                                <option value="mother">Mama</option>
-                                <option value="guardian">Umurezi</option>
-                                <option value="other">Indi</option>
+                                <option value="father">{t('parent_portal.rel_father')}</option>
+                                <option value="mother">{t('parent_portal.rel_mother')}</option>
+                                <option value="guardian">{t('parent_portal.rel_guardian')}</option>
+                                <option value="other">{t('parent_portal.rel_other')}</option>
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">Ibisobanuro (si itegeko)</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">{t('parent_portal.notes_label')}</label>
                             <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2}
-                                placeholder="Ibindi byasanga byafasha ubuyobozi..."
+                                placeholder={t('parent_portal.notes_ph')}
                                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent" />
                         </div>
                         <button type="submit" disabled={submitting}
                             className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 text-white rounded-lg font-bold flex items-center justify-center gap-2">
-                            {submitting ? <><RefreshCw size={18} className="animate-spin" /> Birakorwa...</> : <><Send size={18} /> Ohereza Icyifuzo</>}
+                            {submitting ? <><RefreshCw size={18} className="animate-spin" /> {t('common.processing')}</> : <><Send size={18} /> {t('parent_portal.send_request')}</>}
                         </button>
                     </form>
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-lg p-6">
                     <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-                        <Inbox size={18} /> Ibyifuzo Byanyu
+                        <Inbox size={18} /> {t('parent_portal.your_requests')}
                     </h3>
                     {loadingReqs ? (
-                        <p className="text-sm text-gray-500">Birapakirwa...</p>
+                        <p className="text-sm text-gray-500">{t('common.loading')}</p>
                     ) : myRequests.length === 0 ? (
-                        <p className="text-sm text-gray-500">Nta cyifuzo cyari cyoherejwe.</p>
+                        <p className="text-sm text-gray-500">{t('parent_portal.no_requests')}</p>
                     ) : (
                         <div className="space-y-2">
                             {myRequests.map(r => (
