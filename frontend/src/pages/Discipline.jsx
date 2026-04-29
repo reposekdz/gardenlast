@@ -314,10 +314,10 @@ const Discipline = () => {
         try {
             await axios.put(`${API_URL}/api/discipline/appeals/${id}`,
                 { status, decision_notes: '' }, { headers });
-            toast.success(`Igikomerego ${status === 'accepted' ? 'byemejwe' : 'byangijwe'}`);
+            toast.success(t('disc_full.toasts.appeal_decided', { status: status === 'accepted' ? 'accepted' : 'rejected' }));
             fetchAppeals();
             fetchRecords();
-        } catch (err) { toast.error('Habaye ikibazo'); }
+        } catch (err) { toast.error(t('common_extra.generic_error')); }
     };
 
     // Send SMS (single or broadcast) - using new discipline broadcast endpoint
@@ -336,12 +336,12 @@ const Discipline = () => {
                     gender: smsFilters.gender
                 }, { headers });
 
-                toast.success(res.data.message || `SMS sent to ${res.data.sent_count || 0} recipients`);
+                toast.success(res.data.message || t('disc_full.toasts.sms_sent_count', { count: res.data.sent_count || 0 }));
                 setBroadcastResults(res.data);
             } else {
                 // Single SMS - use existing endpoint
                 await axios.post(`${API_URL}/api/sms/send`, smsForm, { headers });
-                toast.success('SMS yoherejwe!');
+                toast.success(t('disc_full.toasts.sms_sent'));
             }
 
             setShowSMSModal(false);
@@ -1393,4 +1393,3 @@ const Discipline = () => {
 };
 
 export default Discipline;
-             
