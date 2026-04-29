@@ -18,7 +18,6 @@ const TRADE_BADGE = {
 const tradeColor = (t) => TRADE_BADGE[t] || 'bg-gray-100 text-gray-700 border-gray-200';
 
 const fmtDate = (s) => {
-    const { t } = useTranslation();
     if (!s) return '—';
     try {
         const d = new Date(s);
@@ -32,6 +31,7 @@ const initials = (first, last) =>
 const Graduates = () => {
     const { user } = useAuthStore();
     const allowed = ['admin', 'director', 'registrar', 'dod', 'director_of_discipline', 'accountant'].includes(user?.role);
+    const { t } = useTranslation();
 
     const [loading, setLoading]   = useState(true);
     const [data, setData]         = useState({ total: 0, groups: [], filters: { years: [], trades: [] } });

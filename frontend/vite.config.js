@@ -13,9 +13,7 @@ export default defineConfig({
     port: 3000,
     strictPort: true,
     allowedHosts: true,
-    hmr: {
-      clientPort: 443,
-    },
+    hmr: true,
     proxy: {
       '/api': {
         target: 'http://localhost:8080',

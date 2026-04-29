@@ -37,6 +37,7 @@ function emptyYearForm() {
 
 const AcademicYear = () => {
     const { user } = useAuthStore();
+    const { t } = useTranslation();
     const isAdminOrDirector = ['admin', 'director', 'dod', 'director_of_discipline', 'accountant', 'registrar'].includes(user?.role);
     const canView = ['admin', 'director', 'dod', 'director_of_discipline', 'accountant', 'registrar'].includes(user?.role);
 

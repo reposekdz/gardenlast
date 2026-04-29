@@ -28,25 +28,28 @@ const blankForm = {
     preferred_trades: [], notes: '', status: 'active',
 };
 
-const fmt = (d) => {
-    const { t } = useTranslation();
-    if (!d) return '—';
-    try {
-        return new Date(d).toLocaleString('en-GB', {
-            year: 'numeric', month: 'short', day: '2-digit',
-            hour: '2-digit', minute: '2-digit',
-        });
-    } catch { return d; }
-};
+
 
 const Employers = () => {
+    const { t } = useTranslation();
+
+    const fmt = (d) => {
+        if (!d) return '—';
+        try {
+            return new Date(d).toLocaleString('en-GB', {
+                year: 'numeric', month: 'short', day: '2-digit',
+                hour: '2-digit', minute: '2-digit',
+            });
+        } catch { return d; }
+    };
+
     const { user } = useAuthStore();
     const canRead  = ['admin', 'director', 'registrar', 'dod', 'director_of_discipline', 'accountant'].includes(user?.role);
     const canWrite = ['admin', 'director', 'registrar'].includes(user?.role);
 
     const [loading, setLoading]   = useState(true);
     const [items, setItems]       = useState([]);
-    const [sectors, setSectors]   = useState([]);
+    const [sectors, setSectors]   = useState([]);  
     const [emailOk, setEmailOk]   = useState(false);
     const [search, setSearch]     = useState('');
     const [sector, setSector]     = useState('');
@@ -308,7 +311,7 @@ const Employers = () => {
                                                 </span>
                                             </td>
                                             <td className="px-4 py-3 text-xs text-gray-600">
-                                                {e.last_contacted_at ? fmt(e.last_contacted_at) : <span className="text-gray-400">—</span>}
+{e.last_contacted_at ? fmt(e.last_contacted_at) : <span className="text-gray-400">—</span>}
                                                 {e.outreach_count > 0 && (
                                                     <div className="text-[10px] text-gray-400">{e.outreach_count} send(s)</div>
                                                 )}
@@ -468,7 +471,7 @@ const Employers = () => {
                                                     : <span className="px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 text-[10px] font-bold flex items-center gap-1"><XCircle size={10} /> {o.status.toUpperCase()}</span>}
                                             </div>
                                             <div className="text-gray-500 mt-1">
-                                                {fmt(o.sent_at)} · {o.graduate_count} graduates · {o.attached_pdf ? 'PDF attached' : 'no PDF'}
+                                                {fmt(o.sent_at)} · {o.graduate_count} {t('common:graduates')} · {o.attached_pdf ? 'PDF attached' : 'no PDF'}
                                             </div>
                                             {o.error && <div className="text-rose-600 text-[11px] mt-1">{o.error}</div>}
                                         </div>
