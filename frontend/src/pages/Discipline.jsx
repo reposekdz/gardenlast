@@ -130,7 +130,10 @@ const Discipline = () => {
 
             const res = await axios.get(`${API_URL}/api/discipline?${params}`, { headers });
             setRecords(res.data);
-        } catch { toast.error(t('common_extra.generic_error')); }
+        } catch (err) { 
+            console.error('Failed to fetch records:', err);
+            toast.error(err.response?.data?.message || t('common_extra.generic_error')); 
+        }
         finally { setLoading(false); }
     };
 
@@ -141,7 +144,10 @@ const Discipline = () => {
             await axios.delete(`${API_URL}/api/discipline/${id}`, { headers });
             toast.success(t('disc_full.toasts.record_deleted'));
             fetchRecords();
-        } catch (err) { toast.error(t('common_extra.generic_error')); }
+        } catch (err) { 
+            console.error('Delete failed:', err);
+            toast.error(err.response?.data?.message || t('common_extra.generic_error')); 
+        }
     };
 
     // Clear conduct records for a student (DOD function)

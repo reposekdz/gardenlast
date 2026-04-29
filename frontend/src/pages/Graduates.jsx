@@ -54,9 +54,9 @@ const Graduates = () => {
             params.set('limit', '5000');
             const r = await api.get(`/academic-years/graduates?${params.toString()}`);
             setData(r.data || { total: 0, groups: [], filters: { years: [], trades: [] } });
-        } catch (err) {
-            toast.error(err.response?.data?.message || 'Habaye ikibazo gusoma abasoje.');
-        } finally {
+         } catch (err) {
+             toast.error(err.response?.data?.message || t('common_extra.generic_error'));
+         } finally {
             setLoading(false);
         }
     };
@@ -88,13 +88,13 @@ const Graduates = () => {
     /* ─── Print roster (PDF via browser print) ──────────────────── */
     const printRoster = () => {
         if (!data.groups?.length) {
-            toast.info('Nta basoje bahari ku byo washyizemo.');
+            toast.info(t('grad_full.no_graduates_to_print'));
             return;
         }
         const html = buildPrintHtml(data, { yearId, trade, search });
         const w = window.open('', '_blank', 'width=1024,height=768');
         if (!w) {
-            toast.error('Mufungure pop-ups kugira ngo PDF/Print ikore.');
+            toast.error(t('grad_full.enable_popups'));
             return;
         }
         w.document.write(html);
@@ -110,7 +110,7 @@ const Graduates = () => {
         return (
             <div className="text-center py-20 text-gray-400">
                 <Lock size={48} className="mx-auto mb-3 opacity-30" />
-                <p>Iri page riri ku bayobozi gusa.</p>
+                <p>{t('grad_full.access_restricted')}</p>
             </div>
         );
     }
@@ -340,18 +340,18 @@ const GraduateModal = ({ grad, onClose }) => (
                         <p className="text-xs text-gray-500">{grad.from_level || grad.final_level}</p>
                     </div>
                 </div>
-                <Detail icon={Calendar} label="Umwaka warangirijemo">{grad.academic_year_name || '—'}</Detail>
-                <Detail icon={Award}    label="Itariki yarangirijeho">{fmtDate(grad.graduated_at)}</Detail>
-                {grad.gender && <Detail icon={Users} label="Igitsina">{grad.gender}</Detail>}
-                {grad.contact_phone && <Detail icon={Phone} label="Telefone">{grad.contact_phone}</Detail>}
-                {grad.contact_email && <Detail icon={Mail}  label="Email">{grad.contact_email}</Detail>}
+                <Detail icon={Calendar} label={t('grad_full.detail.academic_year')}>{grad.academic_year_name || '—'}</Detail>
+                <Detail icon={Award}    label={t('grad_full.detail.graduation_date')}>{fmtDate(grad.graduated_at)}</Detail>
+                {grad.gender && <Detail icon={Users} label={t('grad_full.detail.gender')}>{grad.gender}</Detail>}
+                {grad.contact_phone && <Detail icon={Phone} label={t('grad_full.detail.phone')}>{grad.contact_phone}</Detail>}
+                {grad.contact_email && <Detail icon={Mail}  label={t('grad_full.detail.email')}>{grad.contact_email}</Detail>}
                 {(grad.address_district || grad.address_sector) && (
-                    <Detail icon={MapPin} label="Aho atuye">
+                    <Detail icon={MapPin} label={t('grad_full.detail.address')}>
                         {[grad.address_district, grad.address_sector].filter(Boolean).join(' / ')}
                     </Detail>
                 )}
-                {grad.guardian_name && <Detail icon={Users} label="Umubyeyi">{grad.guardian_name} {grad.guardian_phone ? `(${grad.guardian_phone})` : ''}</Detail>}
-                {grad.promotion_notes && <Detail icon={FileText} label="Cohort">{grad.promotion_notes}</Detail>}
+                {grad.guardian_name && <Detail icon={Users} label={t('grad_full.detail.guardian')}>{grad.guardian_name} {grad.guardian_phone ? `(${grad.guardian_phone})` : ''}</Detail>}
+                {grad.promotion_notes && <Detail icon={FileText} label={t('grad_full.detail.cohort')}>{grad.promotion_notes}</Detail>}
             </div>
         </div>
     </div>

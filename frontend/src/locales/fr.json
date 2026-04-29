@@ -2725,7 +2725,22 @@
     "all_trades": "Toutes les filières",
     "empty_title": "Aucun diplômé pour le moment.",
     "empty_hint": "Une fois l'année clôturée sur la page Année Académique, les étudiants de Niveau 5/5b apparaîtront ici.",
-    "n_graduates": "{{count}} diplômés"
+    "no_graduates_to_print": "Aucun diplômé à imprimer.",
+    "enable_popups": "Veuillez activer les pop-ups pour imprimer/télécharger.",
+    "access_restricted": "Cette page est réservée aux administrateurs.",
+    "n_graduates": "{{count}} diplômés",
+    "detail": {
+      "academic_year": "Année Académique",
+      "graduation_date": "Date de Graduation",
+      "gender": "Genre",
+      "phone": "Téléphone",
+      "email": "Email",
+      "address": "Adresse",
+      "guardian": "Tuteur",
+      "cohort": "Promotion"
+    },
+    "outreach_log": "Journal d'Envoi",
+    "empty_outreach": "Aucun envoi n'a été effectué."
   },
   "emp_full": {
     "title": "Employeurs",

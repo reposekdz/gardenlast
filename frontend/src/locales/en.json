@@ -2725,7 +2725,22 @@
     "all_trades": "All trades",
     "empty_title": "No graduates yet.",
     "empty_hint": "Once a year is closed on the Academic Year page, Level 5/5b students will appear here.",
-    "n_graduates": "{{count}} graduates"
+    "no_graduates_to_print": "No graduates to print.",
+    "enable_popups": "Please enable pop-ups to print/download.",
+    "access_restricted": "This page is for administrators only.",
+    "n_graduates": "{{count}} graduates",
+    "detail": {
+      "academic_year": "Academic Year",
+      "graduation_date": "Graduation Date",
+      "gender": "Gender",
+      "phone": "Phone",
+      "email": "Email",
+      "address": "Address",
+      "guardian": "Guardian",
+      "cohort": "Cohort"
+    },
+    "outreach_log": "Outreach Log",
+    "empty_outreach": "No outreach has been sent."
   },
   "emp_full": {
     "title": "Employers",

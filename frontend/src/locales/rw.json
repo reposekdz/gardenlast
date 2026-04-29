@@ -2725,7 +2725,22 @@
     "all_trades": "Trades zose",
     "empty_title": "Nta basoje bahari.",
     "empty_hint": "Iyo umwaka ufunzwe ku ipaji y'Umwaka, abanyeshuri ba Level 5/5b bagaragara hano.",
-    "n_graduates": "abasoje {{count}}"
+    "no_graduates_to_print": "Nta basoje bwo gucapa.",
+    "enable_popups": "Shyira pop-ups kugira ngo ucape/wuze.",
+    "access_restricted": "Iri paji ni rya bayobozi gusa.",
+    "n_graduates": "abasoje {{count}}",
+    "detail": {
+      "academic_year": "Umwaka",
+      "graduation_date": "Itariki Yarangirije",
+      "gender": "Igitsina",
+      "phone": "Telefone",
+      "email": "Imeyili",
+      "address": "Aderesi",
+      "guardian": "Umubyeyi/Umuremyi",
+      "cohort": "Cohort"
+    },
+    "outreach_log": "Ibyahoze",
+    "empty_outreach": "Nta outreach yarakorwa."
   },
   "emp_full": {
     "title": "Aho Bakorera",
