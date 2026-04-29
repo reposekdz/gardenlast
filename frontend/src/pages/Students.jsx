@@ -357,7 +357,9 @@ const Students = () => {
         return opt ? opt.label : status;
     };
 
-    const getGradeColor = (score, maxScore) => {
+const formatRegNumber = (reg) => reg ? reg.replace(/\//g, '') : '';
+
+const getGradeColor = (score, maxScore) => {
         const percentage = (score / maxScore) * 100;
         if (percentage >= 90) return 'text-green-600 bg-green-50';
         if (percentage >= 80) return 'text-blue-600 bg-blue-50';
@@ -813,7 +815,7 @@ const Students = () => {
                                             <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-500">No students found</td></tr>
                                         ) : paginatedStudents.map(s => (
                                             <tr key={s.id} className="hover:bg-gray-50">
-                                                <td className="px-4 py-3 font-mono text-sm">{s.reg_number || '-'}</td>
+<td className="px-4 py-3 font-mono text-sm">{formatRegNumber(s.reg_number)}</td>
                                                 <td className="px-4 py-3">
                                                     <div className="font-medium text-gray-800">{s.first_name} {s.last_name}</div>
                                                     <div className="text-sm text-gray-400">{s.contact_phone || '-'}</div>

@@ -143,7 +143,9 @@ const TeacherStudents = () => {
             : <span className="inline-block px-2 py-0.5 rounded-full text-xs font-bold bg-gray-100 text-gray-700">{status}</span>;
     };
 
-    const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-GB') : '—';
+const formatRegNumber = (reg) => reg ? reg.replace(/\//g, '') : '';
+
+const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-GB') : '—';
 
     return (
         <div className="space-y-6">
@@ -258,7 +260,7 @@ const TeacherStudents = () => {
                             <tbody className="divide-y divide-gray-100">
                                 {students.map(s => (
                                     <tr key={s.id} className="hover:bg-gray-50 transition-colors">
-                                        <td className="px-4 py-3 font-mono text-xs text-gray-600">{s.reg_number}</td>
+<td className="px-4 py-3 font-mono text-xs text-gray-600">{formatRegNumber(s.reg_number)}</td>
                                         <td className="px-4 py-3">
                                             <p className="font-bold text-gray-900">{s.first_name} {s.last_name}</p>
                                             {s.contact_phone && <p className="text-xs text-gray-500">{s.contact_phone}</p>}
