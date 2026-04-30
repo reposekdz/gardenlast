@@ -49,11 +49,8 @@ router.post('/evidence/upload', verifyToken, (req, res) => {
 // Get all discipline records
 router.get('/', verifyToken, async (req, res) => {
     try {
-        const { term_id, student_id, action_type, status, date_from, date_to } = req.query;
-
-        const db = getDb();
         const disciplineController = require('../controllers/disciplineController');
-        res.json(await disciplineController.getDisciplineRecords({ query: req.query }));
+        await disciplineController.getDisciplineRecords(req, res);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

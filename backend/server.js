@@ -161,6 +161,16 @@ const initDatabase = async () => {
         try { await db.query(`ALTER TABLE driving_lessons ADD COLUMN description TEXT NULL`); } catch (e) {}
         console.log('✅ Driving lessons upload columns verified');
 
+        // Discipline records: add resolved_by, resolved_at, resolution_date, resolution_notes columns
+        try { await db.query(`ALTER TABLE discipline_records ADD COLUMN resolved_by INT NULL`); } catch (e) {}
+        try { await db.query(`ALTER TABLE discipline_records ADD COLUMN resolved_at TIMESTAMP NULL`); } catch (e) {}
+        try { await db.query(`ALTER TABLE discipline_records ADD COLUMN resolution_date DATE NULL`); } catch (e) {}
+        try { await db.query(`ALTER TABLE discipline_records ADD COLUMN resolution_notes TEXT NULL`); } catch (e) {}
+        try { await db.query(`CREATE INDEX idx_discipline_resolved_by ON discipline_records(resolved_by)`); } catch (e) {}
+        try { await db.query(`CREATE INDEX idx_discipline_resolved_at ON discipline_records(resolved_at)`); } catch (e) {}
+        try { await db.query(`CREATE INDEX idx_discipline_status ON discipline_records(status)`); } catch (e) {}
+        console.log('✅ Discipline records columns verified');
+
         // Auto reminder settings: last_run_at for cron de-dup
         try { await db.query(`ALTER TABLE auto_reminder_settings ADD COLUMN last_run_at TIMESTAMP NULL`); } catch (e) {}
 

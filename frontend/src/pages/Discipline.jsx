@@ -351,21 +351,25 @@ const Discipline = () => {
             setSmsFilters({ trade: '', level: '', gender: '' });
             setBroadcastResults(null);
         } catch (err) {
-            toast.error(err.response?.data?.message || 'SMS yanze');
+            toast.error(err.response?.data?.message || t('disc_full.toasts.sms_failed'));
         } finally {
             setSmsLoading(false);
         }
     };
 
     const filteredRecords = records.filter(r =>
-        searchTerm === '' ||
-        r.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        r.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        r.reg_number?.toLowerCase().includes(searchTerm.toLowerCase())
+        r && (
+            searchTerm === '' ||
+            r.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            r.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            r.reg_number?.toLowerCase().includes(searchTerm.toLowerCase())
+        )
     );
 
-    const pendingAppeals = appeals.filter(a => a.status === 'pending');
-    const pendingLeaves = leaveRequests.filter(l => l.status === 'pending');
+    const pendingAppeals = appeals.filter(a => a?.status === 'pending');
+    const pendingLeaves = leaveRequests.filter(l => l?.status === 'pending');
+    const validLeaveRequests = leaveRequests.filter(Boolean);
+    const validAppeals = appeals.filter(Boolean);
 
     return (
         <div className="p-4 lg:p-6">
@@ -750,9 +754,9 @@ const Discipline = () => {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
-                                {leaveRequests.length === 0 ? (
+                                {validLeaveRequests.length === 0 ? (
                                     <tr><td colSpan={9} className="px-4 py-12 text-center text-gray-400"><Plane size={48} className="mx-auto mb-2 opacity-20" />No leave requests</td></tr>
-                                ) : leaveRequests.map(leave => (
+                                ) : validLeaveRequests.map(leave => (
                                     <tr key={leave.id} className="hover:bg-gray-50">
                                         <td className="px-4 py-3">
                                             <p className="font-bold">
@@ -938,9 +942,9 @@ const Discipline = () => {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
-                                {appeals.length === 0 ? (
+                                {validAppeals.length === 0 ? (
                                     <tr><td colSpan={6} className="px-4 py-12 text-center text-gray-400"><MessageSquare size={48} className="mx-auto mb-2 opacity-20" />No appeals</td></tr>
-                                ) : appeals.map(appeal => (
+                                ) : validAppeals.map(appeal => (
                                     <tr key={appeal.id} className="hover:bg-gray-50">
                                         <td className="px-4 py-3">
                                             <p className="font-bold">{appeal.student_name} {appeal.student_lastname}</p>
@@ -1127,10 +1131,10 @@ const Discipline = () => {
                                                 const files = Array.from(e.target.files || []);
                                                 e.target.value = '';
                                                 if (!files.length) return;
-                                                if (evidenceFiles.length + files.length > 8) {
-                                                    toast.error('Max 8 files');
-                                                    return;
-                                                }
+                                                 if (evidenceFiles.length + files.length > 8) {
+                                                     toast.error(t('disc_full.errors.max_files'));
+                                                     return;
+                                                 }
                                                 setEvidenceUploading(true);
                                                 try {
                                                     const fd = new FormData();

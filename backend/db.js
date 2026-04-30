@@ -588,6 +588,40 @@ const initDatabase = async () => {
             }
         } catch (e) { console.error('Error adding columns to leave_requests:', e.message); }
 
+        // ===== Add missing columns to discipline_records =====
+        try {
+            const addDisciplineCol = async (col, type) => {
+                try {
+                    const [exists] = await connection.query(
+                        "SELECT COUNT(*) as count FROM information_schema.columns WHERE table_schema = ? AND table_name = 'discipline_records' AND column_name = ?",
+                        [process.env.DB_NAME || 'garden_tvet', col]
+                    );
+                    if (exists[0].count === 0) {
+                        await connection.query(`ALTER TABLE discipline_records ADD COLUMN ${col} ${type}`);
+                        console.log(`✅ Added ${col} to discipline_records`);
+                    }
+                } catch (e) { console.error(`Error adding ${col} to discipline_records:`, e.message); }
+            };
+            await addDisciplineCol('resolved_by', 'INT NULL');
+            await addDisciplineCol('resolved_at', 'TIMESTAMP NULL');
+            await addDisciplineCol('resolution_date', 'DATE NULL');
+            await addDisciplineCol('resolution_notes', 'TEXT NULL');
+
+            // Add indexes for better query performance
+            try {
+                await connection.query('CREATE INDEX idx_discipline_resolved_by ON discipline_records(resolved_by)');
+                console.log('✅ Added index idx_discipline_resolved_by');
+            } catch (_) { /* index may already exist */ }
+            try {
+                await connection.query('CREATE INDEX idx_discipline_resolved_at ON discipline_records(resolved_at)');
+                console.log('✅ Added index idx_discipline_resolved_at');
+            } catch (_) { /* index may already exist */ }
+            try {
+                await connection.query('CREATE INDEX idx_discipline_status ON discipline_records(status)');
+                console.log('✅ Added index idx_discipline_status');
+            } catch (_) { /* index may already exist */ }
+        } catch (e) { console.error('Error setting up discipline_records columns:', e.message); }
+
         // ===== Ensure news engagement tables exist =====
         try {
             await connection.query(`
