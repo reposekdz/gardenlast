@@ -585,6 +585,7 @@ const initDatabase = async () => {
                 await addLrCol('actual_return_time', 'DATETIME NULL');
                 await addLrCol('returned_by', 'INT NULL');
                 await addLrCol('return_notes', 'VARCHAR(500) NULL');
+                await addLrCol('submitted_by_parent', 'TINYINT(1) DEFAULT 0');
             }
         } catch (e) { console.error('Error adding columns to leave_requests:', e.message); }
 

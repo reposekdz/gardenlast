@@ -104,7 +104,8 @@ const PublicLayout = () => {
                                 {[
                                     { code: 'rw', label: 'RW' },
                                     { code: 'en', label: 'EN' },
-                                    { code: 'fr', label: 'FR' }
+                                    { code: 'fr', label: 'FR' },
+                                    { code: 'sw', label: 'SW' }
                                 ].map(lang => (
                                     <button
                                         key={lang.code}

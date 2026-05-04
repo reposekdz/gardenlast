@@ -5,8 +5,10 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import en from './locales/en.json';
 import rw from './locales/rw.json';
 import fr from './locales/fr.json';
+import sw from './locales/sw.json';
 
 const STAFF_ROLES = ['admin', 'director', 'dod', 'director_of_discipline', 'accountant', 'stock_manager', 'registrar', 'teacher', 'librarian'];
+const SUPPORTED_LANGS = ['en', 'rw', 'fr', 'sw'];
 
 // Compute the default language at startup based on the persisted user role.
 // Public visitors → Kinyarwanda (rw). Staff/role users → English (en).
@@ -15,7 +17,7 @@ const STAFF_ROLES = ['admin', 'director', 'dod', 'director_of_discipline', 'acco
 const computeDefaultLanguage = () => {
     try {
         const saved = localStorage.getItem('i18nextLng');
-        if (saved && ['en', 'rw', 'fr'].includes(saved)) return saved;
+        if (saved && SUPPORTED_LANGS.includes(saved)) return saved;
 
         const rawUser = localStorage.getItem('user');
         if (rawUser) {
@@ -38,10 +40,11 @@ i18n
             en: { translation: en },
             rw: { translation: rw },
             fr: { translation: fr },
+            sw: { translation: sw },
         },
         lng: computeDefaultLanguage(),
         fallbackLng: 'rw',
-        supportedLngs: ['en', 'rw', 'fr'],
+        supportedLngs: SUPPORTED_LANGS,
         nonExplicitSupportedLngs: true,
         detection: {
             order: ['localStorage', 'navigator', 'htmlTag'],
@@ -58,7 +61,7 @@ i18n
 export const applyDefaultLanguageForRole = (role) => {
     try {
         const saved = localStorage.getItem('i18nextLng');
-        if (saved && ['en', 'rw', 'fr'].includes(saved)) return; // honour user choice
+        if (saved && SUPPORTED_LANGS.includes(saved)) return; // honour user choice
         if (role && STAFF_ROLES.includes(role)) {
             i18n.changeLanguage('en');
         } else {

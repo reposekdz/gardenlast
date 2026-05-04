@@ -324,12 +324,6 @@ const HomePage = () => {
                 <div className="max-w-7xl mx-auto px-6 py-32 relative z-10 w-full">
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
                         <div className="text-white">
-                            {/* Badge */}
-                            <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-6 py-3 mb-8 animate-fade-in-up">
-                                <Star size={18} className="text-accent-400 fill-accent-400" />
-                                <span className="text-sm font-bold tracking-widest uppercase">{cmsContent.subtitle || t('pub.home.hero_badge')}</span>
-                            </div>
-
                             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight mb-6 drop-shadow-2xl animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
                                 {activeSlides[currentImage]?.title || cmsContent.hero_title || t('pub.home.hero_title')} <br />
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-300 to-accent-500">{t('pub.home.future_today')}</span>

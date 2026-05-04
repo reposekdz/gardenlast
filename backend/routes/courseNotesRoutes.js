@@ -80,6 +80,12 @@ const initCourseNotesTable = async () => {
         if (!names.includes('download_count')) {
             await db.query("ALTER TABLE course_notes ADD COLUMN download_count INT DEFAULT 0");
         }
+        if (!names.includes('is_video')) {
+            await db.query("ALTER TABLE course_notes ADD COLUMN is_video TINYINT(1) DEFAULT 0");
+        }
+        if (!names.includes('video_url')) {
+            await db.query("ALTER TABLE course_notes ADD COLUMN video_url VARCHAR(1000) NULL");
+        }
         console.log('\u2705 Course notes table ready');
     } catch (e) {
         console.error('Error creating course_notes table:', e.message);
@@ -99,7 +105,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({
     storage,
-    limits: { fileSize: 30 * 1024 * 1024 },
+    limits: { fileSize: 500 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
         if (file.fieldname === 'cover') {
             if (file.mimetype.startsWith('image/')) return cb(null, true);
@@ -108,7 +114,10 @@ const upload = multer({
         if (file.mimetype === 'application/pdf' || file.originalname.toLowerCase().endsWith('.pdf')) {
             return cb(null, true);
         }
-        cb(new Error('Only PDF files are allowed for notes'), false);
+        if (file.mimetype.startsWith('video/') || /\.(mp4|webm|mov|avi|mkv)$/i.test(file.originalname)) {
+            return cb(null, true);
+        }
+        cb(new Error('Only PDF or video files are allowed'), false);
     }
 });
 
@@ -147,7 +156,8 @@ router.get('/', async (req, res) => {
         const { trade_code, level, q } = req.query;
         let sql = `SELECT id, trade_code, trade_name, level, title, description,
                           file_name, file_size, cover_image, view_count, download_count,
-                          uploaded_by_name, created_at
+                          uploaded_by_name, created_at,
+                          COALESCE(is_video, 0) as is_video, video_url
                    FROM course_notes WHERE 1=1`;
         const params = [];
         if (trade_code) { sql += ' AND trade_code = ?'; params.push(trade_code); }
@@ -226,32 +236,49 @@ router.post(
             }
         };
         try {
-            const { trade_code, level, title, description } = req.body;
+            const { trade_code, level, title, description, video_url, is_video } = req.body;
             const fileEntry = req.files?.file?.[0];
             const coverEntry = req.files?.cover?.[0];
-            if (!fileEntry) { cleanup(); return res.status(400).json({ message: 'PDF file is required' }); }
+            const isVideoUpload = is_video === '1' || is_video === true;
+            const hasVideoUrl = video_url && video_url.trim();
+
+            if (!isVideoUpload && !fileEntry) {
+                cleanup();
+                return res.status(400).json({ message: 'PDF file is required' });
+            }
+            if (isVideoUpload && !fileEntry && !hasVideoUrl) {
+                cleanup();
+                return res.status(400).json({ message: 'Provide a video file or video URL' });
+            }
             const trade = TRADES[trade_code];
             if (!trade) { cleanup(); return res.status(400).json({ message: 'Invalid trade_code' }); }
             if (!trade.levels.includes(level)) { cleanup(); return res.status(400).json({ message: 'Invalid level for this trade' }); }
             if (!title || !title.trim()) { cleanup(); return res.status(400).json({ message: 'Title is required' }); }
+
             const teacherName = req.user.username || `User ${req.user.id}`;
-            const filePath = path.basename(fileEntry.path);
+            const filePath = fileEntry ? path.basename(fileEntry.path) : 'url-only';
+            const fileName = fileEntry ? fileEntry.originalname : (hasVideoUrl ? new URL(video_url.trim()).hostname : 'url-only');
+            const fileSize = fileEntry ? fileEntry.size : 0;
             const coverPath = coverEntry ? path.basename(coverEntry.path) : null;
+
             const [result] = await db.execute(
                 `INSERT INTO course_notes
-                 (trade_code, trade_name, level, title, description, file_path, file_name, file_size, cover_image, uploaded_by, uploaded_by_name)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                 (trade_code, trade_name, level, title, description, file_path, file_name, file_size,
+                  cover_image, uploaded_by, uploaded_by_name, is_video, video_url)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                 [
                     trade.code, trade.name, level, title.trim(), description || null,
-                    filePath, fileEntry.originalname, fileEntry.size, coverPath,
-                    req.user.id, teacherName
+                    filePath, fileName, fileSize, coverPath,
+                    req.user.id, teacherName,
+                    isVideoUpload ? 1 : 0,
+                    hasVideoUrl ? video_url.trim() : null
                 ]
             );
-            res.status(201).json({ message: 'Note uploaded', id: result.insertId });
+            res.status(201).json({ message: isVideoUpload ? 'Video uploaded' : 'Note uploaded', id: result.insertId });
         } catch (e) {
             console.error('Upload error:', e);
             cleanup();
-            res.status(500).json({ message: 'Upload failed' });
+            res.status(500).json({ message: 'Upload failed', detail: e.message });
         }
     }
 );

@@ -524,4 +524,73 @@ router.get('/by-trade-level', verifyToken, verifyRole(staffRoles), async (req, r
     }
 });
 
+// Parent: get their children's leave requests
+router.get('/leaves', verifyToken, verifyRole(['parent']), async (req, res) => {
+    try {
+        const { student_id } = req.query;
+        const db = require('../db');
+        const studentIds = await getLinkedStudentIds(req.user.id);
+        if (studentIds.length === 0) return res.json([]);
+        if (student_id && !studentIds.includes(parseInt(student_id))) {
+            return res.status(403).json({ message: 'Not authorized for this student' });
+        }
+        const ids = student_id ? [parseInt(student_id)] : studentIds;
+        const placeholders = ids.map(() => '?').join(',');
+        const [rows] = await db.execute(
+            `SELECT lr.*, s.first_name, s.last_name, s.reg_number,
+                    CONCAT(COALESCE(u.first_name,''), ' ', COALESCE(u.last_name,'')) as reviewed_by_name
+             FROM leave_requests lr
+             JOIN students s ON lr.student_id = s.id
+             LEFT JOIN users u ON lr.reviewed_by = u.id
+             WHERE lr.student_id IN (${placeholders})
+             ORDER BY lr.created_at DESC LIMIT 100`,
+            ids
+        );
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching parent leaves:', err);
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+});
+
+// Parent: submit a leave request for their child
+router.post('/leaves', verifyToken, verifyRole(['parent']), async (req, res) => {
+    try {
+        const { student_id, leave_type, start_date, end_date, reason, start_time, end_time } = req.body;
+        if (!student_id || !leave_type || !start_date || !end_date || !reason) {
+            return res.status(400).json({ message: 'student_id, leave_type, start_date, end_date and reason are required' });
+        }
+        const db = require('../db');
+        const studentIds = await getLinkedStudentIds(req.user.id);
+        if (!studentIds.includes(parseInt(student_id))) {
+            return res.status(403).json({ message: 'Not authorized for this student' });
+        }
+        const start = new Date(start_date);
+        const end = new Date(end_date);
+        const totalDays = Math.max(1, Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1);
+        const [result] = await db.execute(
+            `INSERT INTO leave_requests (student_id, staff_id, leave_type, start_date, end_date, total_days, reason, start_time, end_time, submitted_by_parent)
+             VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, 1)`,
+            [parseInt(student_id), leave_type, start_date, end_date, totalDays, reason, start_time || null, end_time || null]
+        );
+        // Try SMS notification to parents (non-blocking)
+        try {
+            const smsService = require('../utils/smsService');
+            const isSick = /sick/i.test(leave_type);
+            const fallback = `[Garden TVET] Ombi la ${isSick ? 'ugonjwa' : 'likizo'} limewasilishwa kwa mtoto wako. Taaluma: ${leave_type}. Kutoka: ${start_date} hadi ${end_date} (siku ${totalDays}). Sababu: ${reason}.`;
+            await smsService.sendToStudentParents(
+                parseInt(student_id),
+                isSick ? 'student_sick' : 'leave_submitted',
+                { leave_type, start_date, end_date, total_days: totalDays, reason },
+                'sw',
+                fallback
+            ).catch(() => {});
+        } catch {}
+        res.json({ message: 'Leave request submitted', id: result.insertId, total_days: totalDays });
+    } catch (err) {
+        console.error('Error submitting parent leave:', err);
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+});
+
 module.exports = router;

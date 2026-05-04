@@ -8,7 +8,7 @@ import {
     DollarSign, Calendar, Award, Phone, LogOut,
     RefreshCw, CheckCircle, ClockIcon, XCircle, Star,
     MessageSquare, GraduationCap, Shield, Home, Activity,
-    Send, Inbox, PlusCircle
+    Send, Inbox, PlusCircle, FileText, Lock
 } from 'lucide-react';
 import RealtimeBell from '../components/RealtimeBell';
 
@@ -33,6 +33,16 @@ const ParentPortal = () => {
     const [lastRefresh, setLastRefresh] = useState(new Date());
     const [refreshing, setRefreshing] = useState(false);
     const [pendingOpenThread, setPendingOpenThread] = useState(null);
+
+    // Leave request state
+    const [leaveRequests, setLeaveRequests] = useState([]);
+    const [leaveForm, setLeaveForm] = useState({ leave_type: 'sick', start_date: '', end_date: '', reason: '' });
+    const [submittingLeave, setSubmittingLeave] = useState(false);
+    const [loadingLeaves, setLoadingLeaves] = useState(false);
+
+    // Permission request state
+    const [permForm, setPermForm] = useState({ date: '', start_time: '', end_time: '', reason: '' });
+    const [submittingPerm, setSubmittingPerm] = useState(false);
 
     // ─── Fetch linked children ───────────────────────────────────────────────
     const fetchLinkedChildren = useCallback(async () => {
@@ -106,6 +116,85 @@ const ParentPortal = () => {
 
     const handleRefresh = () => {
         if (selectedChild) fetchChildData(selectedChild);
+    };
+
+    // ─── Fetch leave requests ────────────────────────────────────────────────
+    const fetchLeaves = useCallback(async (child) => {
+        if (!child?.student_id) return;
+        setLoadingLeaves(true);
+        try {
+            const res = await axios.get(
+                `${API_URL}/api/parents/leaves?student_id=${child.student_id}`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            setLeaveRequests(Array.isArray(res.data) ? res.data : []);
+        } catch {
+            setLeaveRequests([]);
+        } finally {
+            setLoadingLeaves(false);
+        }
+    }, [token]);
+
+    useEffect(() => {
+        if (selectedChild && (activeTab === 'leave' || activeTab === 'permissions')) {
+            fetchLeaves(selectedChild);
+        }
+    }, [selectedChild, activeTab, fetchLeaves]);
+
+    // ─── Submit leave request ────────────────────────────────────────────────
+    const handleLeaveSubmit = async (e) => {
+        e.preventDefault();
+        if (!selectedChild?.student_id) return toast.error('Chagua mtoto kwanza');
+        if (!leaveForm.start_date || !leaveForm.end_date || !leaveForm.reason.trim()) {
+            return toast.error('Jaza sehemu zote zinazohitajika');
+        }
+        setSubmittingLeave(true);
+        try {
+            await axios.post(
+                `${API_URL}/api/parents/leaves`,
+                { ...leaveForm, student_id: selectedChild.student_id },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            toast.success(t('parent_portal.leave.success'));
+            setLeaveForm({ leave_type: 'sick', start_date: '', end_date: '', reason: '' });
+            fetchLeaves(selectedChild);
+        } catch (err) {
+            toast.error(err.response?.data?.message || t('parent_portal.leave.failed'));
+        } finally {
+            setSubmittingLeave(false);
+        }
+    };
+
+    // ─── Submit permission request ────────────────────────────────────────────
+    const handlePermSubmit = async (e) => {
+        e.preventDefault();
+        if (!selectedChild?.student_id) return toast.error('Chagua mtoto kwanza');
+        if (!permForm.date || !permForm.start_time || !permForm.reason.trim()) {
+            return toast.error('Jaza sehemu zote zinazohitajika');
+        }
+        setSubmittingPerm(true);
+        try {
+            await axios.post(
+                `${API_URL}/api/parents/leaves`,
+                {
+                    student_id: selectedChild.student_id,
+                    leave_type: 'permission',
+                    start_date: permForm.date,
+                    end_date: permForm.date,
+                    start_time: permForm.start_time,
+                    end_time: permForm.end_time,
+                    reason: permForm.reason
+                },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            toast.success(t('parent_portal.permissions.success'));
+            setPermForm({ date: '', start_time: '', end_time: '', reason: '' });
+            fetchLeaves(selectedChild);
+        } catch (err) {
+            toast.error(err.response?.data?.message || t('parent_portal.permissions.failed'));
+        } finally {
+            setSubmittingPerm(false);
+        }
     };
 
     // ─── Helpers ─────────────────────────────────────────────────────────────
@@ -265,15 +354,17 @@ const ParentPortal = () => {
                 {/* Tabs */}
                 <div className="flex gap-2 overflow-x-auto pb-2 mb-6">
                     {[
-                        { id: 'overview', label: 'Incamake', icon: Activity },
-                        { id: 'attendance', label: 'Kuhari', icon: ClockIcon },
-                        { id: 'grades', label: 'Amanota', icon: BookOpen },
-                        { id: 'discipline', label: 'Imyitwarire', icon: Shield },
-                        { id: 'fees', label: 'Amishyuri', icon: DollarSign },
+                        { id: 'overview', label: t('parent_portal.tabs.overview') || 'Incamake', icon: Activity },
+                        { id: 'attendance', label: t('parent_portal.tabs.attendance') || 'Kuhari', icon: ClockIcon },
+                        { id: 'grades', label: t('parent_portal.tabs.grades') || 'Amanota', icon: BookOpen },
+                        { id: 'discipline', label: t('parent_portal.tabs.discipline') || 'Imyitwarire', icon: Shield },
+                        { id: 'fees', label: t('parent_portal.tabs.payments') || 'Amishyuri', icon: DollarSign },
+                        { id: 'leave', label: t('parent_portal.tabs.leave') || 'Likizo', icon: FileText },
+                        { id: 'permissions', label: t('parent_portal.tabs.permissions') || 'Ruhusa', icon: Lock },
                         { id: 'reminders', label: 'Kwibutsa', icon: Send },
-                        { id: 'messages', label: 'Ubutumwa', icon: MessageSquare },
+                        { id: 'messages', label: t('parent_portal.tabs.messages') || 'Ubutumwa', icon: MessageSquare },
                         { id: 'sms_logs', label: 'SMS Yose', icon: Inbox },
-                        { id: 'notifications', label: 'Amakuru', icon: Bell },
+                        { id: 'notifications', label: t('parent_portal.tabs.notifications') || 'Amakuru', icon: Bell },
                     ].map(tab => (
                         <button
                             key={tab.id}
@@ -723,6 +814,253 @@ const ParentPortal = () => {
                                 </div>
                             ))
                         )}
+                    </div>
+                )}
+
+                {/* ── Tab: LEAVE REQUEST ── */}
+                {activeTab === 'leave' && (
+                    <div className="space-y-6">
+                        {/* Leave Request Form */}
+                        <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-blue-100">
+                            <div className="p-5 border-b border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50">
+                                <h3 className="text-lg font-black text-blue-900 flex items-center gap-2">
+                                    <FileText size={20} className="text-blue-600" />
+                                    {t('parent_portal.leave.title')}
+                                </h3>
+                                <p className="text-sm text-blue-700 mt-1">{t('parent_portal.leave.subtitle')}</p>
+                            </div>
+                            <form onSubmit={handleLeaveSubmit} className="p-5 space-y-4">
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1.5">
+                                        {t('parent_portal.leave.type_label')} *
+                                    </label>
+                                    <select
+                                        value={leaveForm.leave_type}
+                                        onChange={e => setLeaveForm(f => ({ ...f, leave_type: e.target.value }))}
+                                        className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                                    >
+                                        <option value="sick">{t('parent_portal.leave.type_sick')}</option>
+                                        <option value="personal">{t('parent_portal.leave.type_personal')}</option>
+                                        <option value="emergency">{t('parent_portal.leave.type_emergency')}</option>
+                                        <option value="bereavement">{t('parent_portal.leave.type_bereavement')}</option>
+                                        <option value="other">{t('parent_portal.leave.type_other')}</option>
+                                    </select>
+                                </div>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1.5">{t('parent_portal.leave.start_date')} *</label>
+                                        <input
+                                            type="date"
+                                            value={leaveForm.start_date}
+                                            onChange={e => setLeaveForm(f => ({ ...f, start_date: e.target.value }))}
+                                            required
+                                            className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1.5">{t('parent_portal.leave.end_date')} *</label>
+                                        <input
+                                            type="date"
+                                            value={leaveForm.end_date}
+                                            min={leaveForm.start_date}
+                                            onChange={e => setLeaveForm(f => ({ ...f, end_date: e.target.value }))}
+                                            required
+                                            className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1.5">{t('parent_portal.leave.reason')} *</label>
+                                    <textarea
+                                        value={leaveForm.reason}
+                                        onChange={e => setLeaveForm(f => ({ ...f, reason: e.target.value }))}
+                                        required
+                                        rows={3}
+                                        placeholder={t('parent_portal.leave.reason_ph')}
+                                        className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+                                    />
+                                </div>
+                                <button
+                                    type="submit"
+                                    disabled={submittingLeave}
+                                    className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white font-black rounded-xl flex items-center justify-center gap-2 transition-colors"
+                                >
+                                    {submittingLeave ? <><RefreshCw size={16} className="animate-spin" /> {t('parent_portal.leave.submitting')}</> : <><Send size={16} /> {t('parent_portal.leave.submit')}</>}
+                                </button>
+                            </form>
+                        </div>
+
+                        {/* Leave Request History */}
+                        <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                            <div className="p-5 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
+                                <h3 className="font-black text-gray-900 flex items-center gap-2">
+                                    <ClockIcon size={18} className="text-gray-500" />
+                                    {t('parent_portal.leave.history_title')}
+                                </h3>
+                                <button onClick={() => fetchLeaves(selectedChild)} className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                                    <RefreshCw size={14} className={loadingLeaves ? 'animate-spin' : ''} />
+                                </button>
+                            </div>
+                            {loadingLeaves ? (
+                                <div className="p-8 text-center"><RefreshCw size={24} className="animate-spin text-blue-500 mx-auto" /></div>
+                            ) : leaveRequests.filter(r => r.leave_type !== 'permission').length === 0 ? (
+                                <div className="p-10 text-center">
+                                    <FileText size={40} className="text-gray-200 mx-auto mb-3" />
+                                    <p className="text-gray-500 font-medium">{t('parent_portal.leave.no_requests')}</p>
+                                </div>
+                            ) : (
+                                <div className="divide-y divide-gray-50">
+                                    {leaveRequests.filter(r => r.leave_type !== 'permission').map((req, i) => {
+                                        const statusColor = req.status === 'approved' ? 'bg-green-100 text-green-700 border-green-200'
+                                            : req.status === 'rejected' ? 'bg-red-100 text-red-700 border-red-200'
+                                            : 'bg-yellow-100 text-yellow-700 border-yellow-200';
+                                        const statusLabel = req.status === 'approved' ? t('parent_portal.leave.status_approved')
+                                            : req.status === 'rejected' ? t('parent_portal.leave.status_rejected')
+                                            : t('parent_portal.leave.status_pending');
+                                        return (
+                                            <div key={i} className="p-4 hover:bg-gray-50 transition-colors">
+                                                <div className="flex items-start justify-between gap-3">
+                                                    <div className="flex-1">
+                                                        <div className="flex items-center gap-2 flex-wrap mb-1">
+                                                            <span className="text-sm font-black text-gray-800 capitalize">{req.leave_type}</span>
+                                                            <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${statusColor}`}>{statusLabel}</span>
+                                                        </div>
+                                                        <p className="text-xs text-gray-500">{req.start_date} → {req.end_date} ({req.total_days} {req.total_days === 1 ? 'siku' : 'siku'})</p>
+                                                        {req.reason && <p className="text-xs text-gray-600 mt-1 italic">"{req.reason}"</p>}
+                                                        {req.review_notes && (
+                                                            <p className="text-xs text-blue-700 mt-1 bg-blue-50 px-2 py-1 rounded-lg">
+                                                                {req.reviewed_by_name ? `${req.reviewed_by_name}: ` : ''}{req.review_notes}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                    <p className="text-[11px] text-gray-400 whitespace-nowrap">
+                                                        {new Date(req.created_at).toLocaleDateString()}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
+
+                {/* ── Tab: PERMISSIONS ── */}
+                {activeTab === 'permissions' && (
+                    <div className="space-y-6">
+                        {/* Permission Request Form */}
+                        <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-purple-100">
+                            <div className="p-5 border-b border-purple-100 bg-gradient-to-r from-purple-50 to-violet-50">
+                                <h3 className="text-lg font-black text-purple-900 flex items-center gap-2">
+                                    <Lock size={20} className="text-purple-600" />
+                                    {t('parent_portal.permissions.title')}
+                                </h3>
+                                <p className="text-sm text-purple-700 mt-1">{t('parent_portal.permissions.subtitle')}</p>
+                            </div>
+                            <form onSubmit={handlePermSubmit} className="p-5 space-y-4">
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1.5">{t('parent_portal.permissions.date')} *</label>
+                                    <input
+                                        type="date"
+                                        value={permForm.date}
+                                        onChange={e => setPermForm(f => ({ ...f, date: e.target.value }))}
+                                        required
+                                        className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none"
+                                    />
+                                </div>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1.5">{t('parent_portal.permissions.time_from')} *</label>
+                                        <input
+                                            type="time"
+                                            value={permForm.start_time}
+                                            onChange={e => setPermForm(f => ({ ...f, start_time: e.target.value }))}
+                                            required
+                                            className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1.5">{t('parent_portal.permissions.time_to')}</label>
+                                        <input
+                                            type="time"
+                                            value={permForm.end_time}
+                                            onChange={e => setPermForm(f => ({ ...f, end_time: e.target.value }))}
+                                            className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none"
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1.5">{t('parent_portal.permissions.reason')} *</label>
+                                    <textarea
+                                        value={permForm.reason}
+                                        onChange={e => setPermForm(f => ({ ...f, reason: e.target.value }))}
+                                        required
+                                        rows={3}
+                                        placeholder={t('parent_portal.permissions.reason_ph')}
+                                        className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none resize-none"
+                                    />
+                                </div>
+                                <button
+                                    type="submit"
+                                    disabled={submittingPerm}
+                                    className="w-full py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-300 text-white font-black rounded-xl flex items-center justify-center gap-2 transition-colors"
+                                >
+                                    {submittingPerm ? <><RefreshCw size={16} className="animate-spin" /> {t('parent_portal.permissions.submitting')}</> : <><Send size={16} /> {t('parent_portal.permissions.submit')}</>}
+                                </button>
+                            </form>
+                        </div>
+
+                        {/* Permission History */}
+                        <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                            <div className="p-5 border-b border-gray-100 bg-gray-50">
+                                <h3 className="font-black text-gray-900 flex items-center gap-2">
+                                    <ClockIcon size={18} className="text-gray-500" />
+                                    {t('parent_portal.permissions.history_title')}
+                                </h3>
+                            </div>
+                            {loadingLeaves ? (
+                                <div className="p-8 text-center"><RefreshCw size={24} className="animate-spin text-purple-500 mx-auto" /></div>
+                            ) : leaveRequests.filter(r => r.leave_type === 'permission').length === 0 ? (
+                                <div className="p-10 text-center">
+                                    <Lock size={40} className="text-gray-200 mx-auto mb-3" />
+                                    <p className="text-gray-500 font-medium">{t('parent_portal.permissions.no_requests')}</p>
+                                </div>
+                            ) : (
+                                <div className="divide-y divide-gray-50">
+                                    {leaveRequests.filter(r => r.leave_type === 'permission').map((req, i) => {
+                                        const statusColor = req.status === 'approved' ? 'bg-green-100 text-green-700 border-green-200'
+                                            : req.status === 'rejected' ? 'bg-red-100 text-red-700 border-red-200'
+                                            : 'bg-yellow-100 text-yellow-700 border-yellow-200';
+                                        const statusLabel = req.status === 'approved' ? t('parent_portal.leave.status_approved')
+                                            : req.status === 'rejected' ? t('parent_portal.leave.status_rejected')
+                                            : t('parent_portal.leave.status_pending');
+                                        return (
+                                            <div key={i} className="p-4 hover:bg-gray-50 transition-colors">
+                                                <div className="flex items-start justify-between gap-3">
+                                                    <div className="flex-1">
+                                                        <div className="flex items-center gap-2 flex-wrap mb-1">
+                                                            <span className="text-sm font-black text-gray-800">{req.start_date}</span>
+                                                            {req.start_time && <span className="text-xs text-gray-500">{req.start_time}{req.end_time ? ` → ${req.end_time}` : ''}</span>}
+                                                            <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${statusColor}`}>{statusLabel}</span>
+                                                        </div>
+                                                        {req.reason && <p className="text-xs text-gray-600 italic">"{req.reason}"</p>}
+                                                        {req.review_notes && (
+                                                            <p className="text-xs text-purple-700 mt-1 bg-purple-50 px-2 py-1 rounded-lg">
+                                                                {req.reviewed_by_name ? `${req.reviewed_by_name}: ` : ''}{req.review_notes}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                    <p className="text-[11px] text-gray-400 whitespace-nowrap">
+                                                        {new Date(req.created_at).toLocaleDateString()}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 )}
 
