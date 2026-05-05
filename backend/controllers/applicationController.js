@@ -13,34 +13,43 @@ const sendSMS = async (phone, message) => {
 
 // Public: Submit Application - Enhanced with more fields including parent info
 const submitApplication = async (req, res) => {
+    console.log('📋 Application submit:', req.body); // DEBUG LOG
+    
     const {
-        // Student fields
+        // Parent fields (REQUIRED for parent applications)
+        parent_name, parent_relationship,
+        // Student fields  
         first_name, last_name, gender, date_of_birth,
         phone, email, province, district, sector,
         trade, level, previous_school, previous_sector,
-        has_laptop, heard_from, motivation,
-        // Parent fields (if parent application)
-        parent_name
+        has_laptop, heard_from, motivation
     } = req.body;
 
     // Enhanced validation
-    if (!first_name || !last_name || !phone || !trade || !level) {
-        return res.status(400).json({ message: 'Required fields missing' });
+    // Enhanced validation
+    if (!first_name?.trim() || !last_name?.trim() || !phone?.trim() || !trade?.trim() || !level?.trim()) {
+        return res.status(400).json({ message: 'Required fields: first_name, last_name, phone, trade, level' });
+    }
+    
+    if (!parent_name?.trim()) {
+        return res.status(400).json({ message: 'Parent name is required for student applications' });
     }
 
     try {
         const [result] = await db.query(
             `INSERT INTO applications (
+                parent_name, parent_relationship,
                 first_name, last_name, gender, date_of_birth,
                 phone, email, province, district, sector,
                 trade, level, previous_school, previous_sector,
                 has_laptop, heard_from, motivation,
                 status, applied_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())`,
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())`,
             [
-                first_name, last_name, gender || null, date_of_birth || null,
-                phone, email || null, province || null, district || null, sector || null,
-                trade, level, previous_school || null, previous_sector || null,
+                parent_name.trim(), parent_relationship || null,
+                first_name.trim(), last_name.trim(), gender || null, date_of_birth || null,
+                phone.trim(), email || null, province || null, district || null, sector || null,
+                trade.trim(), level.trim(), previous_school || null, previous_sector || null,
                 has_laptop || null, heard_from || null, motivation || null
             ]
         );

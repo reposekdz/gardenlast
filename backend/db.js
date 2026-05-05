@@ -70,12 +70,15 @@ const initDatabase = async () => {
                     has_laptop VARCHAR(10),
                     heard_from VARCHAR(100),
                     motivation TEXT,
-                    status ENUM('pending', 'approved', 'rejected', 'waitlisted') DEFAULT 'pending',
-                    review_notes TEXT,
-                    applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    reviewed_at TIMESTAMP NULL
-                )
-            `);
+                status ENUM('pending', 'approved', 'rejected', 'waitlisted') DEFAULT 'pending',
+                parent_name VARCHAR(100),
+                parent_relationship VARCHAR(50),
+                review_notes TEXT,
+                applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                reviewed_at TIMESTAMP NULL,
+                INDEX idx_parent_name (parent_name)
+            )
+        `);
             console.log('✅ Applications table created');
         } else {
             // Check if trade column exists
